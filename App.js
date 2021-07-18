@@ -1,14 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Image } from 'react-native';
+import Tasks from './app/screens/Tasks';
 
 
 // Add navigation header section (diff color than page)
 
 export default function App() {
-  const handleTap = () => console.log('i suck pp');
+  const handleTap = () => console.log('sign in to google');
 
   return (
+    /*
     <SafeAreaView style={styles.container}>
 
       <View style={{ flex: 0.25 }}></View>
@@ -20,7 +22,7 @@ export default function App() {
 
       <View style={styles.container, { flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
 
-        <Text style={styles.titleText} onPress={handleTap}>Chore Checks</Text>
+        <Text style={styles.titleText}>Chore Checks</Text>
 
       </View>
 
@@ -30,12 +32,14 @@ export default function App() {
 
       <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
 
-        <Text style={styles.text} onPress={handleTap}>Fun Fact: Quaker Oats was founded in 1877!</Text>
+        <Text style={styles.text}>Fun Fact: Quaker Oats was founded in 1877!</Text>
 
       </View>
       
       <StatusBar style="auto" />
     </SafeAreaView>
+    */
+   <Tasks></Tasks>
   );
 }
 
