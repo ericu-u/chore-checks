@@ -5,11 +5,9 @@ import LoginPage from './app/screens/LoginPage';
 import TasksPage from './app/screens/TasksPage';
 
 
-// Add navigation header section (diff color than page)
-
 export default function App() {
   
-
+  // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
    <TasksPage></TasksPage>
    //<LoginPage></LoginPage>
