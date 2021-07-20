@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Image, StatusBar } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, Image, StatusBar, ImageBackground } from 'react-native';
 import { Header } from 'react-native-elements';
 
 function LoginPage(props) {
@@ -12,7 +12,7 @@ function LoginPage(props) {
             <View style={{ flex: 0.25 }}></View>
             <View style={{ flex: 1.25 }}>
 
-                <Image source={require("../assets/oatmeal_logo.jpg")} style={styles.image}/>
+                <Image source={require("../assets/oatmeal-logo.jpg")} style={styles.image}/>
 
             </View>
 
