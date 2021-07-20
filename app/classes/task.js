@@ -6,14 +6,16 @@ class Task {
    * @param {int} points How many points is the task worth
    * @param {int} repeat How often should the task repeat? We could use milliseconds since Date.now() uses milliseconds. If it does not repeat, you could pass in null.
    * @param {String} description A brief description of the task
+   * @param {String} householdID The id of the household this task belongs to
    */
-  constructor(name, deadline, points, repeat, description) {
+  constructor(name, deadline, points, repeat, description, householdID) {
     this.name = name;
     this.deadline = deadline;
     this.points = points;
     this.repeat = repeat;
     this.startDate = Date.now();
     this.description = description;
+    this.householdID = householdID;
 
     // When we first construct the object, these values will be empty. We can modify them with methods.
     this.completed = false; // Is the task finished?
