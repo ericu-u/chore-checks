@@ -46,7 +46,8 @@ const styles = StyleSheet.create({
     },
     titleText: {
       fontSize: 40,
-      color: 'white'
+      color: 'white',
+      fontFamily: 'ZenLoop-Regular'
     },
     text: {
       fontSize: 20
