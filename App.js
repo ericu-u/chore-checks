@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Image } from 'react-native';
 import LoginPage from './app/screens/LoginPage';
 import TasksPage from './app/screens/TasksPage';
+import HouseholdPage from './app/screens/HouseholdPage';
 
 
 export default function App() {
@@ -11,6 +12,7 @@ export default function App() {
   return (
    <TasksPage></TasksPage>
    //<LoginPage></LoginPage>
+   //<HouseholdPage></HouseholdPage>
   );
 }
 
