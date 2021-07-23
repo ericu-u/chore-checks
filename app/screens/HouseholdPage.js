@@ -25,7 +25,7 @@ function HouseholdPage(props) {
             <ScrollView>
             <View style={ styles.individualGroup }>
                 <View style={ styles.individualPoints }>
-                    <Text style={{fontSize:20, flex:1, textAlign: 'center',}}>Username Placeholder</Text>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username Placeholder</Text>
                     <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
@@ -34,7 +34,7 @@ function HouseholdPage(props) {
 
             <View style={ styles.individualGroup }>
                 <View style={ styles.individualPoints }>
-                    <Text style={{fontSize:20, flex:1, textAlign: 'center',}}>Username Placeholder</Text>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username Placeholder</Text>
                     <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
@@ -43,7 +43,7 @@ function HouseholdPage(props) {
 
             <View style={ styles.individualGroup }>
                 <View style={ styles.individualPoints }>
-                    <Text style={{fontSize:20, flex:1, textAlign: 'center',}}>Username Placeholder</Text>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username Placeholder</Text>
                     <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
@@ -52,7 +52,7 @@ function HouseholdPage(props) {
 
             <View style={ styles.individualGroup }>
                 <View style={ styles.individualPoints }>
-                    <Text style={{fontSize:20, flex:1, textAlign: 'center',}}>Username Placeholder</Text>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username Placeholder</Text>
                     <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         marginRight: "7%",
         paddingTop: "7%",
         paddingBottom: "7%",
-        justifyContent: 'space-evenly',  
+        //justifyContent: 'space-evenly',  
         marginBottom: "4%",    
         borderRadius: 6,  
         overflow: 'hidden',
