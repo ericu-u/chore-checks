@@ -1,11 +1,17 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { SafeAreaView, View, Text, StyleSheet, Image, StatusBar, ImageBackground } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, Image, StatusBar, ImageBackground, Button, TouchableHighlight } from 'react-native';
 import { Header, withTheme } from 'react-native-elements';
+
+
+function onPressButton() {
+    alert('Change status'); // TODO: Alert and/or Button to be replaced
+}
 
 function HouseholdPage(props) {
     return ( //replace all margins/paddings with relative positioning based on device
 
+        
         <ImageBackground
             style={{flex:1}}
             source={require("../assets/background-gradient.jpg")}
@@ -25,7 +31,13 @@ function HouseholdPage(props) {
             <ScrollView>
             <View style={ styles.individualGroup }>
                 <View style={ styles.individualPoints }>
-                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username Placeholder</Text>
+                    <View style ={styles.avatarPosition}>
+                        <Image source={require("../assets/standard-account90.png")} />
+                    </View>
+                    <View style={styles.topRight }>
+                        <Image source={require("../assets/gold-trophy.png")} /> 
+                    </View>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username</Text>
                     <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
@@ -34,7 +46,29 @@ function HouseholdPage(props) {
 
             <View style={ styles.individualGroup }>
                 <View style={ styles.individualPoints }>
-                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username Placeholder</Text>
+                <View style ={styles.avatarPosition}>
+                        <Image source={require("../assets/standard-account90.png")} />
+                    </View>
+                <View style={styles.topRight }>
+                        <Image source={require("../assets/silver-trophy.png")} /> 
+                    </View>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username</Text>
+                    <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
+                    <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
+                    <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
+                    
+                </View>
+            </View>
+
+            <View style={ styles.individualGroup }>
+                <View style={ styles.individualPoints }>
+                <View style ={styles.avatarPosition}>
+                        <Image source={require("../assets/standard-account90.png")} />
+                    </View>
+                <View style={styles.topRight }>
+                        <Image source={require("../assets/bronze-trophy.png")} /> 
+                    </View>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username</Text>
                     <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
@@ -43,16 +77,10 @@ function HouseholdPage(props) {
 
             <View style={ styles.individualGroup }>
                 <View style={ styles.individualPoints }>
-                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username Placeholder</Text>
-                    <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
-                    <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
-                    <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
-                </View>
-            </View>
-
-            <View style={ styles.individualGroup }>
-                <View style={ styles.individualPoints }>
-                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username Placeholder</Text>
+                    <View style ={styles.avatarPosition}>
+                        <Image source={require("../assets/standard-account90.png")} />
+                    </View>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username</Text>
                     <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
                     <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
@@ -104,6 +132,24 @@ const styles = StyleSheet.create({
         marginBottom: "4%",    
         borderRadius: 6,  
         overflow: 'hidden',
+    },
+    
+    topRight: {
+        position: 'absolute',
+        paddingLeft:"112%",
+        paddingTop: "3%",
+        //height: "1%",
+        //width: "1%",
+        ///margin: 'auto',
+    },
+
+    avatarPosition: {
+        position: 'absolute',
+        //height: "30%",
+        //width: "30%",
+        //margin: 'auto',
+        paddingLeft: '20%',
+        paddingTop: '15%',
     }
 })
 
