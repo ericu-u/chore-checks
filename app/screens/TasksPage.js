@@ -4,8 +4,14 @@ import { Header } from 'react-native-elements';
 
 function TasksPage(props) {
 
+    //const taskGroupHeight;
+
     function onPressButton() {
         alert('Change status'); // TODO: Alert and/or Button to be replaced
+    }
+
+    function addTask(taskName, points, dueDate) {
+
     }
     
     const task = <View style={ styles.individualTask }>
@@ -22,19 +28,22 @@ function TasksPage(props) {
             style={{flex:1}}
             source={require("../assets/background-gradient.jpg")}
         >
+
+            <Header
+                leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
+                centerComponent={{ text: 'Tasks', style: { color: '#fff' } }}
+            />
+
             <ScrollView>
 
-                <Header
-                    leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                    centerComponent={{ text: 'Tasks', style: { color: '#fff' } }}
-                />
+                
 
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: 20, marginLeft: 20}} />
+                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: '5%', marginLeft: '10%'}} />
                     <View style={ styles.statusHeader }>
                         <Text style={ styles.statusHeaderText }>Active</Text>
                     </View>
-                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: 20, marginLeft: 20}} />
+                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: '10%', marginLeft: '5%'}} />
                 </View>
 
                 <View style={ styles.taskGroup }>
@@ -47,11 +56,11 @@ function TasksPage(props) {
 
 
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: 20, marginLeft: 20}} />
+                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: '5%', marginLeft: '10%'}} />
                     <View style={ styles.statusHeader }>
                         <Text style={ styles.statusHeaderText }>Inactive</Text>
                     </View>
-                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: 20, marginLeft: 20}} />
+                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: '10%', marginLeft: '5%'}} />
                 </View>
 
                 <View style={ styles.taskGroup }>
@@ -78,22 +87,24 @@ const styles = StyleSheet.create({
     statusHeaderText: {
         fontSize: 25,
         textAlign: 'center',
-        width: 100,
+        width: '100%',
     },
     taskGroup: {
-        justifyContent: 'flex-start',
+        //justifyContent: 'flex-start',
         borderBottomWidth: 0.5,
         borderTopWidth: 0.5,
+        height: '80%'
         // TODO: set a max height (maybe)
     },
     individualTask: {
-        height: 90, // TODO: replace with relative positioning based on device
+        height: '20%', // TODO: replace with relative positioning based on device
         // TODO: set alternating background color/opacity
         justifyContent: 'flex-start',
         // TODO: set PROPER borders
         flexDirection: 'row',
-        alignContent: 'space-around',
+        //alignContent: 'space-around',
         alignItems: 'center',
+        borderTopWidth: 2
     }
 })
 
