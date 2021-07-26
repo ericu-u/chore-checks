@@ -8,17 +8,22 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-navigation/drawer": "^5.12.5",
+    "@react-navigation/native": "^5.9.4",
     "@use-expo/font": "^2.0.0",
     "expo": "~42.0.1",
     "expo-font": "~9.2.1",
     "expo-status-bar": "~1.0.4",
-    "firebase": "^8.7.1",
+    "firebase": "^8.8.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-dotenv": "^3.1.1",
     "react-native-elements": "^3.4.2",
+    "react-native-gesture-handler": "^1.10.3",
     "react-native-linear-gradient": "^2.5.6",
+    "react-native-reanimated": "^2.2.0",
+    "react-native-screens": "^3.4.0",
     "react-native-web": "~0.13.12"
   },
   "devDependencies": {
