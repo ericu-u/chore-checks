@@ -1,5 +1,4 @@
 export default class Task {
-
   /*
   NVM I need to get rid of this constructor because a class can't have multiple constructors in js ):
   /**
@@ -46,8 +45,25 @@ export default class Task {
    * @param {String} inProgressBy Who is doing the task
    * @param {int} duration How long the task took
    * @param {String} assigned Who was assigned the task
+   * @param {String} taskID the id of the task
    */
-  constructor(name, deadline, points, repeat,startDate, description, householdID, completed, completedBy, completionTime, inProgress, inProgressBy, duration, assigned) {
+  constructor(
+    name,
+    deadline,
+    points,
+    repeat,
+    startDate,
+    description,
+    householdID,
+    completed,
+    completedBy,
+    completionTime,
+    inProgress,
+    inProgressBy,
+    duration,
+    assigned,
+    taskID
+  ) {
     this.name = name;
     this.deadline = deadline;
     this.points = points;
@@ -55,24 +71,26 @@ export default class Task {
     this.startDate = startDate;
     this.description = description;
     this.householdID = householdID;
-    this.completed = completed; 
+    this.completed = completed;
     this.completedBy = completedBy;
-    this.completionTime = completionTime; 
+    this.completionTime = completionTime;
     this.inProgress = inProgress;
-    this.inProgressBy = inProgressBy; 
-    this.duration = duration; 
+    this.inProgressBy = inProgressBy;
+    this.duration = duration;
     this.assigned = assigned;
-  
+    this.taskID = taskID;
   }
 
+  /**
+   * Static variable used to save and load Task object from firestore
+   */
   static taskConverter = {
-    toFirestore: function(Task) {
+    toFirestore: function (Task) {
       return {
-
-        name:Task.name, 
+        name: Task.name,
         deadline: Task.deadline,
-        points: Task.points, 
-        repeat: Task.repeat, 
+        points: Task.points,
+        repeat: Task.repeat,
         startDate: Task.startDate,
         description: Task.description,
         householdID: Task.householdID,
@@ -83,19 +101,31 @@ export default class Task {
         inProgressBy: Task.inProgressBy,
         duration: Task.duration,
         assigned: Task.assigned,
-
-      }
-
+        taskID: taskID,
+      };
     },
 
-    fromFirestore: function(snapshot, options){
+    fromFirestore: function (snapshot, options) {
       const data = snapshot.data(options);
-      return new Task(data.name, data.deadline, data.points, data.repeat, data.startDate, data.description, data.householdID, data.completed, data.completedBy, data.completionTime, data.inProgress, data.inProgressBy, data.duration, data.assigned);
-  }
-
-
+      return new Task(
+        data.name,
+        data.deadline,
+        data.points,
+        data.repeat,
+        data.startDate,
+        data.description,
+        data.householdID,
+        data.completed,
+        data.completedBy,
+        data.completionTime,
+        data.inProgress,
+        data.inProgressBy,
+        data.duration,
+        data.assigned,
+        data.taskID
+      );
+    },
   };
-
 
   /**
    * Function for having a task repeat
@@ -146,6 +176,4 @@ export default class Task {
 
     this.assigned = user;
   }
-
-
 }
