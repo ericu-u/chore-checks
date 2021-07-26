@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, Text, StyleSheet, ImageBackground, ScrollView, TouchableHighlight, Button } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, ImageBackground, ScrollView, TouchableHighlight, Button, FlatList, StatusBar, SectionList } from 'react-native';
 import { Header } from 'react-native-elements';
 
 function TasksPage(props) {
@@ -13,6 +13,31 @@ function TasksPage(props) {
     function addTask(taskName, points, dueDate) {
 
     }
+
+    var testData = [
+        {
+            title: 'Active',
+            data: ['Do the Dishes', 'Walk the dog', 'Take out trash', 'Shower']
+        },
+        {
+            title: 'Inactive',
+            data: ['Cook dinner']
+        },
+    ];
+
+    const Item = ({ title }) => (
+        <View style={ styles.item }>
+                    <Text style={{flex:1, backgroundColor: 'pink', textAlign: 'center',}}>Points Placeholder</Text>
+                    <Text style={{flex:2, backgroundColor: 'aqua', textAlign: 'center'}}>{title}</Text>
+                    <View style={{flex:1, backgroundColor: 'gold'}}>
+                        <Button title='Button' onPress={onPressButton}></Button> 
+                    </View>
+                </View>
+    );
+
+    const renderItem = ({ item }) => (
+        <Item title={item.taskName} />
+    );
     
     const task = <View style={ styles.individualTask }>
                     <Text style={{flex:1, backgroundColor: 'pink', textAlign: 'center',}}>Points Placeholder</Text>
@@ -34,78 +59,57 @@ function TasksPage(props) {
                 centerComponent={{ text: 'Tasks', style: { color: '#fff' } }}
             />
 
-            <ScrollView>
+                    <SectionList
+                        sections={testData}
+                        keyExtractor={(item, index) => item + index}
+                        renderItem={({ item }) => <Item title={item} />}
+                        renderSectionHeader={({ section: { title } }) => (
+                            <View style={styles.statusHeader}>
+                                <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: '5%', marginLeft: '10%'}} />
+                                <View style={{justifyContent: 'center'}}>
+                                    <Text style={ styles.statusHeaderText }>{title}</Text>
+                                </View>
+                                <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: '10%', marginLeft: '5%'}} />
+                            </View>
+                        )}
+                    />
+
+
+                    
 
                 
 
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: '5%', marginLeft: '10%'}} />
-                    <View style={ styles.statusHeader }>
-                        <Text style={ styles.statusHeaderText }>Active</Text>
-                    </View>
-                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: '10%', marginLeft: '5%'}} />
-                </View>
-
-                <View style={ styles.taskGroup }>
-                    {task}
-                    {task}
-                    {task}
-                    {task}
-                    {task}
-                </View>
-
-
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: '5%', marginLeft: '10%'}} />
-                    <View style={ styles.statusHeader }>
-                        <Text style={ styles.statusHeaderText }>Inactive</Text>
-                    </View>
-                    <View style={{flex: 1, height: 1, backgroundColor: 'black', marginRight: '10%', marginLeft: '5%'}} />
-                </View>
-
-                <View style={ styles.taskGroup }>
-                    {task}
-                    {task}
-                    {task}
-                </View>
-
-            </ScrollView>
+            
 
         </ImageBackground>
     );
 }
 
 const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        backgroundColor: '#52a7d1',
-    },
     statusHeader: {
         height: 80, // TODO: replace with relative positioning based on device
         justifyContent: 'center',
+        borderBottomWidth: 0.5,
+        borderTopWidth: 0.5,
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     statusHeaderText: {
         fontSize: 25,
         textAlign: 'center',
         width: '100%',
     },
-    taskGroup: {
-        //justifyContent: 'flex-start',
-        borderBottomWidth: 0.5,
-        borderTopWidth: 0.5,
-        height: '80%'
-        // TODO: set a max height (maybe)
-    },
-    individualTask: {
-        height: '20%', // TODO: replace with relative positioning based on device
-        // TODO: set alternating background color/opacity
-        justifyContent: 'flex-start',
-        // TODO: set PROPER borders
+    item: {
         flexDirection: 'row',
-        //alignContent: 'space-around',
-        alignItems: 'center',
-        borderTopWidth: 2
-    }
+        //padding: 20,
+        //marginVertical: 8,
+        //marginHorizontal: 16,
+        height: 60
+    },
+    container: {
+        flex: 1,
+        marginTop: StatusBar.currentHeight || 0,
+    },
 })
 
 export default TasksPage;

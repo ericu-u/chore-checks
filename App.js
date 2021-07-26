@@ -7,6 +7,7 @@ import HouseholdPage from "./app/screens/HouseholdPage";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import config from "./config";
+import Test from "./app/screens/Test";
 
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
@@ -31,6 +32,7 @@ export default function App() {
     <TasksPage></TasksPage>
     //<LoginPage></LoginPage>
     //<HouseholdPage></HouseholdPage>
+    //<Test></Test>
   );
 }
 
