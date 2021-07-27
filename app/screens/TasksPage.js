@@ -14,8 +14,8 @@ import {
 } from "react-native";
 import { Header } from "react-native-elements";
 import config from "../../config";
-import * as firebase from "firebase";
-import "firebase/firestore";
+// import * as firebase from "firebase";
+// import "firebase/firestore";
 import Household from "../classes/household";
 import Task from "../classes/task";
 
@@ -37,7 +37,7 @@ function TasksPage(props) {
       console.log("pls", tasks);
     });
   }, []);
-*/
+
 
   useEffect(() => {
     db.collection("/houses/h38219/Tasks")
@@ -85,7 +85,7 @@ function TasksPage(props) {
 
     return await house.getTasks();
   }
-
+*/
   // End of firebase stuff
   function onPressButton() {
     alert("Change status"); // TODO: Alert and/or Button to be replaced

@@ -1,6 +1,6 @@
 import config from "../../config";
-import * as firebase from "firebase";
-import "firebase/firestore";
+// import * as firebase from "firebase";
+// import "firebase/firestore";
 import Task from "./task";
 
 export default class Person {

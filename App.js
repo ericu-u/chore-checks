@@ -4,12 +4,14 @@ import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 import LoginPage from "./app/screens/LoginPage";
 import TasksPage from "./app/screens/TasksPage";
 import HouseholdPage from "./app/screens/HouseholdPage";
-import * as firebase from "firebase";
-import "firebase/firestore";
+// import * as firebase from "firebase";
+// import "firebase/firestore";
 import config from "./config";
 import Test from "./app/screens/Test";
 import Drawer from "./app/screens/Drawer";
 
+
+/*
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
   authDomain: "chores-97427.firebaseapp.com",
@@ -26,7 +28,7 @@ if (!firebase.apps.length) {
 } else {
   firebase.app(); // if already initialized, use that one
 }
-
+*/
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
