@@ -28,6 +28,7 @@ function HouseholdPage(props) {
                     <Text style={ styles.statusHeaderText }>Sort By Points</Text>
                 </View>
             </View>
+            
             <ScrollView>
             <View style={ styles.individualGroup }>
                 <View style={ styles.individualPoints }>

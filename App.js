@@ -8,7 +8,9 @@ import HouseholdPage from "./app/screens/HouseholdPage";
 // import "firebase/firestore";
 import config from "./config";
 import Test from "./app/screens/Test";
+import SettingsPage from "./app/screens/SettingsPage";
 import Drawer from "./app/screens/Drawer";
+
 
 
 /*
@@ -32,11 +34,12 @@ if (!firebase.apps.length) {
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
-    <Drawer></Drawer>
+    //<Drawer></Drawer>
     //<TasksPage></TasksPage>
     //<LoginPage></LoginPage>
     //<HouseholdPage></HouseholdPage>
     //<Test></Test>
+    <SettingsPage></SettingsPage>
   );
 }
 
