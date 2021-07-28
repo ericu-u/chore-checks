@@ -5,19 +5,19 @@ import {
   Text,
   StyleSheet,
   ImageBackground,
-  ScrollView,
   TouchableHighlight,
   Button,
-  FlatList,
   StatusBar,
   SectionList,
+  
 } from "react-native";
-import { Header } from "react-native-elements";
+import { Header, Overlay, } from "react-native-elements";
 import config from "../../config";
 // import * as firebase from "firebase";
 // import "firebase/firestore";
 import Household from "../classes/household";
 import Task from "../classes/task";
+import Test from "./Test";
 
 function TasksPage(props) {
   //const taskGroupHeight;
@@ -87,46 +87,54 @@ function TasksPage(props) {
   }
 */
   // End of firebase stuff
+
+
   function onPressButton() {
     alert("Change status"); // TODO: Alert and/or Button to be replaced
   }
 
-  function addTask(taskName, points, dueDate) {}
+  const [visible, setVisible] = useState(false);
+
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
+
+
+  // name, deadline, points, repeat, description, householdID
+  var testTaskOne = new Task(
+    "Do the Dishes", 
+    Date.now() + 99999999, 
+    10, 
+    null, 
+    "Wash and rinse dishes in the sink.", 
+    12345);
+
+  var testTaskTwo = new Task(
+    "Walk the Dog", 
+    Date.now() + 99999999, 
+    10, 
+    null, 
+    "Take Freddy around the neighborhood.", 
+    12345);
 
   var testData = [
     {
       title: "Active",
-      data: ["Do the Dishes", "Walk the dog", "Take out trash", "Shower"],
+      data: [testTaskOne, testTaskTwo],
     },
     {
       title: "Inactive",
-      data: ["Cook dinner"],
+      data: [],
     },
   ];
 
-  const Item = ({ title }) => (
+  const Item = ({ task }) => (
     <View style={styles.item}>
       <Text style={{ flex: 1, backgroundColor: "pink", textAlign: "center" }}>
         Points Placeholder
       </Text>
-      <Text style={{ flex: 2, backgroundColor: "aqua", textAlign: "center" }}>
-        {title}
-      </Text>
-      <View style={{ flex: 1, backgroundColor: "gold" }}>
-        <Button title="Button" onPress={onPressButton}></Button>
-      </View>
-    </View>
-  );
-
-  const renderItem = ({ item }) => <Item title={item.taskName} />;
-
-  const task = (
-    <View style={styles.individualTask}>
-      <Text style={{ flex: 1, backgroundColor: "pink", textAlign: "center" }}>
-        Points Placeholder
-      </Text>
-      <Text style={{ flex: 2, backgroundColor: "aqua", textAlign: "center" }}>
-        Name Placeholder
+      <Text style={{ flex: 2, backgroundColor: "aqua", textAlign: "center" }} onPress={toggleOverlay}>
+        {task.name} {"\n"} Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* Add if statement to display time if less than 24 hours */}
       </Text>
       <View style={{ flex: 1, backgroundColor: "gold" }}>
         <Button title="Button" onPress={onPressButton}></Button>
@@ -136,6 +144,8 @@ function TasksPage(props) {
 
   return (
     // TODO: replace all margins/paddings with relative positioning based on device
+
+    
 
     <ImageBackground
       style={{ flex: 1 }}
@@ -150,10 +160,14 @@ function TasksPage(props) {
         centerComponent={{ text: "Tasks", style: { color: "#fff" } }}
       />
 
+      <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+        <Text>Hello testing</Text>
+      </Overlay>
+
       <SectionList
         sections={testData}
         keyExtractor={(item, index) => item + index}
-        renderItem={({ item }) => <Item title={item} />}
+        renderItem={({ item }) => <Item task={item} />}
         renderSectionHeader={({ section: { title } }) => (
           <View style={styles.statusHeader}>
             <View

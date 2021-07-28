@@ -32,8 +32,8 @@ if (!firebase.apps.length) {
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
-    <Drawer></Drawer>
-    //<TasksPage></TasksPage>
+    //<Drawer></Drawer>
+    <TasksPage></TasksPage>
     //<LoginPage></LoginPage>
     //<HouseholdPage></HouseholdPage>
     //<Test></Test>
