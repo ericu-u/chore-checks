@@ -110,8 +110,8 @@ function TasksPage(props) {
     12345);
 
   var testTaskTwo = new Task(
-    "Walk the Dog", 
-    Date.now() + 99999999, 
+    "Walk the Dog",
+    Date.now() + 99999999,
     10, 
     null, 
     "Take Freddy around the neighborhood.", 
@@ -130,14 +130,18 @@ function TasksPage(props) {
 
   const Item = ({ task }) => (
     <View style={styles.item}>
-      <Text style={{ flex: 1, backgroundColor: "pink", textAlign: "center" }}>
-        Points Placeholder
+      <Text style={{ flex: 1, textAlign: "center" }}>
+        {task.points}
       </Text>
-      <Text style={{ flex: 2, backgroundColor: "aqua", textAlign: "center" }} onPress={toggleOverlay}>
-        {task.name} {"\n"} Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* Add if statement to display time if less than 24 hours */}
+      <Text style={{ flex: 2, textAlign: "center" }} onPress={toggleOverlay}>
+        {task.name} {"\n"} Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
       </Text>
-      <View style={{ flex: 1, backgroundColor: "gold" }}>
-        <Button title="Button" onPress={onPressButton}></Button>
+      <View style={{ flex: 1, justifyContent: "center", backgroundColor: 'blue' }}>
+        <TouchableHighlight onPress={onPressButton} underlayColor="aqua">
+          <View style={{ alignItems: 'center' }}>
+            <Text>Claim</Text>
+          </View>
+        </TouchableHighlight>
       </View>
     </View>
   );
@@ -206,6 +210,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.5,
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#6495ED",
+    opacity: 0.8,
   },
   statusHeaderText: {
     fontSize: 25,
@@ -218,6 +224,8 @@ const styles = StyleSheet.create({
     //marginVertical: 8,
     //marginHorizontal: 16,
     height: 60,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   container: {
     flex: 1,
