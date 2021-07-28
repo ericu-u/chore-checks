@@ -9,6 +9,8 @@ import "firebase/firestore";
 import config from "./config";
 import Test from "./app/screens/Test";
 import Drawer from "./app/screens/Drawer";
+import { TaskPageClass } from "./app/screens/TaskPageClass";
+import { TasksPage2 } from "./app/screens/TasksPage2";
 
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
@@ -28,19 +30,18 @@ if (!firebase.apps.length) {
   firebase.app(); // if already initialized, use that one
 }
 
+console.log("aaaaaaaaaaaaaaaaaaaaa");
 const db = firebase.firestore();
 
 var docRef = db.doc("/houses/h38219");
-
-(async () => {
-  console.log((await docRef.get()).data());
-})();
 
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
     // <Drawer></Drawer>
-    <TasksPage></TasksPage>
+    // <TasksPage></TasksPage>
+    //<TaskPageClass></TaskPageClass>
+    <TasksPage2></TasksPage2>
     //<LoginPage></LoginPage>
     //<HouseholdPage></HouseholdPage>
     //<Test></Test>
