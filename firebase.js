@@ -6,8 +6,6 @@
 
 // Initialize Firebase
 
-
-/*
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
   authDomain: "chores-97427.firebaseapp.com",
@@ -131,5 +129,3 @@ docRef
   .catch((error) => {
     console.log("Error getting document:", error);
   });
-
-  */
