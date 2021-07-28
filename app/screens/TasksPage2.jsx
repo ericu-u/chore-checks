@@ -23,12 +23,14 @@ export class TasksPage2 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [],
-      unsubscribe: null,
+      tasks: [], // List of task objects
+      unsubscribe: null, // Firebase subscription. Calling this method will mean we stop listening to firebase for updates whenever the database changes
     };
   }
 
   componentDidMount() {
+    // This method is called when the component is first rendered
+    // Set up firebase stuff
     var firebaseConfig = {
       apiKey: config.FIREBASE_KEY,
       authDomain: "chores-97427.firebaseapp.com",
@@ -46,39 +48,31 @@ export class TasksPage2 extends React.Component {
     }
 
     const db = firebase.firestore();
+
+    // Firestore subscription. Listens to database for changes.
     var unsub = db
       .collection("/houses/h38219/Tasks")
       .withConverter(Task.taskConverter)
       .onSnapshot((querySnapshot) => {
-        var tempTasks = [];
+        // Whenever there is a change in firestore, this method runs
+        var tempTasks = []; // This temp array will store all the Tasks from firestore
         querySnapshot.forEach((doc) => {
-          //console.log(doc.data());
           tempTasks.push(doc.data());
         });
-        // console.log(tempTasks);
-        // setTasks(tasks);
         console.log("updated tasks");
-        this.setState({ tasks: tempTasks });
+        this.setState({ tasks: tempTasks }); // Makes the state.tasks equal tempTasks
       });
 
-    this.setState({ unsubscribe: unsub });
+    this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
   }
   componentWillUnmount() {
-    this.state.unsubscribe();
+    // This method runs whenever we stop rendering the component
+    this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
 
   render() {
-    var testData = [
-      {
-        title: "Active",
-        data: ["Do the Dishes", "Walk the dog", "Take out trash", "Shower"],
-      },
-      {
-        title: "Inactive",
-        data: ["Cook dinner"],
-      },
-    ];
-    // console.log(this.state.tasks);
+    // Returns what we want the user to see
+
     return (
       // TODO: replace all margins/paddings with relative positioning based on device
 
