@@ -77,6 +77,9 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
+  menuIcon: {
+    marginLeft: 20,
+  },
 });
 
 export default function MenuPage() {
@@ -88,7 +91,7 @@ export default function MenuPage() {
 }
 
 // stack navigators
-const ProfileStack = createStackNavigator();
+// const ProfileStack = createStackNavigator();
 
 // function ProfileNavigator() {
 //   return (
@@ -100,11 +103,15 @@ const ProfileStack = createStackNavigator();
 //           title: "Profile",
 //           headerLeft: () => (
 //             <MaterialIcons
+//               style={styles.menuIcon}
 //               name="menu"
-//               size={28}
+//               size={30}
 //               onPress={() => navigation.toggleDrawer()}
 //             />
 //           ),
+//           headerStyle: {
+//             backgroundColor: "#2B88D8",
+//           },
 //         })}
 //       />
 //     </ProfileStack.Navigator>
@@ -123,11 +130,15 @@ function TasksNavigator() {
           title: "Tasks",
           headerLeft: () => (
             <MaterialIcons
+              style={styles.menuIcon}
               name="menu"
-              size={28}
+              size={30}
               onPress={() => navigation.toggleDrawer()}
             />
           ),
+          headerStyle: {
+            backgroundColor: "#2B88D8",
+          },
         })}
       />
     </TasksStack.Navigator>
@@ -146,11 +157,15 @@ function TasksNavigator() {
 //           title: "Chatbox",
 //           headerLeft: () => (
 //             <MaterialIcons
+//               style={styles.menuIcon}
 //               name="menu"
-//               size={28}
+//               size={30}
 //               onPress={() => navigation.toggleDrawer()}
 //             />
 //           ),
+//           headerStyle: {
+//             backgroundColor: "#2B88D8",
+//           },
 //         })}
 //       />
 //     </ChatboxStack.Navigator>
@@ -169,11 +184,15 @@ function HouseholdNavigator() {
           title: "Household",
           headerLeft: () => (
             <MaterialIcons
+              style={styles.menuIcon}
               name="menu"
-              size={28}
+              size={30}
               onPress={() => navigation.toggleDrawer()}
             />
           ),
+          headerStyle: {
+            backgroundColor: "#2B88D8",
+          },
         })}
       />
     </HouseholdStack.Navigator>
@@ -189,14 +208,18 @@ function HouseholdNavigator() {
 //         name="Settings"
 //         component={SettingsPage}
 //         options={({ navigation }) => ({
-//           title: "Tasks",
+//           title: "Settings",
 //           headerLeft: () => (
 //             <MaterialIcons
+//               style={styles.menuIcon}
 //               name="menu"
-//               size={28}
+//               size={30}
 //               onPress={() => navigation.toggleDrawer()}
 //             />
 //           ),
+//           headerStyle: {
+//             backgroundColor: "#2B88D8",
+//           },
 //         })}
 //       />
 //     </SettingsStack.Navigator>

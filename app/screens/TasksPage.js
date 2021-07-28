@@ -157,14 +157,6 @@ function TasksPage(props) {
       style={{ flex: 1 }}
       source={require("../assets/background-gradient.jpg")}
     >
-      <Header
-        leftComponent={{
-          icon: "menu",
-          color: "#fff",
-          iconStyle: { color: "#fff" },
-        }}
-        centerComponent={{ text: "Tasks", style: { color: "#fff" } }}
-      />
 
       <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
         <Text>Hello testing</Text>
