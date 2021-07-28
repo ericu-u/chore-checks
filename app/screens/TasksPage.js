@@ -9,9 +9,11 @@ import {
   Button,
   StatusBar,
   SectionList,
-  
 } from "react-native";
-import { Header, Overlay, } from "react-native-elements";
+import { Header, Overlay } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
+import { StackHeaderLeftButtonProps } from "@react-navigation/stack";
+import { MaterialIcons } from "@expo/vector-icons";
 import config from "../../config";
 // import * as firebase from "firebase";
 // import "firebase/firestore";
@@ -99,23 +101,24 @@ function TasksPage(props) {
     setVisible(!visible);
   };
 
-
   // name, deadline, points, repeat, description, householdID
   var testTaskOne = new Task(
-    "Do the Dishes", 
-    Date.now() + 99999999, 
-    10, 
-    null, 
-    "Wash and rinse dishes in the sink.", 
-    12345);
+    "Do the Dishes",
+    Date.now() + 99999999,
+    10,
+    null,
+    "Wash and rinse dishes in the sink.",
+    12345
+  );
 
   var testTaskTwo = new Task(
-    "Walk the Dog", 
-    Date.now() + 99999999, 
-    10, 
-    null, 
-    "Take Freddy around the neighborhood.", 
-    12345);
+    "Walk the Dog",
+    Date.now() + 99999999,
+    10,
+    null,
+    "Take Freddy around the neighborhood.",
+    12345
+  );
 
   var testData = [
     {
@@ -133,8 +136,13 @@ function TasksPage(props) {
       <Text style={{ flex: 1, backgroundColor: "pink", textAlign: "center" }}>
         Points Placeholder
       </Text>
-      <Text style={{ flex: 2, backgroundColor: "aqua", textAlign: "center" }} onPress={toggleOverlay}>
-        {task.name} {"\n"} Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* Add if statement to display time if less than 24 hours */}
+      <Text
+        style={{ flex: 2, backgroundColor: "aqua", textAlign: "center" }}
+        onPress={toggleOverlay}
+      >
+        {task.name} {"\n"} Due Date: {new Date(task.deadline).getMonth()} /{" "}
+        {new Date(task.deadline).getDate()}{" "}
+        {/* Add if statement to display time if less than 24 hours */}
       </Text>
       <View style={{ flex: 1, backgroundColor: "gold" }}>
         <Button title="Button" onPress={onPressButton}></Button>
@@ -144,8 +152,6 @@ function TasksPage(props) {
 
   return (
     // TODO: replace all margins/paddings with relative positioning based on device
-
-    
 
     <ImageBackground
       style={{ flex: 1 }}
