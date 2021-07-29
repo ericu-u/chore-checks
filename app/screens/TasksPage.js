@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableHighlight,
-  Button,
+  Image,
   StatusBar,
   SectionList,
   
@@ -90,15 +90,15 @@ function TasksPage(props) {
 
 
   function onPressButton() {
-    alert("Change status"); // TODO: Alert and/or Button to be replaced
+    alert("Status has been changed."); // TODO: Alert and/or Button to be replaced
   }
 
   const [visible, setVisible] = useState(false);
 
-  const toggleOverlay = () => {
+  const toggleOverlay = ({task}) => {
+    console.log(task);
     setVisible(!visible);
   };
-
 
   // name, deadline, points, repeat, description, householdID
   var testTaskOne = new Task(
@@ -111,7 +111,7 @@ function TasksPage(props) {
 
   var testTaskTwo = new Task(
     "Walk the Dog",
-    Date.now() + 99999999,
+    999999,
     10, 
     null, 
     "Take Freddy around the neighborhood.", 
@@ -130,17 +130,30 @@ function TasksPage(props) {
 
   const Item = ({ task }) => (
     <View style={styles.item}>
-      <Text style={{ flex: 1, textAlign: "center" }}>
-        {task.points}
-      </Text>
-      <Text style={{ flex: 2, textAlign: "center" }} onPress={toggleOverlay}>
-        {task.name} {"\n"} Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
-      </Text>
-      <View style={{ flex: 1, justifyContent: "center", backgroundColor: 'blue' }}>
-        <TouchableHighlight onPress={onPressButton} underlayColor="aqua">
-          <View style={{ alignItems: 'center' }}>
-            <Text>Claim</Text>
-          </View>
+
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
+        <Image
+          source={require('../assets/hexagon.png')}
+          style={{ height: 50, width: 50 }}
+        />
+        <Text style={{position: 'absolute'}}>{task.points}</Text>
+      </View>
+
+      <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
+        <Text style={{ fontSize: 18 }} onPress={toggleOverlay}>
+          {task.name} {/* TODO: Add if statement to display time if less than 24 hours */}
+        </Text>
+        <Text style={{ fontSize: 13, color: '#db1414' }} onPress={toggleOverlay}>
+          Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
+        </Text>
+      </View>
+      
+      <View style={{ flex: 2, justifyContent: "center" }}>
+        <TouchableHighlight
+          style={styles.status}
+          onPress={onPressButton}
+          underlayColor='#96c7eb'>
+          <Text style={styles.statusText}>Claim</Text>
         </TouchableHighlight>
       </View>
     </View>
@@ -166,6 +179,7 @@ function TasksPage(props) {
 
       <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
         <Text>Hello testing</Text>
+        <Text>test</Text>
       </Overlay>
 
       <SectionList
@@ -204,13 +218,13 @@ function TasksPage(props) {
 
 const styles = StyleSheet.create({
   statusHeader: {
-    height: 80, // TODO: replace with relative positioning based on device
+    height: 70, // TODO: replace with relative positioning based on device
     justifyContent: "center",
     borderBottomWidth: 0.5,
     borderTopWidth: 0.5,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#6495ED",
+    backgroundColor: "#569dd1",
     opacity: 0.8,
   },
   statusHeaderText: {
@@ -223,14 +237,29 @@ const styles = StyleSheet.create({
     //padding: 20,
     //marginVertical: 8,
     //marginHorizontal: 16,
-    height: 60,
+    height: 70,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
   },
+  status: {
+    marginRight: 20,
+    marginLeft: 10,
+    //marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: '#2588cf',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  statusText: {
+    color: '#fff',
+    textAlign: 'center',
+  }
 });
 
 export default TasksPage;
