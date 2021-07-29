@@ -9,9 +9,17 @@ import "firebase/firestore";
 import config from "./config";
 import Test from "./app/screens/Test";
 import Drawer from "./app/screens/Drawer";
+<<<<<<< Updated upstream
 import { TaskPageClass } from "./app/screens/TaskPageClass";
 import { TasksPage2 } from "./app/screens/TasksPage2";
 
+=======
+import HouseholdPage2 from "./app/screens/HouseholdPage2";
+import { TasksPage2 } from "./app/screens/TasksPage2";
+import { HousePage3 } from "./app/screens/HouseHoldPage3";
+
+/*
+>>>>>>> Stashed changes
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
   authDomain: "chores-97427.firebaseapp.com",
@@ -43,8 +51,15 @@ export default function App() {
     //<TaskPageClass></TaskPageClass>
     <TasksPage2></TasksPage2>
     //<LoginPage></LoginPage>
-    //<HouseholdPage></HouseholdPage>
     //<Test></Test>
+<<<<<<< Updated upstream
+=======
+    // <SettingsPage></SettingsPage>
+    // <HouseholdPage></HouseholdPage>
+    // <HouseholdPage2></HouseholdPage2>
+    // <TasksPage2></TasksPage2>
+    <HousePage3></HousePage3>
+>>>>>>> Stashed changes
   );
 }
 

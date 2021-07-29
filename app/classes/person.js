@@ -1,6 +1,6 @@
 import config from "../../config";
-// import * as firebase from "firebase";
-// import "firebase/firestore";
+import * as firebase from "firebase";
+import "firebase/firestore";
 import Task from "./task";
 
 export default class Person {
@@ -18,6 +18,7 @@ export default class Person {
     this.profilePic = profilePic;
     this.householdID = householdID;
     this.points = points;
+    // this.tasks = this.getTasks();
   }
 
   /**
@@ -71,16 +72,12 @@ export default class Person {
     const db = firebase.firestore();
     var colRef = db.collection("/houses/" + this.householdID + "/Tasks");
 
-    const tasks = await colRef.get();
-
     //console.log(tasks);
     var allTasks = [];
     var allIDs = [];
     var snapshot = await colRef.get();
     snapshot.forEach((task) => {
-      var dataRef = db.doc("/houses/" + this.householdID + "/Tasks/" + task.id);
       allIDs.push(task.id);
-      console.log("first");
     });
 
     for (let i = 0; i < allIDs.length; i++) {
@@ -89,29 +86,12 @@ export default class Person {
       );
 
       var putIn = await dataRef.withConverter(Task.taskConverter).get();
+     // console.log("putin", putIn.data());
       var theData = putIn.data();
       if (theData["completedBy"] === this.personID) {
         allTasks.push(putIn.data());
       }
     }
-
-    /*
-      .then(async (querySnapshot) => {
-        await querySnapshot.forEach(async (doc) => {
-          console.log("first");
-          var dataRef = await db.doc(
-            "/houses/" + this.householdID + "/Tasks/" + doc.id
-          );
-          console.log("second");
-          var help = (
-            await dataRef.withConverter(Task.taskConverter).get()
-          ).data();
-          console.log("third");
-
-          allTasks.push(help);
-        });
-      });
-*/
     return allTasks;
   }
 }

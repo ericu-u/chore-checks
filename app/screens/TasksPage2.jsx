@@ -46,7 +46,10 @@ export class TasksPage2 extends React.Component {
     } else {
       firebase.app();
     }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     const db = firebase.firestore();
 
     // Firestore subscription. Listens to database for changes.

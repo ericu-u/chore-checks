@@ -20,7 +20,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 } else {
   firebase.app();
-}
 
 const db = firebase.firestore();
 var docRef;
