@@ -16,7 +16,13 @@ const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      drawerStyle={{ backgroundColor: "#e5e5e5" }}
+      drawerContentOptions={{
+        itemStyle: { marginVertical: 15 },
+        labelStyle: { fontSize: 15 },
+      }}
+    >
       {/* <Drawer.Screen
         name="Profile"
         component={ProfilePage}
@@ -76,6 +82,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 40,
     height: 40,
+    marginLeft: 15,
   },
   menuIcon: {
     marginLeft: 20,
@@ -111,6 +118,12 @@ export default function MenuPage() {
 //           ),
 //           headerStyle: {
 //             backgroundColor: "#2B88D8",
+//             shadowColor: "#656565",
+//             shadowOpacity: 10,
+//             shadowRadius: 10,
+//             shadowOffset: {
+//               height: 5,
+//             },
 //           },
 //         })}
 //       />
@@ -138,6 +151,12 @@ function TasksNavigator() {
           ),
           headerStyle: {
             backgroundColor: "#2B88D8",
+            shadowColor: "#656565",
+            shadowOpacity: 10,
+            shadowRadius: 10,
+            shadowOffset: {
+              height: 5,
+            },
           },
         })}
       />
@@ -165,6 +184,12 @@ function TasksNavigator() {
 //           ),
 //           headerStyle: {
 //             backgroundColor: "#2B88D8",
+//             shadowColor: "#656565",
+//             shadowOpacity: 10,
+//             shadowRadius: 10,
+//             shadowOffset: {
+//               height: 5,
+//             },
 //           },
 //         })}
 //       />
@@ -192,6 +217,12 @@ function HouseholdNavigator() {
           ),
           headerStyle: {
             backgroundColor: "#2B88D8",
+            shadowColor: "#656565",
+            shadowOpacity: 10,
+            shadowRadius: 10,
+            shadowOffset: {
+              height: 5,
+            },
           },
         })}
       />
@@ -219,6 +250,12 @@ function HouseholdNavigator() {
 //           ),
 //           headerStyle: {
 //             backgroundColor: "#2B88D8",
+//             shadowColor: "#656565",
+//             shadowOpacity: 10,
+//             shadowRadius: 10,
+//             shadowOffset: {
+//               height: 5,
+//             },
 //           },
 //         })}
 //       />
