@@ -6,11 +6,11 @@ import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MaterialIcons } from "@expo/vector-icons";
 
-// import ProfilePage from "./ProfilePage";
+import ProfilePage from "./ProfilePage";
 import TasksPage from "./TasksPage";
-// import ChatboxPage from "./ChatboxPage";
+import ChatboxPage from "./ChatboxPage";
 import HouseholdPage from "./HouseholdPage";
-// import SettingsPage from "./SettingsPage";
+import SettingsPage from "./SettingsPage";
 
 const Drawer = createDrawerNavigator();
 
@@ -23,15 +23,18 @@ function MyDrawer() {
         labelStyle: { fontSize: 15 },
       }}
     >
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name="Profile"
-        component={ProfilePage}
-        // options={{
-        //   drawerIcon: () => (
-        //   <Image source={require("../assets/question-mark.png")} style={styles.icon} />
-        //   )
-        // }}
-      /> */}
+        component={ProfileNavigator}
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={require("../assets/question-mark.png")}
+              style={styles.icon}
+            />
+          ),
+        }}
+      />
       <Drawer.Screen
         name="Tasks"
         component={TasksNavigator}
@@ -44,15 +47,15 @@ function MyDrawer() {
           ),
         }}
       />
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name="Chatbox"
         component={ChatboxNavigator}
-        // options={{
-        //   drawerIcon: () => (
-        //   <Image source={require("../assets/chat.png")} style={styles.icon} />
-        //   )
-        // }}
-      /> */}
+        options={{
+          drawerIcon: () => (
+            <Image source={require("../assets/chat.png")} style={styles.chatIcon} />
+          ),
+        }}
+      />
       <Drawer.Screen
         name="Household"
         component={HouseholdNavigator}
@@ -65,15 +68,18 @@ function MyDrawer() {
           ),
         }}
       />
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name="Settings"
         component={SettingsNavigator}
-        // options={{
-        //   drawerIcon: () => (
-        //   <Image source={require("../assets/settings.png")} style={styles.icon} />
-        //   )
-        // }}
-      /> */}
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={require("../assets/settings.png")}
+              style={styles.icon}
+            />
+          ),
+        }}
+      />
     </Drawer.Navigator>
   );
 }
@@ -84,6 +90,7 @@ const styles = StyleSheet.create({
     height: 40,
     marginLeft: 15,
   },
+  chatIcon: { width: 40, height: 37, marginLeft: 15 },
   menuIcon: {
     marginLeft: 20,
   },
@@ -98,38 +105,38 @@ export default function MenuPage() {
 }
 
 // stack navigators
-// const ProfileStack = createStackNavigator();
+const ProfileStack = createStackNavigator();
 
-// function ProfileNavigator() {
-//   return (
-//     <ProfileStack.Navigator>
-//       <ProfileStack.Screen
-//         name="Profile"
-//         component={ProfilePage}
-//         options={({ navigation }) => ({
-//           title: "Profile",
-//           headerLeft: () => (
-//             <MaterialIcons
-//               style={styles.menuIcon}
-//               name="menu"
-//               size={30}
-//               onPress={() => navigation.toggleDrawer()}
-//             />
-//           ),
-//           headerStyle: {
-//             backgroundColor: "#2B88D8",
-//             shadowColor: "#656565",
-//             shadowOpacity: 10,
-//             shadowRadius: 10,
-//             shadowOffset: {
-//               height: 5,
-//             },
-//           },
-//         })}
-//       />
-//     </ProfileStack.Navigator>
-//   );
-// }
+function ProfileNavigator() {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen
+        name="Profile"
+        component={ProfilePage}
+        options={({ navigation }) => ({
+          title: "Profile",
+          headerLeft: () => (
+            <MaterialIcons
+              style={styles.menuIcon}
+              name="menu"
+              size={30}
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+          headerStyle: {
+            backgroundColor: "#2B88D8",
+            shadowColor: "#656565",
+            shadowOpacity: 10,
+            shadowRadius: 10,
+            shadowOffset: {
+              height: 5,
+            },
+          },
+        })}
+      />
+    </ProfileStack.Navigator>
+  );
+}
 
 const TasksStack = createStackNavigator();
 
@@ -164,38 +171,38 @@ function TasksNavigator() {
   );
 }
 
-// const ChatboxStack = createStackNavigator();
+const ChatboxStack = createStackNavigator();
 
-// function ChatboxNavigator() {
-//   return (
-//     <ChatboxStack.Navigator>
-//       <ChatboxStack.Screen
-//         name="Chatbox"
-//         component={ChatboxPage}
-//         options={({ navigation }) => ({
-//           title: "Chatbox",
-//           headerLeft: () => (
-//             <MaterialIcons
-//               style={styles.menuIcon}
-//               name="menu"
-//               size={30}
-//               onPress={() => navigation.toggleDrawer()}
-//             />
-//           ),
-//           headerStyle: {
-//             backgroundColor: "#2B88D8",
-//             shadowColor: "#656565",
-//             shadowOpacity: 10,
-//             shadowRadius: 10,
-//             shadowOffset: {
-//               height: 5,
-//             },
-//           },
-//         })}
-//       />
-//     </ChatboxStack.Navigator>
-//   );
-// }
+function ChatboxNavigator() {
+  return (
+    <ChatboxStack.Navigator>
+      <ChatboxStack.Screen
+        name="Chatbox"
+        component={ChatboxPage}
+        options={({ navigation }) => ({
+          title: "Chatbox",
+          headerLeft: () => (
+            <MaterialIcons
+              style={styles.menuIcon}
+              name="menu"
+              size={30}
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+          headerStyle: {
+            backgroundColor: "#2B88D8",
+            shadowColor: "#656565",
+            shadowOpacity: 10,
+            shadowRadius: 10,
+            shadowOffset: {
+              height: 5,
+            },
+          },
+        })}
+      />
+    </ChatboxStack.Navigator>
+  );
+}
 
 const HouseholdStack = createStackNavigator();
 
@@ -230,35 +237,35 @@ function HouseholdNavigator() {
   );
 }
 
-// const SettingsStack = createStackNavigator();
+const SettingsStack = createStackNavigator();
 
-// function SettingsNavigator() {
-//   return (
-//     <SettingsStack.Navigator>
-//       <SettingsStack.Screen
-//         name="Settings"
-//         component={SettingsPage}
-//         options={({ navigation }) => ({
-//           title: "Settings",
-//           headerLeft: () => (
-//             <MaterialIcons
-//               style={styles.menuIcon}
-//               name="menu"
-//               size={30}
-//               onPress={() => navigation.toggleDrawer()}
-//             />
-//           ),
-//           headerStyle: {
-//             backgroundColor: "#2B88D8",
-//             shadowColor: "#656565",
-//             shadowOpacity: 10,
-//             shadowRadius: 10,
-//             shadowOffset: {
-//               height: 5,
-//             },
-//           },
-//         })}
-//       />
-//     </SettingsStack.Navigator>
-//   );
-// }
+function SettingsNavigator() {
+  return (
+    <SettingsStack.Navigator>
+      <SettingsStack.Screen
+        name="Settings"
+        component={SettingsPage}
+        options={({ navigation }) => ({
+          title: "Settings",
+          headerLeft: () => (
+            <MaterialIcons
+              style={styles.menuIcon}
+              name="menu"
+              size={30}
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+          headerStyle: {
+            backgroundColor: "#2B88D8",
+            shadowColor: "#656565",
+            shadowOpacity: 10,
+            shadowRadius: 10,
+            shadowOffset: {
+              height: 5,
+            },
+          },
+        })}
+      />
+    </SettingsStack.Navigator>
+  );
+}
