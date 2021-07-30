@@ -1,14 +1,12 @@
 import React from "react";
 import {
-  SafeAreaView,
   View,
   Text,
   StyleSheet,
   ImageBackground,
-  ScrollView,
+  Image,
   TouchableHighlight,
-  Button,
-  FlatList,
+  Modal,
   StatusBar,
   SectionList,
 } from "react-native";
@@ -69,6 +67,8 @@ export class TasksPage2 extends React.Component {
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
 
+  
+
   render() {
     // Returns what we want the user to see
 
@@ -91,7 +91,7 @@ export class TasksPage2 extends React.Component {
         <SectionList
           sections={[{ title: "Task names", data: this.state.tasks }]}
           keyExtractor={(item, index) => item + index}
-          renderItem={({ item }) => <Item title={item} />}
+          renderItem={({ item }) => <Item task={item} />}
           renderSectionHeader={({ section: { title } }) => (
             <View style={styles.statusHeader}>
               <View
@@ -123,29 +123,51 @@ export class TasksPage2 extends React.Component {
   }
 }
 
-const Item = ({ title }) => (
+const Item = ({ task }) => (
   <View style={styles.item}>
-    <Text style={{ flex: 1, backgroundColor: "pink", textAlign: "center" }}>
-      {title.points}
-    </Text>
-    <Text style={{ flex: 2, backgroundColor: "aqua", textAlign: "center" }}>
-      {title.name}
-    </Text>
 
-    <View style={{ flex: 1, backgroundColor: "gold" }}>
-      <Button title="Button"></Button>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
+      <Image
+        source={require('../assets/hexagon.png')}
+        style={{ height: 50, width: 50 }}
+      />
+      <Text style={{position: 'absolute'}}>{task.points}</Text>
+    </View>
+
+    <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
+      <Text style={{ fontSize: 18 }}>
+        {task.name} {/* TODO: Add if statement to display time if less than 24 hours */}
+      </Text>
+      <Text style={{ fontSize: 13, color: '#db1414' }}>
+        Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
+      </Text>
+    </View>
+    
+    <View style={{ flex: 2, justifyContent: "center" }}>
+      <TouchableHighlight
+        style={styles.takenStatus}
+        onPress={onPressButton}
+        underlayColor='#96c7eb'>
+        <Text style={styles.statusText}>Taken</Text>
+      </TouchableHighlight>
     </View>
   </View>
 );
 
+function onPressButton() {
+  alert("Status has been changed."); // TODO: Alert and/or Button to be replaced
+}
+
 const styles = StyleSheet.create({
   statusHeader: {
-    height: 80, // TODO: replace with relative positioning based on device
+    height: 70, // TODO: replace with relative positioning based on device
     justifyContent: "center",
     borderBottomWidth: 0.5,
     borderTopWidth: 0.5,
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#569dd1",
+    opacity: 0.8,
   },
   statusHeaderText: {
     fontSize: 25,
@@ -157,11 +179,50 @@ const styles = StyleSheet.create({
     //padding: 20,
     //marginVertical: 8,
     //marginHorizontal: 16,
-    height: 60,
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
+  },
+  claimStatus: {
+    marginRight: 20,
+    marginLeft: 10,
+    //marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: '#2588cf',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  statusText: {
+    color: '#fff',
+    textAlign: 'center',
+  },
+  claimedStatus: {
+    marginRight: 20,
+    marginLeft: 10,
+    //marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: 'gray',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  takenStatus: {
+    marginRight: 20,
+    marginLeft: 10,
+    //marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
   },
 });
 
