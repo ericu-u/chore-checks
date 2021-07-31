@@ -77,24 +77,6 @@ export default class Household {
       var putIn = await dataRef.withConverter(Task.taskConverter).get();
       allTasks.push(putIn.data());
     }
-
-    /*
-      .then(async (querySnapshot) => {
-        await querySnapshot.forEach(async (doc) => {
-          console.log("first");
-          var dataRef = await db.doc(
-            "/houses/" + this.householdID + "/Tasks/" + doc.id
-          );
-          console.log("second");
-          var help = (
-            await dataRef.withConverter(Task.taskConverter).get()
-          ).data();
-          console.log("third");
-
-          allTasks.push(help);
-        });
-      });
-*/
     return allTasks;
   }
 
@@ -137,23 +119,6 @@ export default class Household {
       allPpl.push(putIn.data());
     }
 
-    /*
-      .then(async (querySnapshot) => {
-        await querySnapshot.forEach(async (doc) => {
-          console.log("first");
-          var dataRef = await db.doc(
-            "/houses/" + this.householdID + "/Tasks/" + doc.id
-          );
-          console.log("second");
-          var help = (
-            await dataRef.withConverter(Task.taskConverter).get()
-          ).data();
-          console.log("third");
-
-          allTasks.push(help);
-        });
-      });
-*/
     return allPpl;
   }
 }
