@@ -50,8 +50,8 @@ export default function App() {
     // <SettingsPage></SettingsPage>
     // <HouseholdPage></HouseholdPage>
     // <HouseholdPage2></HouseholdPage2>
-    <TasksPage2></TasksPage2>
-    // <HousePage3></HousePage3>
+    // <TasksPage2></TasksPage2>
+    <HousePage3></HousePage3>
   );
 }
 

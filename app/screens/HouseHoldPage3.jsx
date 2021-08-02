@@ -263,8 +263,13 @@ const Item = ({ title, index, tasksDone }) => (
         {title.name}
       </Text>
       <Text style={{ textAlign: "center" }}>Points: {title.points}</Text>
-      <NumTasks index={index} tasksDone={tasksDone}></NumTasks>
-      <Text style={{ textAlign: "center" }}>Completion Rate: Placeholder</Text>
+      <Text style={{ textAlign: "center" }}>
+        Tasks Completed: {title.tasksCompleted}
+      </Text>
+
+      <Text style={{ textAlign: "center" }}>
+        Completion Rate: {title.successRate}
+      </Text>
     </View>
   </View>
 );
