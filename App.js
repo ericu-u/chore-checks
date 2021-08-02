@@ -10,8 +10,7 @@ import config from "./config";
 import Test from "./app/screens/Test";
 import SettingsPage from "./app/screens/SettingsPage";
 import Drawer from "./app/screens/Drawer";
-
-
+import { HousePage3 } from "./app/screens/HouseHoldPage3";
 
 /*
 var firebaseConfig = {
@@ -37,9 +36,10 @@ export default function App() {
     //<Drawer></Drawer>
     //<TasksPage></TasksPage>
     //<LoginPage></LoginPage>
-    //<HouseholdPage></HouseholdPage>
+    // <HouseholdPage></HouseholdPage>
     //<Test></Test>
-    <SettingsPage></SettingsPage>
+    //<SettingsPage></SettingsPage>
+    <HousePage3></HousePage3>
   );
 }
 
