@@ -38,7 +38,7 @@ var docRef = db.doc("/houses/h38219");
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
-    // <Drawer></Drawer>
+    <Drawer></Drawer>
     // <TasksPage></TasksPage>
     //<TaskPageClass></TaskPageClass>
     // <TasksPage2></TasksPage2>
@@ -47,7 +47,7 @@ export default function App() {
     // <SettingsPage></SettingsPage>
     // <HouseholdPage></HouseholdPage>
     // <HouseholdPage2></HouseholdPage2>
-     <TasksPage2></TasksPage2>
+    // <TasksPage2></TasksPage2>
     // <HousePage3></HousePage3>
   );
 }
