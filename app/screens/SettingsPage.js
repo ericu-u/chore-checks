@@ -47,11 +47,6 @@ export class SettingsPage extends React.Component {
             style={{flex:1}}
             source={require("../assets/background-gradient.jpg")}
         >
-            <Header
-                leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'Settings', style: { color: '#fff' } }}
-            />
-
         
         <View style={styles.settingsBox}>
             <Text style={styles.textAlign}>Task Notifications</Text>
