@@ -8,6 +8,7 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 import config from "./config";
 import Test from "./app/screens/Test";
+import SettingsPage from "./app/screens/SettingsPage";
 import Drawer from "./app/screens/Drawer";
 import HouseholdPage2 from "./app/screens/HouseholdPage2";
 import { TasksPage2 } from "./app/screens/TasksPage2";
