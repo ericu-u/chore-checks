@@ -32,8 +32,11 @@ if (!firebase.apps.length) {
 }
 
 const db = firebase.firestore();
-
-var docRef = db.doc("/houses/h38219");
+console.log("refreshed");
+var docRef = db.doc("/messages/XBdku2O78W9iwkbev3y2");
+docRef.get().then((doc) => {
+  console.log(doc.data());
+});
 
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see

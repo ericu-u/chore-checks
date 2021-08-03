@@ -5,20 +5,33 @@ import Task from "./task";
 
 export default class Person {
   /**
-   *
    * @param {String} personID The id of the user
    * @param {String} name The name of the user
    * @param {String} profilePic A url of the profilePic of the user
    * @param {String} householdID The id of the household the person is in
    * @param {int} points The number of points the person has
+   * @param {int} tasksCompleted The number of tasks the person completed
+   * @param {int} tasksFailed The number of tasks the person failed
+   * @param {String} successRate Percentage of tasks they finished
    */
-  constructor(personID, name, profilePic, householdID, points) {
+  constructor(
+    personID,
+    name,
+    profilePic,
+    householdID,
+    points,
+    tasksCompleted,
+    tasksFailed,
+    successRate
+  ) {
     this.personID = personID;
     this.name = name;
     this.profilePic = profilePic;
     this.householdID = householdID;
     this.points = points;
-    // this.tasks = this.getTasks();
+    this.tasksCompleted = tasksCompleted;
+    this.tasksFailed = tasksFailed;
+    this.successRate = successRate;
   }
 
   /**
@@ -32,6 +45,9 @@ export default class Person {
         profilePic: Person.profilePic,
         householdID: Person.householdID,
         points: Person.points,
+        tasksCompleted: Person.tasksCompleted,
+        tasksFailed: Person.tasksFailed,
+        successRate: Person.successRate,
       };
     },
 
@@ -42,7 +58,10 @@ export default class Person {
         data.name,
         data.profilePic,
         data.householdID,
-        data.points
+        data.points,
+        data.tasksCompleted,
+        data.tasksFailed,
+        data.successRate
       );
     },
   };
@@ -86,7 +105,7 @@ export default class Person {
       );
 
       var putIn = await dataRef.withConverter(Task.taskConverter).get();
-     // console.log("putin", putIn.data());
+      // console.log("putin", putIn.data());
       var theData = putIn.data();
       if (theData["completedBy"] === this.personID) {
         allTasks.push(putIn.data());
