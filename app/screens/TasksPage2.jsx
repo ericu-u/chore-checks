@@ -16,6 +16,8 @@ import "firebase/firestore";
 import Household from "../classes/household";
 import Task from "../classes/task";
 import { Header } from "react-native-elements";
+import Overlay from 'react-native-modal-overlay';
+import _, { map } from 'underscore';
 
 export class TasksPage2 extends React.Component {
   constructor(props) {
@@ -23,6 +25,7 @@ export class TasksPage2 extends React.Component {
     this.state = {
       tasks: [], // List of task objects
       unsubscribe: null, // Firebase subscription. Calling this method will mean we stop listening to firebase for updates whenever the database changes
+      sectionedTasks: [],
     };
   }
 
@@ -58,14 +61,30 @@ export class TasksPage2 extends React.Component {
         });
         console.log("updated tasks");
         this.setState({ tasks: tempTasks }); // Makes the state.tasks equal tempTasks
+        var activeTasks = _.where(this.state.tasks, {completed: null});
+        var completedTasks = _.reject(this.state.tasks, function(task){ return task.completed != null; });
+        var sections = [{
+          title: 'Active',
+          data: activeTasks
+        }, {
+          title: 'Inactive',
+          data: completedTasks
+        }];
+        console.log(sections);
+        this.setState({ sectionedTasks: sections});
       });
-
     this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
   }
   componentWillUnmount() {
     // This method runs whenever we stop rendering the component
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
+
+  state = {
+    modalVisible: true, 
+  }
+  
+  onClose = () => this.setState({ modalVisible: false});
 
   
 
@@ -88,8 +107,12 @@ export class TasksPage2 extends React.Component {
           centerComponent={{ text: "Tasks", style: { color: "#fff" } }}
         />
 
+        <Overlay visible={this.state.modalVisible} onClose={this.onClose} closeOnTouchOutside>
+          <Text>Hello testing</Text>
+        </Overlay>
+
         <SectionList
-          sections={[{ title: "Task names", data: this.state.tasks }]}
+          sections={this.state.sectionedTasks }
           keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => <Item task={item} />}
           renderSectionHeader={({ section: { title } }) => (
@@ -123,6 +146,8 @@ export class TasksPage2 extends React.Component {
   }
 }
 
+
+
 const Item = ({ task }) => (
   <View style={styles.item}>
 
@@ -136,7 +161,7 @@ const Item = ({ task }) => (
 
     <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
       <Text style={{ fontSize: 18 }}>
-        {task.name} {/* TODO: Add if statement to display time if less than 24 hours */}
+        {task.name}
       </Text>
       <Text style={{ fontSize: 13, color: '#db1414' }}>
         Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
