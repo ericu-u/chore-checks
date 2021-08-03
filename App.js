@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 import LoginPage from "./app/screens/LoginPage";
 import TasksPage from "./app/screens/TasksPage";
 import HouseholdPage from "./app/screens/HouseholdPage";
+import ChatboxPage from "./app/screens/ChatboxPage";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import config from "./config";
@@ -44,15 +45,16 @@ export default function App() {
   return (
     <Drawer></Drawer>
     // <TasksPage></TasksPage>
-    //<TaskPageClass></TaskPageClass>
+    // <TaskPageClass></TaskPageClass>
     // <TasksPage2></TasksPage2>
-    //<LoginPage></LoginPage>
-    //<Test></Test>
+    // <LoginPage></LoginPage>
+    // <Test></Test>
     // <SettingsPage></SettingsPage>
     // <HouseholdPage></HouseholdPage>
     // <HouseholdPage2></HouseholdPage2>
     // <TasksPage2></TasksPage2>
     // <HousePage3></HousePage3>
+    // <ChatboxPage></ChatboxPage>
   );
 }
 
