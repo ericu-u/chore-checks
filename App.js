@@ -38,8 +38,8 @@ export default function App() {
     //<LoginPage></LoginPage>
     // <HouseholdPage></HouseholdPage>
     //<Test></Test>
-    //<SettingsPage></SettingsPage>
-    <HousePage3></HousePage3>
+    <SettingsPage></SettingsPage>
+    //<HousePage3></HousePage3>
   );
 }
 

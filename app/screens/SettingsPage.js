@@ -1,28 +1,24 @@
 import React, {useState} from 'react';
 import { render } from 'react-dom';
 import { ScrollView } from 'react-native';
-import { SafeAreaView, View, Text, StyleSheet, Image, StatusBar, ImageBackground, Button, TouchableHighlight, Switch } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, Image, StatusBar, ImageBackground, Button, TouchableHighlight, Switch, TouchableOpacity } from 'react-native';
 import { Header, withTheme } from 'react-native-elements';
+import { sub } from 'react-native-reanimated';
+import {moderateScale} from 'react-native-size-matters'
 
 
 export class SettingsPage extends React.Component {
+    /*Variables for specific the notifications*/
     state={
         TaskNotifcations:false,
         TnApproach:false,
         TnDeadlinePass:false,
-        TnTaskIn:false,
+        TnTaskInc:false,
         TnHousemateComplete:false,
         ChatNotifcations:false,
     }
-    /*toggleSwitch = (value) => {
-        this.setState({TaskNotifcations:value})
-        this.setState({TnApproach:value})
-        this.setState({TnDeadlinePass:value})
-        this.setState({TnTaskIn:value})
-        this.setState({TnHousemateComplete:value})
-        this.setState({ChatNotifcations:value})
 
-    }*/
+    /*Allows true or false of specific settings to change*/
     toggleTaskNotifcations = (value) => {
         this.setState({TaskNotifcations:value})
     }
@@ -43,59 +39,100 @@ export class SettingsPage extends React.Component {
     }
     render(){
     return (
-        <ImageBackground
-            style={{flex:1}}
-            source={require("../assets/background-gradient.jpg")}
-        >
-            <Header
-                leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'Settings', style: { color: '#fff' } }}
-            />
+    <ImageBackground
+        style={{flex:1}}
+        source={require("../assets/background-gradient.jpg")}
+    >
+        <Header
+            leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
+            centerComponent={{ text: 'Settings', style: { color: '#fff' } }}
+        />
 
-        
+        <SafeAreaView>
         <View style={styles.settingsBox}>
-            <Text style={styles.textAlign}>Task Notifications</Text>
+
+            {/*Task Notifications button setting*/}
+            <View style={styles.textAlign}>
+            <Text style={{fontSize:24}}>Task Notifications</Text>
                 <View style={styles.largeButton}>
-                <Switch onValueChange={this.toggleTaskNotifcations}
-                    value={this.state.TaskNotifcations}/>
+                <Switch 
+                onValueChange={this.toggleTaskNotifcations}
+                value={this.state.TaskNotifcations}/>
                 </View>
+            </View>
 
-            <Text style={styles.subTextAlign}>Approaching deadline</Text>
-            <View style={styles.largeButton}>
-                <Switch onValueChange={this.toggleTnApproach}
-                    value={this.state.TnApproach}/>
+            {/*Approaching deadline button setting*/}
+            <View style={styles.subTextAlign}>
+            <Text>Approaching deadline</Text>
+                <View style={styles.smallButton}>
+                <Switch 
+                style={{ transform: [{ scaleX: .7 }, { scaleY: .7 }] }}
+                onValueChange={this.toggleTnApproach}
+                value={this.state.TnApproach}/>
                 </View>
+            </View>
 
-            <Text style={styles.subTextAlign}>Deadline passed</Text>
-            <View style={styles.largeButton}>
-                <Switch onValueChange={this.toggleTnDeadlinePass}
-                    value={this.state.TnDeadlinePass}/>
+            {/*Deadline passed button setting*/}
+            <View style={styles.subTextAlign}>
+            <Text>Deadline passed</Text>
+                <View style={styles.smallButton}>
+                <Switch 
+                style={{ transform: [{ scaleX: .7 }, { scaleY: .7 }] }}
+                onValueChange={this.toggleTnDeadlinePass}
+                value={this.state.TnDeadlinePass}/>
                 </View>
+            </View>
 
-            <Text style={styles.subTextAlign}>Task incomplete</Text>
-            <View style={styles.largeButton}>
-                <Switch onValueChange={this.toggleTnTaskInc}
-                    value={this.state.TnTaskInc}/>
+            {/*Task incomplete button setting*/}
+            <View style={styles.subTextAlign}>
+            <Text>Task incomplete</Text>
+                <View style={styles.smallButton}>
+                <Switch 
+                style={{ transform: [{ scaleX: .7 }, { scaleY: .7 }] }}
+                onValueChange={this.toggleTnTaskInc}
+                value={this.state.TnTaskInc}/>
                 </View>
+            </View>
 
-            <Text style={styles.subTextAlign}>Housemate completion</Text>
-            <View style={styles.largeButton}>
-                <Switch onValueChange={this.toggleTnHousemateComplete}
-                    value={this.state.TnHousemateComplete}/>
+            {/*Housemate completion button setting*/}
+            <View style={styles.subTextAlign}>
+            <Text>Housemate completion</Text>
+                <View style={styles.smallButton}>
+                <Switch 
+                style={{ transform: [{ scaleX: .7 }, { scaleY: .7 }] }}
+                onValueChange={this.toggleTnHousemateComplete}
+                value={this.state.TnHousemateComplete}/>
                 </View>
-
-            <Text style={styles.textAlign}>Chat Notifications</Text>
-            <View style={styles.largeButton}>
+            </View>
+            
+            {/*Chat notifications*/}
+            <View style={styles.textAlign}>
+            <Text style={{fontSize:24}}>Chat Notifications</Text>
+                <View style={styles.largeButton}>
                 <Switch onValueChange={this.toggleChatNotifications}
                     value={this.state.ChatNotifications}/>
                 </View>
-            
-            <Text style={styles.bottomTextStart}>Change Household</Text>
-            <Text style={styles.bottomTextResume}>Sign Out</Text>
-        </View>
+            </View>
 
-        </ImageBackground>
-        
+        </View>
+        </SafeAreaView>
+        <SafeAreaView style={styles.bottomTextStart}>
+
+            {/*Change Household button link*/}
+            <Button
+                title="Change Household"
+                color="black"
+                onPress={() => Alert.alert('Button with adjusted color pressed')}
+            />  
+
+            {/*Sign out button*/}  
+            <Button
+                color="red"
+                onPress={() => Alert.alert('Button with adjusted color pressed')}
+                title = "Sign Out">
+            </Button>        
+            </SafeAreaView>
+    </ImageBackground>
     );
 }
 }
@@ -106,7 +143,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#52a7d1',
     },
     statusHeader: {
-        //height: "30%", //replace with relative positioning based on device
         justifyContent: 'center',
         marginTop: "6%",
         marginBottom: "6%",
@@ -117,7 +153,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     settingsBox: {
-        //justifyContent: 'space-evenly',
         backgroundColor: 'white',
         marginLeft: "10%",
         marginRight: "10%",
@@ -125,7 +160,7 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         borderColor: 'black',
         borderWidth: 1,
-        height: "84%",
+        height: "93%",
         paddingTop:"2%",
     },
 
@@ -133,19 +168,30 @@ const styles = StyleSheet.create({
         paddingTop: "3%",
         fontSize:24,
         paddingLeft: "8%",
+        flexDirection: 'row',
     },
 
     subTextAlign: {
         paddingTop: "3%",
         fontSize: 18,
         paddingLeft: "12%",
+        flexDirection: 'row',
     },
 
     bottomTextStart: {
-        textAlign: 'center',
-        marginTop: "128%",
-        paddingBottom: "3%",
-        fontSize: 30,
+        position:'absolute',
+        alignSelf: 'center',
+        //textAlign: 'center',
+        //paddingBottom: "3%",
+        //fontSize: 30,
+        //paddingTop: "90%",
+        //marginTop: "100%",
+        //height: "90%",
+        alignItems: 'center',
+        //alignContent: 'flex-end',
+        //justifyContent: 'center',
+        //marginLeft:"25%",
+        bottom:"4%",
     },
 
     bottomTextResume: {
@@ -154,16 +200,19 @@ const styles = StyleSheet.create({
          color: 'red',
     },
     largeButton: {
-        //position: 'absolute',
-        flex: 1,
-        //backgroundColor: 'white',
+        //flex: 1,
+        position:'absolute',
         alignItems: 'center',
-        justifyContent: 'center',
-        marginLeft: "70%",
-        //marginBottom: "4%",
-        //paddingBottom:"2%"
-        
-    }
+        marginLeft: "85%",
+        paddingTop: "4%"
+    },
+    smallButton: {
+        //flex: 1,
+        position:'absolute',
+        alignItems: 'center',
+        marginLeft: "90%",
+        paddingTop: "2%",
+    },
 })
 
 export default SettingsPage; 
