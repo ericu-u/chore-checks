@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Button,
   View,
   Text,
   StyleSheet,
@@ -9,6 +10,8 @@ import {
   Modal,
   StatusBar,
   SectionList,
+  Pressable,
+  FlatList
 } from "react-native";
 import config from "../../config";
 import * as firebase from "firebase";
@@ -16,6 +19,8 @@ import "firebase/firestore";
 import Household from "../classes/household";
 import Task from "../classes/task";
 import { Header } from "react-native-elements";
+import Overlay from 'react-native-modal-overlay';
+import _, { map } from 'underscore';
 
 export class TasksPage2 extends React.Component {
   constructor(props) {
@@ -23,6 +28,8 @@ export class TasksPage2 extends React.Component {
     this.state = {
       tasks: [], // List of task objects
       unsubscribe: null, // Firebase subscription. Calling this method will mean we stop listening to firebase for updates whenever the database changes
+      sectionedTasks: [],
+      modalVisible: true, 
     };
   }
 
@@ -58,8 +65,17 @@ export class TasksPage2 extends React.Component {
         });
         console.log("updated tasks");
         this.setState({ tasks: tempTasks }); // Makes the state.tasks equal tempTasks
+        var activeTasks = _.where(this.state.tasks, {completed: null});
+        var completedTasks = _.reject(this.state.tasks, function(task){ return task.completed != null; });
+        var sections = [{
+          title: 'Active',
+          data: activeTasks
+        }, {
+          title: 'Inactive',
+          data: completedTasks
+        }];
+        this.setState({ sectionedTasks: sections});
       });
-
     this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
   }
   componentWillUnmount() {
@@ -67,7 +83,13 @@ export class TasksPage2 extends React.Component {
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
 
+  state = {
+    modalVisible: true, 
+  }
   
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+  }
 
   render() {
     // Returns what we want the user to see
@@ -88,8 +110,38 @@ export class TasksPage2 extends React.Component {
           centerComponent={{ text: "Tasks", style: { color: "#fff" } }}
         />
 
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalHeader}>Task Name Here</Text>
+              <FlatList
+                data={[
+                  {key: 'Task Property 1'},
+                  {key: 'Task Property 2'},
+                  {key: 'Task Property 3'},
+                  {key: 'Task Property 4'},
+                  {key: 'Task Property 5'},
+                  {key: 'Task Property 6'},
+                ]}
+                renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left' }}>{item.key}</Text>}
+              />
+              <View style={{ position: 'absolute', bottom: 10 }}>
+                <Button
+                  style={styles.modalButton}
+                  onPress={() => this.setModalVisible(!this.state.modalVisible)}
+                  title="Close"
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>
+
         <SectionList
-          sections={[{ title: "Task names", data: this.state.tasks }]}
+          sections={this.state.sectionedTasks }
           keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => <Item task={item} />}
           renderSectionHeader={({ section: { title } }) => (
@@ -123,6 +175,8 @@ export class TasksPage2 extends React.Component {
   }
 }
 
+
+
 const Item = ({ task }) => (
   <View style={styles.item}>
 
@@ -135,9 +189,15 @@ const Item = ({ task }) => (
     </View>
 
     <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
-      <Text style={{ fontSize: 18 }}>
-        {task.name} {/* TODO: Add if statement to display time if less than 24 hours */}
+      <Pressable
+          style={[styles.button, styles.buttonOpen]}
+          onPress={() => this.setModalVisible(true)}
+        >
+          <Text style={{ fontSize: 18 }} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
+        {task.name}
       </Text>
+        </Pressable>
+      
       <Text style={{ fontSize: 13, color: '#db1414' }}>
         Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
       </Text>
@@ -145,7 +205,7 @@ const Item = ({ task }) => (
     
     <View style={{ flex: 2, justifyContent: "center" }}>
       <TouchableHighlight
-        style={styles.takenStatus}
+        style={styles.claimStatus}
         onPress={onPressButton}
         underlayColor='#96c7eb'>
         <Text style={styles.statusText}>Taken</Text>
@@ -159,6 +219,75 @@ function onPressButton() {
 }
 
 const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  claimStatus: {
+    marginRight: 20,
+    marginLeft: 10,
+    //marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: '#2588cf',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  claimedStatus: {
+    marginRight: 20,
+    marginLeft: 10,
+    //marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: 'gray',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+  },
+  item: {
+    flexDirection: "row",
+    //padding: 20,
+    //marginVertical: 8,
+    //marginHorizontal: 16,
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalButton: {
+    borderRadius: 20,
+    padding: 10,
+    margin: 30,
+    elevation: 2,
+    position: 'absolute',
+  },
+  modalHeader: {
+    fontSize: 30,
+    textAlign: "center"
+  },
+  modalView: {
+    margin: 20,
+    height: 400,
+    width: 300,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
   statusHeader: {
     height: 70, // TODO: replace with relative positioning based on device
     justifyContent: "center",
@@ -174,44 +303,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: "100%",
   },
-  item: {
-    flexDirection: "row",
-    //padding: 20,
-    //marginVertical: 8,
-    //marginHorizontal: 16,
-    height: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  claimStatus: {
-    marginRight: 20,
-    marginLeft: 10,
-    //marginTop: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: '#2588cf',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'black',
-  },
   statusText: {
     color: '#fff',
     textAlign: 'center',
-  },
-  claimedStatus: {
-    marginRight: 20,
-    marginLeft: 10,
-    //marginTop: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: 'gray',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'black',
   },
   takenStatus: {
     marginRight: 20,
