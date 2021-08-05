@@ -16,6 +16,7 @@
     "@use-expo/font": "^2.0.0",
     "expo": "~42.0.1",
     "expo-font": "~9.2.1",
+    "expo-google-app-auth": "^8.2.2",
     "expo-status-bar": "~1.0.4",
     "faker": "^5.5.3",
     "firebase": "^8.8.0",
@@ -31,7 +32,8 @@
     "react-native-reanimated": "^2.2.0",
     "react-native-screens": "^3.4.0",
     "react-native-web": "~0.13.12",
-    "underscore": "^1.13.1"
+    "underscore": "^1.13.1",
+    "react-navigation": "^3.0.9"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
