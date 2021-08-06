@@ -12,6 +12,7 @@ import Drawer from "./app/screens/Drawer";
 import HouseholdPage2 from "./app/screens/HouseholdPage2";
 import { TasksPage2 } from "./app/screens/TasksPage2";
 import { HousePage3 } from "./app/screens/HouseHoldPage3";
+import BigChat from "./app/screens/chatMasterThing";
 
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
@@ -32,10 +33,9 @@ if (!firebase.apps.length) {
 }
 
 const db = firebase.firestore();
-console.log("refreshed");
 var docRef = db.doc("/messages/XBdku2O78W9iwkbev3y2");
 docRef.get().then((doc) => {
-  console.log(doc.data());
+  //  console.log(doc.data());
 });
 
 export default function App() {
@@ -51,7 +51,8 @@ export default function App() {
     // <HouseholdPage></HouseholdPage>
     // <HouseholdPage2></HouseholdPage2>
     // <TasksPage2></TasksPage2>
-    <HousePage3></HousePage3>
+    // <HousePage3></HousePage3>
+    <BigChat></BigChat>
   );
 }
 

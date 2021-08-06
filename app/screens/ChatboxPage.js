@@ -1,18 +1,14 @@
-import React from 'react';
+import React from "react";
 
 function ChatboxPage(props) {
-    return (
-        <ImageBackground
-            style={{flex:1}}
-            source={require("../assets/background-gradient.jpg")}
-        >
-
-        </ImageBackground>
-    );
+  return (
+    <ImageBackground
+      style={{ flex: 1 }}
+      source={require("../assets/background-gradient.jpg")}
+    ></ImageBackground>
+  );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({});
 
-})
-
-export default ChatboxPage; 
+export default ChatboxPage;
