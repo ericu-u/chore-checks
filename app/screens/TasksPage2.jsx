@@ -11,7 +11,9 @@ import {
   StatusBar,
   SectionList,
   Pressable,
-  FlatList
+  FlatList,
+  TouchableOpacity,
+  clickHandler,
 } from "react-native";
 import config from "../../config";
 import * as firebase from "firebase";
@@ -19,8 +21,8 @@ import "firebase/firestore";
 import Household from "../classes/household";
 import Task from "../classes/task";
 import { Header } from "react-native-elements";
-import Overlay from 'react-native-modal-overlay';
 import _, { map } from 'underscore';
+import { FAB } from 'react-native-paper';
 
 export class TasksPage2 extends React.Component {
   constructor(props) {
@@ -127,7 +129,7 @@ export class TasksPage2 extends React.Component {
                   {key: 'Task Property 5'},
                   {key: 'Task Property 6'},
                 ]}
-                renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left' }}>{item.key}</Text>}
+                renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.key}</Text>}
               />
               <View style={{ position: 'absolute', bottom: 10 }}>
                 <Button
@@ -139,6 +141,8 @@ export class TasksPage2 extends React.Component {
             </View>
           </View>
         </Modal>
+
+        
 
         <SectionList
           sections={this.state.sectionedTasks }
@@ -170,12 +174,24 @@ export class TasksPage2 extends React.Component {
             </View>
           )}
         />
+
+        <AddButton></AddButton>
       </ImageBackground>
     );
   }
 }
 
 
+
+const AddButton = () => (
+  <FAB
+    style={styles.fab}
+    small
+    icon="plus"
+    color="white"
+    onPress={() => console.log('Pressed')}
+  />
+);
 
 const Item = ({ task }) => (
   <View style={styles.item}>
@@ -191,11 +207,9 @@ const Item = ({ task }) => (
     <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
       <Pressable
           style={[styles.button, styles.buttonOpen]}
-          onPress={() => this.setModalVisible(true)}
+          onPress={() => this.setModalVisible(!this.state.modalVisible)}
         >
-          <Text style={{ fontSize: 18 }} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
-        {task.name}
-      </Text>
+          <Text style={{ fontSize: 18 }}>{task.name}</Text>
         </Pressable>
       
       <Text style={{ fontSize: 13, color: '#db1414' }}>
@@ -219,6 +233,7 @@ function onPressButton() {
 }
 
 const styles = StyleSheet.create({
+
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -251,6 +266,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
   },
+  fab: {
+    position: 'absolute',
+    margin: 20,
+    right: 5,
+    bottom: 5,
+    backgroundColor: '#071b7a'
+  },
   item: {
     flexDirection: "row",
     //padding: 20,
@@ -268,8 +290,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   modalHeader: {
-    fontSize: 30,
-    textAlign: "center"
+    fontSize: 25,
+    textAlign: "center",
+    margin: 10,
   },
   modalView: {
     margin: 20,
