@@ -64,7 +64,8 @@ class LoginScreen extends Component {
         behavior: "web",
         androidClientId:
           "409040868260-ahtufk4tk7f54bap4bi9e061dihn9grr.apps.googleusercontent.com",
-        //iosClientId: YOUR_CLIENT_ID_HERE,
+        iosClientId:
+          "409040868260-m4u2ubmsmbpgdqnk4f8g3frclv1k6mtn.apps.googleusercontent.com",
         scopes: ["profile", "email"],
       });
 
