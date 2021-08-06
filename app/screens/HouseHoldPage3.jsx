@@ -81,48 +81,16 @@ export class HousePage3 extends React.Component {
             // console.log("people", this.state.people);
             tempTasks.push([]);
           });
-          for (var i = 0; i < tempTasks.length; i++) {
-            tempTasks[i] = await this.state.people[i].getTasks();
-            this.setState({ tasks: tempTasks });
-          }
-        };
-        setTasks();
-      });
-
-    var unsub2 = db
-      .collection("/houses/h38219/Tasks")
-      .withConverter(Task.taskConverter)
-      .onSnapshot((querySnapshot) => {
-        console.log("updated tasks");
-        const setTasks = async () => {
-          var tempTasks2 = [];
-          this.state.people.forEach(async (p) => {
-            // var temtem = await p.getTasks();
-            // console.log(p.personID, temtem);
-            // tempTasks.push();
-            // tempTasks.push(temtem);
-            // this.setState({ tasks: tempTasks });
-            // console.log("tasks", this.state.tasks);
-            // console.log("people", this.state.people);
-            tempTasks2.push([]);
-          });
-          for (var i = 0; i < tempTasks2.length; i++) {
-            var temptem = await this.state.people[i].getTasks();
-            tempTasks2[i] = temptem;
-            this.setState({ tasks: tempTasks2 });
-          }
         };
         setTasks();
       });
 
     this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
-    this.setState({ unsubscribe2: unsub2 }); // We save our subscription so we can end it later
   }
 
   componentWillUnmount() {
     // This method runs whenever we stop rendering the component
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
-    this.state.unsubscribe2();
   }
   render() {
     return (
@@ -263,8 +231,13 @@ const Item = ({ title, index, tasksDone }) => (
         {title.name}
       </Text>
       <Text style={{ textAlign: "center" }}>Points: {title.points}</Text>
-      <NumTasks index={index} tasksDone={tasksDone}></NumTasks>
-      <Text style={{ textAlign: "center" }}>Completion Rate: Placeholder</Text>
+      <Text style={{ textAlign: "center" }}>
+        Tasks Completed: {title.tasksCompleted}
+      </Text>
+
+      <Text style={{ textAlign: "center" }}>
+        Completion Rate: {title.successRate}
+      </Text>
     </View>
   </View>
 );

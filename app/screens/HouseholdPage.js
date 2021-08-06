@@ -17,17 +17,12 @@ function HouseholdPage(props) {
             source={require("../assets/background-gradient.jpg")}
         >
 
-            <Header
-                leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'Household', style: { color: '#fff' } }}
-            />
-
-
             <View style={{flexDirection: 'column', alignItems: 'center'}}>
                 <View style={ styles.statusHeader }>
                     <Text style={ styles.statusHeaderText }>Sort By Points</Text>
                 </View>
             </View>
+            
             <ScrollView>
             <View style={ styles.individualGroup }>
                 <View style={ styles.individualPoints }>
