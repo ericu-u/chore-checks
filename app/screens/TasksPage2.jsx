@@ -31,7 +31,7 @@ export class TasksPage2 extends React.Component {
       tasks: [], // List of task objects
       unsubscribe: null, // Firebase subscription. Calling this method will mean we stop listening to firebase for updates whenever the database changes
       sectionedTasks: [],
-      modalVisible: true, 
+      modalVisible: true,
     };
   }
 
@@ -85,17 +85,13 @@ export class TasksPage2 extends React.Component {
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
 
-  state = {
-    modalVisible: true, 
-  }
-  
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   }
 
   render() {
     // Returns what we want the user to see
-
+    const { modalVisible } = this.state;
     return (
       // TODO: replace all margins/paddings with relative positioning based on device
 
@@ -115,7 +111,11 @@ export class TasksPage2 extends React.Component {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={this.state.modalVisible}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            this.setModalVisible(!modalVisible);
+          }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -134,7 +134,7 @@ export class TasksPage2 extends React.Component {
               <View style={{ position: 'absolute', bottom: 10 }}>
                 <Button
                   style={styles.modalButton}
-                  onPress={() => this.setModalVisible(!this.state.modalVisible)}
+                  onPress={() => this.setModalVisible(!modalVisible)}
                   title="Close"
                 />
               </View>
@@ -142,12 +142,10 @@ export class TasksPage2 extends React.Component {
           </View>
         </Modal>
 
-        
-
         <SectionList
-          sections={this.state.sectionedTasks }
+          sections={ this.state.sectionedTasks }
           keyExtractor={(item, index) => item + index}
-          renderItem={({ item }) => <Item task={item} />}
+          renderItem={({ item }) => <Item task={item} temp={this.state} />}
           renderSectionHeader={({ section: { title } }) => (
             <View style={styles.statusHeader}>
               <View
@@ -181,19 +179,16 @@ export class TasksPage2 extends React.Component {
   }
 }
 
-
-
 const AddButton = () => (
   <FAB
     style={styles.fab}
-    small
     icon="plus"
     color="white"
     onPress={() => console.log('Pressed')}
   />
 );
 
-const Item = ({ task }) => (
+const Item = ({ task, temp }) => (
   <View style={styles.item}>
 
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
@@ -207,7 +202,7 @@ const Item = ({ task }) => (
     <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
       <Pressable
           style={[styles.button, styles.buttonOpen]}
-          onPress={() => this.setModalVisible(!this.state.modalVisible)}
+          onPress={console.log(temp.modalVisible)}
         >
           <Text style={{ fontSize: 18 }}>{task.name}</Text>
         </Pressable>
