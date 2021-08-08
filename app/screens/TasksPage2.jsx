@@ -11,7 +11,9 @@ import {
   StatusBar,
   SectionList,
   Pressable,
-  FlatList
+  FlatList,
+  TouchableOpacity,
+  clickHandler,
 } from "react-native";
 import config from "../../config";
 import * as firebase from "firebase";
@@ -19,8 +21,8 @@ import "firebase/firestore";
 import Household from "../classes/household";
 import Task from "../classes/task";
 import { Header } from "react-native-elements";
-import Overlay from 'react-native-modal-overlay';
 import _, { map } from 'underscore';
+import { FAB } from 'react-native-paper';
 
 export class TasksPage2 extends React.Component {
   constructor(props) {
@@ -29,7 +31,7 @@ export class TasksPage2 extends React.Component {
       tasks: [], // List of task objects
       unsubscribe: null, // Firebase subscription. Calling this method will mean we stop listening to firebase for updates whenever the database changes
       sectionedTasks: [],
-      modalVisible: true, 
+      modalVisible: true,
     };
   }
 
@@ -83,17 +85,13 @@ export class TasksPage2 extends React.Component {
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
 
-  state = {
-    modalVisible: true, 
-  }
-  
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   }
 
   render() {
     // Returns what we want the user to see
-
+    const { modalVisible } = this.state;
     return (
       // TODO: replace all margins/paddings with relative positioning based on device
 
@@ -113,7 +111,11 @@ export class TasksPage2 extends React.Component {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={this.state.modalVisible}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            this.setModalVisible(!modalVisible);
+          }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -127,12 +129,12 @@ export class TasksPage2 extends React.Component {
                   {key: 'Task Property 5'},
                   {key: 'Task Property 6'},
                 ]}
-                renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left' }}>{item.key}</Text>}
+                renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.key}</Text>}
               />
               <View style={{ position: 'absolute', bottom: 10 }}>
                 <Button
                   style={styles.modalButton}
-                  onPress={() => this.setModalVisible(!this.state.modalVisible)}
+                  onPress={() => this.setModalVisible(!modalVisible)}
                   title="Close"
                 />
               </View>
@@ -141,9 +143,9 @@ export class TasksPage2 extends React.Component {
         </Modal>
 
         <SectionList
-          sections={this.state.sectionedTasks }
+          sections={ this.state.sectionedTasks }
           keyExtractor={(item, index) => item + index}
-          renderItem={({ item }) => <Item task={item} />}
+          renderItem={({ item }) => <Item task={item} temp={this.state} />}
           renderSectionHeader={({ section: { title } }) => (
             <View style={styles.statusHeader}>
               <View
@@ -170,14 +172,23 @@ export class TasksPage2 extends React.Component {
             </View>
           )}
         />
+
+        <AddButton></AddButton>
       </ImageBackground>
     );
   }
 }
 
+const AddButton = () => (
+  <FAB
+    style={styles.fab}
+    icon="plus"
+    color="white"
+    onPress={() => console.log('Pressed')}
+  />
+);
 
-
-const Item = ({ task }) => (
+const Item = ({ task, temp }) => (
   <View style={styles.item}>
 
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
@@ -191,11 +202,9 @@ const Item = ({ task }) => (
     <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
       <Pressable
           style={[styles.button, styles.buttonOpen]}
-          onPress={() => this.setModalVisible(true)}
+          onPress={console.log(temp.modalVisible)}
         >
-          <Text style={{ fontSize: 18 }} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
-        {task.name}
-      </Text>
+          <Text style={{ fontSize: 18 }}>{task.name}</Text>
         </Pressable>
       
       <Text style={{ fontSize: 13, color: '#db1414' }}>
@@ -219,6 +228,7 @@ function onPressButton() {
 }
 
 const styles = StyleSheet.create({
+
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -251,6 +261,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
   },
+  fab: {
+    position: 'absolute',
+    margin: 20,
+    right: 5,
+    bottom: 5,
+    backgroundColor: '#071b7a'
+  },
   item: {
     flexDirection: "row",
     //padding: 20,
@@ -268,8 +285,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   modalHeader: {
-    fontSize: 30,
-    textAlign: "center"
+    fontSize: 25,
+    textAlign: "center",
+    margin: 10,
   },
   modalView: {
     margin: 20,
