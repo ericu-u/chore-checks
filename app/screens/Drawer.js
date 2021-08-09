@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Image, StyleSheet, Button } from "react-native";
+import { Image, StyleSheet, Button, View, Text } from "react-native";
 import { Header } from "react-native-elements";
 import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MaterialIcons } from "@expo/vector-icons";
 
@@ -11,16 +11,19 @@ import TasksPage from "./TasksPage";
 import ChatboxPage from "./ChatboxPage";
 import HouseholdPage from "./HouseholdPage";
 import SettingsPage from "./SettingsPage";
+import Sidebar from "./CustomDrawer";
 
 const Drawer = createDrawerNavigator();
 
+// drawer navigator screens
 function MyDrawer() {
   return (
     <Drawer.Navigator
       drawerStyle={{ backgroundColor: "#e5e5e5" }}
+      drawerContent={(props) => <Sidebar {...props} />}
       drawerContentOptions={{
         itemStyle: { marginVertical: 15 },
-        labelStyle: { fontSize: 15 },
+        labelStyle: { fontSize: 20 },
       }}
     >
       <Drawer.Screen
@@ -52,7 +55,10 @@ function MyDrawer() {
         component={ChatboxNavigator}
         options={{
           drawerIcon: () => (
-            <Image source={require("../assets/chat.png")} style={styles.chatIcon} />
+            <Image
+              source={require("../assets/chat.png")}
+              style={styles.chatIcon}
+            />
           ),
         }}
       />
@@ -104,7 +110,7 @@ export default function MenuPage() {
   );
 }
 
-// stack navigators
+// stack navigator screens
 const ProfileStack = createStackNavigator();
 
 function ProfileNavigator() {
