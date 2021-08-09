@@ -67,8 +67,16 @@ export class TasksPage2 extends React.Component {
         });
         console.log("updated tasks");
         this.setState({ tasks: tempTasks }); // Makes the state.tasks equal tempTasks
-        var activeTasks = _.where(this.state.tasks, {completed: null});
-        var completedTasks = _.reject(this.state.tasks, function(task){ return task.completed != null; });
+        var activeTasks = _.where(this.state.tasks, {completed: null}); // Gets tasks without completion
+
+        // For loop that appends completed tasks
+        var completedTasks = [];
+        for (let task of this.state.tasks) {
+          if (typeof task.completed == 'string') {
+            completedTasks.push(task)
+          }
+        }
+
         var sections = [{
           title: 'Active',
           data: activeTasks
@@ -84,6 +92,7 @@ export class TasksPage2 extends React.Component {
     // This method runs whenever we stop rendering the component
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
+  
 
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
@@ -122,14 +131,32 @@ export class TasksPage2 extends React.Component {
               <Text style={styles.modalHeader}>Task Name Here</Text>
               <FlatList
                 data={[
-                  {key: 'Task Property 1'},
-                  {key: 'Task Property 2'},
-                  {key: 'Task Property 3'},
-                  {key: 'Task Property 4'},
-                  {key: 'Task Property 5'},
-                  {key: 'Task Property 6'},
+                  {
+                    key: 'Task Property 1',
+                    propertyName: 'property'
+                  },
+                  {
+                    key: 'Task Property 2',
+                    propertyName: 'property'
+                  },
+                  {
+                    key: 'Task Property 3',
+                    propertyName: 'property'
+                  },
+                  {
+                    key: 'Task Property 4',
+                    propertyName: 'property'
+                  },
+                  {
+                    key: 'Task Property 5',
+                    propertyName: 'property'
+                  },
+                  {
+                    key: 'Task Property 6',
+                    propertyName: 'property'
+                  },
                 ]}
-                renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.key}</Text>}
+                renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.propertyName}: {item.key}</Text>}
               />
               <View style={{ position: 'absolute', bottom: 10 }}>
                 <Button
@@ -188,7 +215,101 @@ const AddButton = () => (
   />
 );
 
+const TaskModal = () => (
+  <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            this.setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalHeader}>Task Name Here</Text>
+              <FlatList
+                data={[
+                  {
+                    key: 'Task Property 1',
+                    propertyName: 'property'
+                  },
+                  {
+                    key: 'Task Property 2',
+                    propertyName: 'property'
+                  },
+                  {
+                    key: 'Task Property 3',
+                    propertyName: 'property'
+                  },
+                  {
+                    key: 'Task Property 4',
+                    propertyName: 'property'
+                  },
+                  {
+                    key: 'Task Property 5',
+                    propertyName: 'property'
+                  },
+                  {
+                    key: 'Task Property 6',
+                    propertyName: 'property'
+                  },
+                ]}
+                renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.propertyName}: {item.key}</Text>}
+              />
+              <View style={{ position: 'absolute', bottom: 10 }}>
+                <Button
+                  style={styles.modalButton}
+                  onPress={() => this.setModalVisible(!modalVisible)}
+                  title="Close"
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>
+)
+
+const StatusButton = (task) => {
+  if (task.inProgress == 'claimed') {
+    return <TouchableHighlight
+    style={styles.claimedStatus}
+    onPress={onPressButton}
+    underlayColor='#96c7eb'>
+    <Text style={styles.statusText}>Claimed!</Text>
+  </TouchableHighlight>
+  }
+  else if (task.inProgress == 'taken') {
+    return <TouchableHighlight
+    style={styles.takenStatus}
+    onPress={onPressButton}
+    underlayColor='#96c7eb'>
+    <Text style={styles.statusText}>Taken</Text>
+  </TouchableHighlight>
+  }
+  else if (!task.inProgress) {
+    return <TouchableHighlight
+    style={styles.claimStatus}
+    onPress={onPressButton}
+    underlayColor='#96c7eb'>
+    <Text style={styles.statusText}>Claim</Text>
+  </TouchableHighlight>
+  }
+  else if (task.inProgress == 'done') {
+    return <TouchableHighlight
+    style={styles.doneStatus}
+    onPress={onPressButton}
+    underlayColor='#96c7eb'>
+    <Text style={styles.statusText}>Done</Text>
+  </TouchableHighlight>
+  }
+  else {
+    return <Text>temporary error</Text>
+  }
+}
+  
+
 const Item = ({ task, temp }) => (
+
   <View style={styles.item}>
 
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
@@ -213,12 +334,7 @@ const Item = ({ task, temp }) => (
     </View>
     
     <View style={{ flex: 2, justifyContent: "center" }}>
-      <TouchableHighlight
-        style={styles.claimStatus}
-        onPress={onPressButton}
-        underlayColor='#96c7eb'>
-        <Text style={styles.statusText}>Taken</Text>
-      </TouchableHighlight>
+      <StatusButton props={task} />
     </View>
   </View>
 );
@@ -260,6 +376,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
+  },
+  doneStatus: {
+    marginRight: 20,
+    marginLeft: 10,
+    //marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: 'green',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
   },
   fab: {
     position: 'absolute',
