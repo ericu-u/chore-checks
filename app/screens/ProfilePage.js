@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, ImageBackground } from "react-native";
+import AccessoryBar from "./AccessoryBar";
 
 function ProfilePage(props) {
   return (

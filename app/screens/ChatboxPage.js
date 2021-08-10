@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet, TextInput, View, Button } from "react-native";
 import * as firebase from "firebase";
 import "firebase/firestore";
+import ImgPicker from "./ImagePicker";
 
 var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
 const firebaseConfig = {
@@ -24,6 +25,7 @@ if (firebase.apps.length === 0) {
 
 const db = firebase.firestore();
 const chatsRef = db.collection("/houses/" + householdIDD + "/Messages");
+// const chatsRef = db.collection("/chat2");
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -94,6 +96,11 @@ export default function App() {
       renderUsernameOnMessage
       renderAvatarOnTop
       messagesContainerStyle={{ backgroundColor: "#7ab5ca" }}
+      renderActions={() => (
+        <React.Fragment>
+          <ImgPicker />
+        </React.Fragment>
+      )}
     />
   );
 }

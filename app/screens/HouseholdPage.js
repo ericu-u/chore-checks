@@ -94,7 +94,7 @@ export default class HouseholdPage extends React.Component {
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
   render() {
-    console.log(this.state.people);
+    // console.log(this.state.people);
     return (
       //replace all margins/paddings with relative positioning based on device
 
