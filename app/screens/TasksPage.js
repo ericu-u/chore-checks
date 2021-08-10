@@ -24,6 +24,8 @@ import { Header } from "react-native-elements";
 import _, { map } from "underscore";
 import { FAB } from "react-native-paper";
 
+var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
+
 export class TasksPage extends React.Component {
   constructor(props) {
     super(props);
@@ -57,7 +59,7 @@ export class TasksPage extends React.Component {
 
     // Firestore subscription. Listens to database for changes.
     var unsub = db
-      .collection("/houses/h38219/Tasks")
+      .collection("/houses/" + householdIDD +"/Tasks")
       .withConverter(Task.taskConverter)
       .onSnapshot((querySnapshot) => {
         // Whenever there is a change in firestore, this method runs
@@ -65,7 +67,6 @@ export class TasksPage extends React.Component {
         querySnapshot.forEach((doc) => {
           tempTasks.push(doc.data());
         });
-        console.log("updated tasks");
         this.setState({ tasks: tempTasks }); // Makes the state.tasks equal tempTasks
         var activeTasks = _.where(this.state.tasks, { completed: null });
         var completedTasks = _.reject(this.state.tasks, function (task) {

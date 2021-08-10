@@ -21,6 +21,7 @@ import Task from "../classes/task";
 import { Header } from "react-native-elements";
 import Person from "../classes/person";
 
+var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
 export default class HouseholdPage extends React.Component {
   constructor(props) {
     super(props);
@@ -54,7 +55,8 @@ export default class HouseholdPage extends React.Component {
 
     // Firestore subscription. Listens to database for changes.
     var unsub = db
-      .collection("/houses/h38219/People")
+      .collection("/users")
+      .where("householdID", "==", householdIDD)
       .orderBy("points", "desc")
       .withConverter(Person.personConverter)
       .onSnapshot((querySnapshot) => {
@@ -65,7 +67,6 @@ export default class HouseholdPage extends React.Component {
           tempPpl.push(doc.data());
           tempTasks.push([]);
         });
-        console.log("updated ppl");
         this.setState({ people: tempPpl }); // Makes the state.people equal tempPpl
         this.setState({ tasks: tempTasks });
 
@@ -93,6 +94,7 @@ export default class HouseholdPage extends React.Component {
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
   render() {
+    console.log(this.state.people);
     return (
       //replace all margins/paddings with relative positioning based on device
 
@@ -206,7 +208,12 @@ const Item = ({ title, index, tasksDone }) => (
   <View style={styles.individualGroup}>
     <View style={styles.individualPoints}>
       <View style={styles.avatarPosition}>
-        <Image source={require("../assets/standard-account90.png")} />
+        <Image
+          style={{ width: 90, height: 90, borderRadius: 90 / 2 }}
+          source={{
+            uri: title.profilePic,
+          }}
+        />
       </View>
       <View style={styles.topRight}>
         <Trophy index={index}></Trophy>

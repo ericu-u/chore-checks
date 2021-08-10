@@ -7,6 +7,7 @@ import { StyleSheet, TextInput, View, Button } from "react-native";
 import * as firebase from "firebase";
 import "firebase/firestore";
 
+var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
 const firebaseConfig = {
   apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
   authDomain: "chores-97427.firebaseapp.com",
@@ -22,7 +23,7 @@ if (firebase.apps.length === 0) {
 }
 
 const db = firebase.firestore();
-const chatsRef = db.collection("/houses/h0B5ajDC1E2E4OkFXuFiS/Messages");
+const chatsRef = db.collection("/houses/" + householdIDD + "/Messages");
 
 export default function App() {
   const [user, setUser] = useState(null);
