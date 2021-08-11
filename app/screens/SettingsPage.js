@@ -17,6 +17,12 @@ import {
 import { Header, withTheme } from "react-native-elements";
 import { sub } from "react-native-reanimated";
 import { moderateScale } from "react-native-size-matters";
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+} from "@expo-google-fonts/montserrat";
 
 export class SettingsPage extends React.Component {
   /*Variables for specific the notifications*/
@@ -58,7 +64,7 @@ export class SettingsPage extends React.Component {
           <View style={styles.settingsBox}>
             {/*Task Notifications button setting*/}
             <View style={styles.textAlign}>
-              <Text style={{ fontSize: 24 }}>Task Notifications</Text>
+              <Text style={{ fontSize: 24, fontFamily: "Montserrat_500Medium" }}>Task Notifications</Text>
               <View style={styles.largeButton}>
                 <Switch
                   onValueChange={this.toggleTaskNotifcations}
@@ -69,7 +75,7 @@ export class SettingsPage extends React.Component {
 
             {/*Approaching deadline button setting*/}
             <View style={styles.subTextAlign}>
-              <Text>Approaching deadline</Text>
+              <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Approaching deadline</Text>
               <View style={styles.smallButton}>
                 <Switch
                   style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
@@ -81,7 +87,7 @@ export class SettingsPage extends React.Component {
 
             {/*Deadline passed button setting*/}
             <View style={styles.subTextAlign}>
-              <Text>Deadline passed</Text>
+              <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
               <View style={styles.smallButton}>
                 <Switch
                   style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
@@ -93,7 +99,7 @@ export class SettingsPage extends React.Component {
 
             {/*Task incomplete button setting*/}
             <View style={styles.subTextAlign}>
-              <Text>Task incomplete</Text>
+              <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Task incomplete</Text>
               <View style={styles.smallButton}>
                 <Switch
                   style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
@@ -105,7 +111,7 @@ export class SettingsPage extends React.Component {
 
             {/*Housemate completion button setting*/}
             <View style={styles.subTextAlign}>
-              <Text>Housemate completion</Text>
+              <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Housemate completion</Text>
               <View style={styles.smallButton}>
                 <Switch
                   style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
@@ -117,7 +123,7 @@ export class SettingsPage extends React.Component {
 
             {/*Chat notifications*/}
             <View style={styles.textAlign}>
-              <Text style={{ fontSize: 24 }}>Chat Notifications</Text>
+              <Text style={{ fontSize: 24, fontFamily: "Montserrat_500Medium" }}>Chat Notifications</Text>
               <View style={styles.largeButton}>
                 <Switch
                   onValueChange={this.toggleChatNotifications}
@@ -128,19 +134,30 @@ export class SettingsPage extends React.Component {
           </View>
         </SafeAreaView>
         <SafeAreaView style={styles.bottomTextStart}>
-          {/*Change Household button link*/}
-          <Button
+          {/*Initial change household button*/}
+          {/* <Button
             title="Change Household"
             color="black"
             onPress={() => Alert.alert("Button with adjusted color pressed")}
-          />
+          /> */}
 
-          {/*Sign out button*/}
-          <Button
+          {/*Altered change household button to add custom font*/}
+          <TouchableOpacity onPress={() => Alert.alert("Button with adjusted color pressed")}>
+            <Text style={{ fontSize: 20, fontFamily: "Montserrat_500Medium" }}>Change Household</Text>
+          </TouchableOpacity>
+
+          {/*Initial sign out button*/}
+          {/* <Button
             color="red"
             onPress={() => Alert.alert("Button with adjusted color pressed")}
             title="Sign Out"
-          ></Button>
+          ></Button> */}
+
+          {/*Altered sign out button to add custom font*/}
+          <TouchableOpacity onPress={() => Alert.alert("Button with adjusted color pressed")}>
+            <Text style={{ color: "red", fontSize: 20, fontFamily: "Montserrat_500Medium", paddingTop: "5%" }}>Sign out</Text>
+          </TouchableOpacity>
+
         </SafeAreaView>
       </ImageBackground>
     );

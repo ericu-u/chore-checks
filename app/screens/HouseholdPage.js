@@ -2,13 +2,27 @@ import React from 'react';
 import { ScrollView } from 'react-native';
 import { SafeAreaView, View, Text, StyleSheet, Image, StatusBar, ImageBackground, Button, TouchableHighlight } from 'react-native';
 import { Header, withTheme } from 'react-native-elements';
-
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+} from "@expo-google-fonts/montserrat";
 
 function onPressButton() {
     alert('Change status'); // TODO: Alert and/or Button to be replaced
 }
 
 function HouseholdPage(props) {
+    let [fontsLoaded] = useFonts({
+        Montserrat_400Regular,
+        Montserrat_500Medium,
+      });
+
+    if (!fontsLoaded) {
+       return <AppLoading />;
+    }
+    else {
     return ( //replace all margins/paddings with relative positioning based on device
 
         
@@ -32,10 +46,10 @@ function HouseholdPage(props) {
                     <View style={styles.topRight }>
                         <Image source={require("../assets/gold-trophy.png")} /> 
                     </View>
-                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username</Text>
-                    <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
-                    <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
-                    <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",fontFamily: "Montserrat_500Medium",}}>Username</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Points: Placeholder</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Tasks Completed: Placeholder</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Completion Rate: Placeholder</Text>
                 </View>
             </View>
 
@@ -47,10 +61,10 @@ function HouseholdPage(props) {
                 <View style={styles.topRight }>
                         <Image source={require("../assets/silver-trophy.png")} /> 
                     </View>
-                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username</Text>
-                    <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
-                    <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
-                    <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",fontFamily: "Montserrat_500Medium",}}>Username</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Points: Placeholder</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Tasks Completed: Placeholder</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Completion Rate: Placeholder</Text>
                     
                 </View>
             </View>
@@ -63,10 +77,10 @@ function HouseholdPage(props) {
                 <View style={styles.topRight }>
                         <Image source={require("../assets/bronze-trophy.png")} /> 
                     </View>
-                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username</Text>
-                    <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
-                    <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
-                    <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",fontFamily: "Montserrat_500Medium",}}>Username</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Points: Placeholder</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Tasks Completed: Placeholder</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Completion Rate: Placeholder</Text>
                 </View>
             </View>
 
@@ -75,10 +89,10 @@ function HouseholdPage(props) {
                     <View style ={styles.avatarPosition}>
                         <Image source={require("../assets/standard-account90.png")} />
                     </View>
-                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",}}>Username</Text>
-                    <Text style={{ textAlign: 'center'}}>Points: Placeholder</Text>
-                    <Text style={{ textAlign: 'center',}}>Tasks Completed: Placeholder</Text>
-                    <Text style={{ textAlign: 'center',}}>Completion Rate: Placeholder</Text>
+                    <Text style={{fontSize:18, flex:1, textAlign: 'center',paddingBottom: "3%",fontFamily: "Montserrat_500Medium",}}>Username</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Points: Placeholder</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Tasks Completed: Placeholder</Text>
+                    <Text style={{ textAlign: 'center',fontFamily: "Montserrat_400Regular",}}>Completion Rate: Placeholder</Text>
                 </View>
             </View>
             </ScrollView>
@@ -87,6 +101,7 @@ function HouseholdPage(props) {
   
         </ImageBackground>
     );
+}
 }
 const styles = StyleSheet.create({
     background: {
@@ -103,6 +118,7 @@ const styles = StyleSheet.create({
         fontSize: 25,
         justifyContent: 'center',
         textAlign: 'center',
+        fontFamily: "Montserrat_500Medium",
     },
     individualGroup: {
         justifyContent: 'space-evenly',
