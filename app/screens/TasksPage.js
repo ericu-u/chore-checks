@@ -15,8 +15,8 @@ import { useNavigation } from "@react-navigation/native";
 import { StackHeaderLeftButtonProps } from "@react-navigation/stack";
 import { MaterialIcons } from "@expo/vector-icons";
 import config from "../../config";
-// import * as firebase from "firebase";
-// import "firebase/firestore";
+import * as firebase from "firebase";
+import "firebase/firestore";
 import Household from "../classes/household";
 import Task from "../classes/task";
 import Test from "./Test";
@@ -24,40 +24,9 @@ import Test from "./Test";
 function TasksPage(props) {
   //const taskGroupHeight;
 
-  const [tasks, setTasks] = useState();
+  var [reload, setReload] = useState(false);
+  var [stateTasks, setTasks] = useState([]);
 
-  /*
-  useEffect(() => {
-    var tasksRef = db.collection("/houses/" + householdID + "/Tasks");
-    tasksRef.withConverter(Task.taskConverter).onSnapshot((snapshot) => {
-      var tempTask = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setTasks(tempTask);
-      console.log("pls", tasks);
-    });
-  }, []);
-
-
-  useEffect(() => {
-    db.collection("/houses/h38219/Tasks")
-      .withConverter(Task.taskConverter)
-      .onSnapshot((querySnapshot) => {
-        var tempTasks = [];
-        querySnapshot.forEach((doc) => {
-          console.log(doc.data());
-          tempTasks.push(doc.data());
-        });
-        setTasks(tempTasks);
-        console.log("tasks are:", tasks);
-      });
-
-    // Stop listening for updates when no longer required
-  }, []);
-
-  // Start of firebase stuff
   var firebaseConfig = {
     apiKey: config.FIREBASE_KEY,
     authDomain: "chores-97427.firebaseapp.com",
@@ -74,22 +43,34 @@ function TasksPage(props) {
     firebase.app();
   }
 
+  useEffect(() => {
+    console.log("tasks are:", tasks);
+  }, [tasks]);
+
   const db = firebase.firestore();
   // TODO householdID of the user should be stored in the householdID variable. For now, I will just make it the only household we have
   const householdID = "h38219";
 
-  async function tasksfromDb() {
-    var houseRef = db.doc("/houses/" + householdID);
+  var tasks = [];
 
-    var house = (
-      await (await houseRef.withConverter(Household.houseConverter)).get()
-    ).data();
+  console.log("REFRESHED");
+  db.collection("/houses/h38219/Tasks")
+    .withConverter(Task.taskConverter)
+    .onSnapshot((querySnapshot) => {
+      var tempTasks = [];
+      querySnapshot.forEach((doc) => {
+        //console.log(doc.data());
+        tempTasks.push(doc.data());
+      });
+      tasks = tempTasks;
+      // setTasks(tasks);
+    });
 
-    return await house.getTasks();
-  }
-*/
-  // End of firebase stuff
+  var docRef = db.doc("/houses/h38219");
 
+  (async () => {
+    // console.log((await docRef.get()).data());
+  })();
 
   function onPressButton() {
     alert("Change status"); // TODO: Alert and/or Button to be replaced
@@ -163,7 +144,7 @@ function TasksPage(props) {
       </Overlay>
 
       <SectionList
-        sections={testData}
+        sections={tasks}
         keyExtractor={(item, index) => item + index}
         renderItem={({ item }) => <Item task={item} />}
         renderSectionHeader={({ section: { title } }) => (

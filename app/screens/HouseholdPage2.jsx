@@ -1,0 +1,174 @@
+import React from "react";
+import { ScrollView } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  StatusBar,
+  ImageBackground,
+  Button,
+  TouchableHighlight,
+  SectionList,
+} from "react-native";
+import { Header, withTheme } from "react-native-elements";
+
+function onPressButton() {
+  alert("Change status"); // TODO: Alert and/or Button to be replaced
+}
+
+function HouseholdPage2(props) {
+  var testData = [
+    {
+      title: "Active",
+      data: ["Do the Dishes", "Walk the dog", "Take out trash", "Shower"],
+    },
+    {
+      title: "Inactive",
+      data: ["Cook dinner"],
+    },
+    {
+      title: "Inactive",
+      data: ["Cook dinner"],
+    },
+    {
+      title: "Inactive",
+      data: ["Cook dinner"],
+    },
+    {
+      title: "Inactive",
+      data: ["Cook dinner"],
+    },
+  ];
+  return (
+    //replace all margins/paddings with relative positioning based on device
+
+    <ImageBackground
+      style={{ flex: 1 }}
+      source={require("../assets/background-gradient.jpg")}
+    >
+      <Header
+        leftComponent={{
+          icon: "menu",
+          color: "#fff",
+          iconStyle: { color: "#fff" },
+        }}
+        centerComponent={{ text: "Household", style: { color: "#fff" } }}
+      />
+
+      <View style={{ flexDirection: "column", alignItems: "center" }}>
+        <View style={styles.statusHeader}>
+          <Text style={styles.statusHeaderText}>Sort By Points</Text>
+        </View>
+      </View>
+
+      <SectionList
+        sections={[{ title: "Household", data: testData }]}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({ item, index }) => <Item title={item} index={index} />}
+        renderSectionHeader={({ section: { title } }) => <View></View>}
+      />
+    </ImageBackground>
+  );
+}
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    backgroundColor: "#52a7d1",
+  },
+  statusHeader: {
+    //height: "30%", //replace with relative positioning based on device
+    justifyContent: "center",
+    marginTop: "6%",
+    marginBottom: "6%",
+  },
+  statusHeaderText: {
+    fontSize: 25,
+    justifyContent: "center",
+    textAlign: "center",
+  },
+  individualGroup: {
+    justifyContent: "space-evenly",
+    //alignItems: "center",
+    // set a max height (maybe)
+  },
+  individualPoints: {
+    //height: "100%", //replace with relative positioning based on device
+    // set alternating background color
+    justifyContent: "flex-start",
+    // set PROPER borders
+    flexDirection: "column",
+    alignContent: "center",
+    alignItems: "flex-start",
+    backgroundColor: "white",
+    paddingLeft: "35%",
+    marginLeft: "7%",
+    marginRight: "7%",
+    paddingTop: "7%",
+    paddingBottom: "7%",
+    //justifyContent: 'space-evenly',
+    marginBottom: "4%",
+    borderRadius: 6,
+    overflow: "hidden",
+  },
+
+  topRight: {
+    position: "absolute",
+    paddingLeft: "112%",
+    paddingTop: "3%",
+    //height: "1%",
+    //width: "1%",
+    ///margin: 'auto',
+  },
+
+  avatarPosition: {
+    position: "absolute",
+    //height: "30%",
+    //width: "30%",
+    //margin: 'auto',
+    paddingLeft: "20%",
+    paddingTop: "15%",
+  },
+});
+
+console.log("refreshed");
+
+function Trophy(index) {
+  if (index.index === 0) {
+    return <Image source={require("../assets/gold-trophy.png")} />;
+  } else if (index.index === 1) {
+    return <Image source={require("../assets/silver-trophy.png")} />;
+  } else if (index.index === 2) {
+    return <Image source={require("../assets/bronze-trophy.png")} />;
+  }
+  return <View></View>;
+}
+
+const Item = ({ title, index }) => (
+  <View style={styles.individualGroup}>
+    <View style={styles.individualPoints}>
+      <View style={styles.avatarPosition}>
+        <Image source={require("../assets/standard-account90.png")} />
+      </View>
+      <View style={styles.topRight}>
+        <Trophy index={index}></Trophy>
+      </View>
+      <Text
+        style={{
+          fontSize: 18,
+          flex: 1,
+          textAlign: "center",
+          paddingBottom: "3%",
+        }}
+      >
+        Username
+      </Text>
+      <Text style={{ textAlign: "center" }}>Points: Placeholder</Text>
+      <Text style={{ textAlign: "center" }}>Tasks Completed: Placeholder</Text>
+      <Text style={{ textAlign: "center" }}>Completion Rate: Placeholder</Text>
+    </View>
+  </View>
+);
+
+export default HouseholdPage2;
