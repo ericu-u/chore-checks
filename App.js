@@ -44,19 +44,19 @@ docRef.get().then((doc) => {
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
-    <ScuffedLogin></ScuffedLogin>
+    //  <ScuffedLogin></ScuffedLogin>
     //<Drawer></Drawer>
     // <TasksPage></TasksPage>
     // <TaskPageClass></TaskPageClass>
     // <TasksPage2></TasksPage2>
-    // <LoginPage></LoginPage>
-    // <Test></Test>
+    <LoginPage></LoginPage>
+    //<Test></Test>
     // <SettingsPage></SettingsPage>
     // <HouseholdPage></HouseholdPage>
     // <HouseholdPage2></HouseholdPage2>
-    // <TasksPage2></TasksPage2>
-    // <HousePage3></HousePage3>
-    // <ChatboxPage></ChatboxPage>
+    //<TasksPage2></TasksPage2>
+    //<HousePage3></HousePage3>
+    //<ChatboxPage></ChatboxPage>
   );
 }
 
