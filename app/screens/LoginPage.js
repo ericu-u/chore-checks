@@ -48,7 +48,7 @@ function LoginPage(props) {
   };
 
   onSignIn = (googleUser) => {
-    console.log("Google Auth Response", googleUser);
+    // console.log("Google Auth Response", googleUser);
     // We need to register an Observer on Firebase Auth to make sure auth is initialized.
     var unsubscribe = firebase.auth().onAuthStateChanged(
       function (firebaseUser) {
@@ -67,7 +67,7 @@ function LoginPage(props) {
             .signInWithCredential(credential)
             .then(function () {
               console.log("user signed in");
-              navigation.navigate("Drawer");
+              // navigation.navigate("Drawer");
             })
             .catch((error) => {
               // Handle Errors here.
@@ -81,7 +81,7 @@ function LoginPage(props) {
             });
         } else {
           console.log("User already signed-in Firebase.");
-          navigation.navigate("Drawer");
+          // navigation.navigate("Drawer");
         }
       }.bind(this)
     ); // Sketch
@@ -124,12 +124,14 @@ function LoginPage(props) {
 
       if (result.type === "success") {
         this.onSignIn(result);
+        navigation = useNavigation();
+        navigation.navigate("Drawer");
         return result.accessToken;
       } else {
         return { cancelled: true };
       }
     } else {
-      console.log(":)", firebase.auth());
+      console.log("already logged in");
     }
   };
 

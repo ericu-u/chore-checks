@@ -21,6 +21,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import "react-native-gesture-handler";
 
+// firebase.auth().signOut();
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
   authDomain: "chores-97427.firebaseapp.com",
@@ -50,15 +51,14 @@ const Stack = createStackNavigator();
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
-    // <LoginPage></LoginPage>
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     <Stack.Screen name="LoginPage" component={LoginPage} />
-    //     <Stack.Screen name="Drawer" component={Drawer} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
-    //<Help></Help>
-    <Help2></Help2>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="LoginPage" component={LoginPage} />
+        <Stack.Screen name="Drawer" component={Drawer} />
+      </Stack.Navigator>
+    </NavigationContainer>
+    // <Help></Help>
+    // <Help2></Help2>
   );
 }
 
@@ -72,7 +72,14 @@ export default function App() {
 
 class Help2 extends React.Component {
   render() {
-    if (firebase.auth().currentUser === null) {
+    var now = Date.now();
+    var u = firebase.auth().currentUser;
+
+    while (Date.now() - now < 2000) {
+      console.log("loading");
+    }
+    console.log("user in render:", u);
+    if (u === null) {
       return <LoginPage></LoginPage>;
     } else {
       return <Drawer></Drawer>;
