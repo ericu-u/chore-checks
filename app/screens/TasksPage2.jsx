@@ -231,8 +231,8 @@ const TaskModal = (modalVisible, selectedTask, setTask) => {
 }
 
 const StatusButton = (task) => {
-  // TODO: adjust if statements based on task inprogress property
-  if (task.inProgress == 'claimed') {
+
+  if (task.props.inProgress == 'claimed') { //personID equal to user
     return <TouchableHighlight
     style={styles.claimedStatus}
     onPress={onPressButton}
@@ -240,28 +240,28 @@ const StatusButton = (task) => {
     <Text style={styles.statusText}>Claimed!</Text>
   </TouchableHighlight>
   }
-  else if (task.inProgress == 'taken') {
+  else if (task.props.inProgress == 'taken') { //personID not equal to user
     return <TouchableHighlight
     style={styles.takenStatus}
     onPress={onPressButton}
-    underlayColor='#96c7eb'>
+    underlayColor='#c26969'>
     <Text style={styles.statusText}>Taken</Text>
   </TouchableHighlight>
   }
-  else if (!task.inProgress) {
+  else if (task.props.completed) {
+    return <TouchableHighlight
+    style={styles.doneStatus}
+    onPress={onPressButton}
+    underlayColor='#69c272'>
+    <Text style={styles.statusText}>Done</Text>
+  </TouchableHighlight>
+  }
+  else if (!task.props.inProgress) { //inProgress = null
     return <TouchableHighlight
     style={styles.claimStatus}
     onPress={onPressButton}
     underlayColor='#96c7eb'>
     <Text style={styles.statusText}>Claim</Text>
-  </TouchableHighlight>
-  }
-  else if (task.inProgress == 'done') {
-    return <TouchableHighlight
-    style={styles.doneStatus}
-    onPress={onPressButton}
-    underlayColor='#96c7eb'>
-    <Text style={styles.statusText}>Done</Text>
   </TouchableHighlight>
   }
   else {
