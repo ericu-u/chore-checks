@@ -95,8 +95,3 @@ export default function App() {
    renderAvatarOnTop
    messagesContainerStyle={{ backgroundColor: '#7ab5ca' }} />
 }
-
-
-
-
-

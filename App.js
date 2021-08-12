@@ -46,14 +46,14 @@ export default function App() {
     // <TasksPage></TasksPage>
     //<TaskPageClass></TaskPageClass>
     // <TasksPage2></TasksPage2>
-    //<LoginPage></LoginPage>
+    <LoginPage></LoginPage>
     //<Test></Test>
     // <SettingsPage></SettingsPage>
     // <HouseholdPage></HouseholdPage>
     // <HouseholdPage2></HouseholdPage2>
     //<TasksPage2></TasksPage2>
     //<HousePage3></HousePage3>
-    <ChatboxPage></ChatboxPage>
+    //<ChatboxPage></ChatboxPage>
     
   );
 }
