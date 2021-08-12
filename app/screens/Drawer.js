@@ -13,7 +13,7 @@ import {
 } from "@expo-google-fonts/montserrat";
 
 import ProfilePage from "./ProfilePage";
-import TasksPage from "./TasksPage";
+import {TasksPage2} from "./TasksPage2";
 import ChatboxPage from "./ChatboxPage";
 import HouseholdPage from "./HouseholdPage";
 import SettingsPage from "./SettingsPage";
@@ -171,7 +171,7 @@ function TasksNavigator() {
     <TasksStack.Navigator>
       <TasksStack.Screen
         name="Tasks"
-        component={TasksPage}
+        component={TasksPage2}
         options={({ navigation }) => ({
           title: "Tasks",
           headerTitleStyle: {
