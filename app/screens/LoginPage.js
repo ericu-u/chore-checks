@@ -12,14 +12,19 @@ import { Header } from "react-native-elements";
 import { set } from "react-native-reanimated";
 import * as firebase from "firebase";
 import * as Google from "expo-google-app-auth";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 
-function LoginPage(props) {
+function LoginPage({ navigation }) {
   const [oatmealfact, setFact] = useState("");
 
   useEffect;
   () => {
+    console.log("effect");
     if (firebase.auth().currentUser !== null) {
-      navigation.navigate("Drawer");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Drawer" }],
+      });
     }
     var oatmealfacts_array = [
       "Oatmeal fact ",
@@ -67,7 +72,6 @@ function LoginPage(props) {
             .signInWithCredential(credential)
             .then(function () {
               console.log("user signed in");
-              // navigation.navigate("Drawer");
             })
             .catch((error) => {
               // Handle Errors here.
@@ -81,7 +85,6 @@ function LoginPage(props) {
             });
         } else {
           console.log("User already signed-in Firebase.");
-          // navigation.navigate("Drawer");
         }
       }.bind(this)
     ); // Sketch
@@ -124,13 +127,20 @@ function LoginPage(props) {
 
       if (result.type === "success") {
         this.onSignIn(result);
-        navigation = useNavigation();
-        navigation.navigate("Drawer");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Drawer" }],
+        });
         return result.accessToken;
       } else {
         return { cancelled: true };
       }
     } else {
+      // navigation.push("Drawer");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Drawer" }],
+      });
       console.log("already logged in");
     }
   };
@@ -188,7 +198,6 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 40,
     color: "white",
-    fontFamily: "ZenLoop-Regular",
   },
   text: {
     fontSize: 20,

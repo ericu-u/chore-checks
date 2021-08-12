@@ -46,45 +46,33 @@ docRef.get().then((doc) => {
   //  console.log(doc.data());
 });
 
-const Stack = createStackNavigator();
+const AuthStack = createStackNavigator();
 
+firebase.auth().signOut();
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="LoginPage" component={LoginPage} />
-        <Stack.Screen name="Drawer" component={Drawer} />
-      </Stack.Navigator>
+    <NavigationContainer independent={true}>
+      <AuthStack.Navigator independent={true}>
+        <AuthStack.Screen
+          independent={true}
+          name="LoginPage"
+          component={LoginPage}
+          options={{ headerShown: false }}
+        />
+
+        <AuthStack.Screen
+          independent={true}
+          name="Drawer"
+          component={Drawer}
+          options={{ headerShown: false }}
+        />
+      </AuthStack.Navigator>
     </NavigationContainer>
+    // <LoginPage></LoginPage>
     // <Help></Help>
     // <Help2></Help2>
   );
-}
-
-// const Help = () => {
-//   if (firebase.auth().currentUser === null) {
-//     return LoginPage;
-//   } else {
-//     return Drawer;
-//   }
-// };
-
-class Help2 extends React.Component {
-  render() {
-    var now = Date.now();
-    var u = firebase.auth().currentUser;
-
-    while (Date.now() - now < 2000) {
-      console.log("loading");
-    }
-    console.log("user in render:", u);
-    if (u === null) {
-      return <LoginPage></LoginPage>;
-    } else {
-      return <Drawer></Drawer>;
-    }
-  }
 }
 
 const styles = StyleSheet.create({

@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
 
 export default function MenuPage() {
   return (
-    <NavigationContainer>
+    <NavigationContainer independent={true}>
       <MyDrawer />
     </NavigationContainer>
   );
