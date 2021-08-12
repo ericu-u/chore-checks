@@ -52,7 +52,10 @@ function MyDrawer() {
         component={ChatboxNavigator}
         options={{
           drawerIcon: () => (
-            <Image source={require("../assets/chat.png")} style={styles.chatIcon} />
+            <Image
+              source={require("../assets/chat.png")}
+              style={styles.chatIcon}
+            />
           ),
         }}
       />
