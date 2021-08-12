@@ -31,7 +31,8 @@ export class TasksPage2 extends React.Component {
       tasks: [], // List of task objects
       unsubscribe: null, // Firebase subscription. Calling this method will mean we stop listening to firebase for updates whenever the database changes
       sectionedTasks: [],
-      modalVisible: true,
+      modalVisible: false,
+      selectedTask: null,
     };
   }
 
@@ -92,15 +93,17 @@ export class TasksPage2 extends React.Component {
     // This method runs whenever we stop rendering the component
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
-  
 
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   }
 
+  setTask = (task) => {
+    this.setState({ selectedTask: task });
+  }
+
   render() {
     // Returns what we want the user to see
-    const { modalVisible } = this.state;
     return (
       // TODO: replace all margins/paddings with relative positioning based on device
 
@@ -117,62 +120,10 @@ export class TasksPage2 extends React.Component {
           centerComponent={{ text: "Tasks", style: { color: "#fff" } }}
         />
 
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            this.setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalHeader}>Task Name Here</Text>
-              <FlatList
-                data={[
-                  {
-                    key: 'Task Property 1',
-                    propertyName: 'property'
-                  },
-                  {
-                    key: 'Task Property 2',
-                    propertyName: 'property'
-                  },
-                  {
-                    key: 'Task Property 3',
-                    propertyName: 'property'
-                  },
-                  {
-                    key: 'Task Property 4',
-                    propertyName: 'property'
-                  },
-                  {
-                    key: 'Task Property 5',
-                    propertyName: 'property'
-                  },
-                  {
-                    key: 'Task Property 6',
-                    propertyName: 'property'
-                  },
-                ]}
-                renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.propertyName}: {item.key}</Text>}
-              />
-              <View style={{ position: 'absolute', bottom: 10 }}>
-                <Button
-                  style={styles.modalButton}
-                  onPress={() => this.setModalVisible(!modalVisible)}
-                  title="Close"
-                />
-              </View>
-            </View>
-          </View>
-        </Modal>
-
         <SectionList
           sections={ this.state.sectionedTasks }
           keyExtractor={(item, index) => item + index}
-          renderItem={({ item }) => <Item task={item} temp={this.state} />}
+          renderItem={({ item }) => <Item task={item} setModalVisible={this.setModalVisible} modalVisible={this.state.modalVisible} setTask={this.setTask} />}
           renderSectionHeader={({ section: { title } }) => (
             <View style={styles.statusHeader}>
               <View
@@ -200,6 +151,13 @@ export class TasksPage2 extends React.Component {
           )}
         />
 
+        <TaskModal
+          modalVisible={this.state.modalVisible}
+          setModalVisible={this.setModalVisible}
+          selectedTask={this.state.selectedTask}
+          setTask={this.setTask}
+        ></TaskModal>
+
         <AddButton></AddButton>
       </ImageBackground>
     );
@@ -215,61 +173,65 @@ const AddButton = () => (
   />
 );
 
-const TaskModal = () => (
-  <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            this.setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalHeader}>Task Name Here</Text>
-              <FlatList
-                data={[
-                  {
-                    key: 'Task Property 1',
-                    propertyName: 'property'
-                  },
-                  {
-                    key: 'Task Property 2',
-                    propertyName: 'property'
-                  },
-                  {
-                    key: 'Task Property 3',
-                    propertyName: 'property'
-                  },
-                  {
-                    key: 'Task Property 4',
-                    propertyName: 'property'
-                  },
-                  {
-                    key: 'Task Property 5',
-                    propertyName: 'property'
-                  },
-                  {
-                    key: 'Task Property 6',
-                    propertyName: 'property'
-                  },
-                ]}
-                renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.propertyName}: {item.key}</Text>}
-              />
-              <View style={{ position: 'absolute', bottom: 10 }}>
-                <Button
-                  style={styles.modalButton}
-                  onPress={() => this.setModalVisible(!modalVisible)}
-                  title="Close"
-                />
-              </View>
-            </View>
-          </View>
-        </Modal>
-)
+const TaskModal = (modalVisible, selectedTask, setTask) => {
+
+  console.log(selectedTask);
+  
+  return <Modal
+  animationType="slide"
+  transparent={true}
+  visible={modalVisible.modalVisible}
+  onRequestClose={() => {
+    Alert.alert("Modal has been closed.");
+    modalVisible.setModalVisible(!modalVisible.modalVisible);
+  }}
+>
+  <View style={styles.centeredView}>
+    <View style={styles.modalView}>
+      <Text style={styles.modalHeader}>Task Name Here</Text>
+      <FlatList
+        data={[
+          {
+            key: 'Task Property 1',
+            propertyName: 'property'
+          },
+          {
+            key: 'Task Property 2',
+            propertyName: 'property'
+          },
+          {
+            key: 'Task Property 3',
+            propertyName: 'property'
+          },
+          {
+            key: 'Task Property 4',
+            propertyName: 'property'
+          },
+          {
+            key: 'Task Property 5',
+            propertyName: 'property'
+          },
+          {
+            key: 'Task Property 6',
+            propertyName: 'property'
+          },
+        ]}
+        renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.propertyName}: {item.key}</Text>}
+      />
+      <View style={{ position: 'absolute', bottom: 10 }}>
+        <Button
+          style={styles.modalButton}
+          onPress={() => modalVisible.setModalVisible(!modalVisible.modalVisible)}
+          title="Close"
+        />
+      </View>
+    </View>
+  </View>
+</Modal>
+}
 
 const StatusButton = (task) => {
+  // TODO: adjust if statements based on task inprogress property
   if (task.inProgress == 'claimed') {
     return <TouchableHighlight
     style={styles.claimedStatus}
@@ -308,7 +270,7 @@ const StatusButton = (task) => {
 }
   
 
-const Item = ({ task, temp }) => (
+const Item = ({ task, setModalVisible, modalVisible, setTask }) => (
 
   <View style={styles.item}>
 
@@ -322,11 +284,11 @@ const Item = ({ task, temp }) => (
 
     <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
       <Pressable
-          style={[styles.button, styles.buttonOpen]}
-          onPress={console.log(temp.modalVisible)}
-        >
-          <Text style={{ fontSize: 18 }}>{task.name}</Text>
-        </Pressable>
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => { setModalVisible(!modalVisible.modalVisible); setTask(task); }}
+      >
+        <Text style={{ fontSize: 18 }}>{task.name}</Text>
+      </Pressable>
       
       <Text style={{ fontSize: 13, color: '#db1414' }}>
         Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
