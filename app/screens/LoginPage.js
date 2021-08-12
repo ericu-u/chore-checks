@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Image, StatusBar, ImageBackground } from 'react-native';
 import { Header } from 'react-native-elements';
+import { set } from 'react-native-reanimated';
+
 
 function LoginPage(props) {
+
+  const[oatmealfact, setFact]= useState("")
+
+    useEffect;() => {
+      var oatmealfacts_array = ["Oatmeal fact ", "Oatmeal fact2","Oatmeal fact3"]
+      setFact = oatmealfacts_array[Math.floor(Math.random()*oatmealfactsarray.length)];
+      
+    }
 
     const handleTap = () => console.log('sign in to google');
 
@@ -24,14 +34,16 @@ function LoginPage(props) {
                 <Text style={styles.text} onPress={handleTap}>Google Sign-in here</Text>
             </View>
 
-            <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={styles.text}>Fun Fact: Quaker Oats was founded in 1877!</Text>
+            <View style={{ flex: 2, alignItems: 'center', justifyContent: 'center' }}>
+                <Text >{oatmealfact}</Text>
             </View>
       
             <StatusBar style="auto" />
         </SafeAreaView>
     );
 }
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -42,7 +54,10 @@ const styles = StyleSheet.create({
     },
     image: {
       flex: 1,
-      resizeMode: 'contain',
+
+      width: 200,
+      height: 200,
+      borderRadius: 200/2,
     },
     titleText: {
       fontSize: 40,
@@ -54,4 +69,6 @@ const styles = StyleSheet.create({
     }
   });
 
+
 export default LoginPage;
+
