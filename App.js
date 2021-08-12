@@ -16,6 +16,10 @@ import { TasksPage2 } from "./app/screens/TasksPage2";
 import { HousePage3 } from "./app/screens/HouseHoldPage3";
 import BigChat from "./app/screens/chatMasterThing";
 import ScuffedLogin from "./app/screens/ScuffedLogin";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import "react-native-gesture-handler";
 
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
@@ -41,23 +45,39 @@ docRef.get().then((doc) => {
   //  console.log(doc.data());
 });
 
+const Stack = createStackNavigator();
+
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
-    //  <ScuffedLogin></ScuffedLogin>
-    //<Drawer></Drawer>
-    // <TasksPage></TasksPage>
-    // <TaskPageClass></TaskPageClass>
-    // <TasksPage2></TasksPage2>
-    <LoginPage></LoginPage>
-    //<Test></Test>
-    // <SettingsPage></SettingsPage>
-    // <HouseholdPage></HouseholdPage>
-    // <HouseholdPage2></HouseholdPage2>
-    //<TasksPage2></TasksPage2>
-    //<HousePage3></HousePage3>
-    //<ChatboxPage></ChatboxPage>
+    // <LoginPage></LoginPage>
+    // <NavigationContainer>
+    //   <Stack.Navigator>
+    //     <Stack.Screen name="LoginPage" component={LoginPage} />
+    //     <Stack.Screen name="Drawer" component={Drawer} />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+    //<Help></Help>
+    <Help2></Help2>
   );
+}
+
+// const Help = () => {
+//   if (firebase.auth().currentUser === null) {
+//     return LoginPage;
+//   } else {
+//     return Drawer;
+//   }
+// };
+
+class Help2 extends React.Component {
+  render() {
+    if (firebase.auth().currentUser === null) {
+      return <LoginPage></LoginPage>;
+    } else {
+      return <Drawer></Drawer>;
+    }
+  }
 }
 
 const styles = StyleSheet.create({

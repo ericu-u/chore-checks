@@ -17,6 +17,7 @@ import {
 import { Header, withTheme } from "react-native-elements";
 import { sub } from "react-native-reanimated";
 import { moderateScale } from "react-native-size-matters";
+import * as firebase from "firebase";
 
 export class SettingsPage extends React.Component {
   /*Variables for specific the notifications*/
@@ -138,7 +139,10 @@ export class SettingsPage extends React.Component {
           {/*Sign out button*/}
           <Button
             color="red"
-            onPress={() => Alert.alert("Button with adjusted color pressed")}
+            onPress={async () => {
+              await firebase.auth().signOut();
+              console.log("signed out");
+            }}
             title="Sign Out"
           ></Button>
         </SafeAreaView>
