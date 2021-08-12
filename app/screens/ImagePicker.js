@@ -7,6 +7,7 @@ import * as firebase from "firebase";
 
 var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
 
+// Source: https://github.com/shnrndk/office_messenger/blob/master/Components/ImagePicker/ImgPicker.js
 export default class ImgPicker extends React.Component {
   state = {
     image: null,

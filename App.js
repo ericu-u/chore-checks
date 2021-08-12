@@ -15,6 +15,7 @@ import HouseholdPage2 from "./app/screens/HouseholdPage2";
 import { TasksPage2 } from "./app/screens/TasksPage2";
 import { HousePage3 } from "./app/screens/HouseHoldPage3";
 import BigChat from "./app/screens/chatMasterThing";
+import ScuffedLogin from "./app/screens/ScuffedLogin";
 
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
@@ -43,7 +44,8 @@ docRef.get().then((doc) => {
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
-    <Drawer></Drawer>
+    <ScuffedLogin></ScuffedLogin>
+    //<Drawer></Drawer>
     // <TasksPage></TasksPage>
     // <TaskPageClass></TaskPageClass>
     // <TasksPage2></TasksPage2>
