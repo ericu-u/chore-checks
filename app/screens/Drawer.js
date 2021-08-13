@@ -19,13 +19,14 @@ import ChatboxPage from "./ChatboxPage";
 import HouseholdPage from "./HouseholdPage";
 import SettingsPage from "./SettingsPage";
 import CustomDrawer from "./CustomDrawer";
-
+import HouseholdSelectionPage from "./HouseholdSelectionPage";
 const Drawer = createDrawerNavigator();
 
 // drawer navigator screens
 function MyDrawer() {
   return (
     <Drawer.Navigator
+      independent={true}
       drawerStyle={{ backgroundColor: "#e5e5e5" }}
       drawerContent={(props) => <CustomDrawer {...props} />}
       drawerContentOptions={{
@@ -35,6 +36,7 @@ function MyDrawer() {
       }}
     >
       <Drawer.Screen
+        independent={true}
         name="Profile"
         component={ProfileNavigator}
         options={{
@@ -47,6 +49,7 @@ function MyDrawer() {
         }}
       />
       <Drawer.Screen
+        independent={true}
         name="Tasks"
         component={TasksNavigator}
         options={{
@@ -59,6 +62,7 @@ function MyDrawer() {
         }}
       />
       <Drawer.Screen
+        independent={true}
         name="Chatbox"
         component={ChatboxNavigator}
         options={{
@@ -71,6 +75,7 @@ function MyDrawer() {
         }}
       />
       <Drawer.Screen
+        independent={true}
         name="Household"
         component={HouseholdNavigator}
         options={{
@@ -83,6 +88,7 @@ function MyDrawer() {
         }}
       />
       <Drawer.Screen
+        independent={true}
         name="Settings"
         component={SettingsNavigator}
         options={{
@@ -120,8 +126,8 @@ export default function MenuPage() {
     return <AppLoading />;
   } else {
     return (
-      <NavigationContainer>
-        <MyDrawer />
+      <NavigationContainer independent={true}>
+        <MyDrawer independent={true}/>
       </NavigationContainer>
     );
   }
@@ -132,8 +138,9 @@ const ProfileStack = createStackNavigator();
 
 function ProfileNavigator() {
   return (
-    <ProfileStack.Navigator>
+    <ProfileStack.Navigator independent={true}>
       <ProfileStack.Screen
+        independent={true}
         name="Profile"
         component={ProfilePage}
         options={({ navigation }) => ({
@@ -169,8 +176,9 @@ const TasksStack = createStackNavigator();
 
 function TasksNavigator() {
   return (
-    <TasksStack.Navigator>
+    <TasksStack.Navigator independent={true}>
       <TasksStack.Screen
+        independent={true}
         name="Tasks"
         component={TasksPage2}
         options={({ navigation }) => ({
@@ -206,8 +214,9 @@ const ChatboxStack = createStackNavigator();
 
 function ChatboxNavigator() {
   return (
-    <ChatboxStack.Navigator>
+    <ChatboxStack.Navigator independent={true}>
       <ChatboxStack.Screen
+        independent={true}
         name="Chatbox"
         component={ChatboxPage}
         options={({ navigation }) => ({
@@ -243,8 +252,9 @@ const HouseholdStack = createStackNavigator();
 
 function HouseholdNavigator() {
   return (
-    <HouseholdStack.Navigator>
+    <HouseholdStack.Navigator independent={true}>
       <HouseholdStack.Screen
+        independent={true}
         name="Household"
         component={HouseholdPage}
         options={({ navigation }) => ({
@@ -309,6 +319,10 @@ function SettingsNavigator() {
           },
         })}
       />
+      <SettingsStack.Screen
+        name="HouseholdSelectionPage"
+        component={HouseholdSelectionPage}
+      ></SettingsStack.Screen>
     </SettingsStack.Navigator>
   );
 }

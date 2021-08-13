@@ -1,6 +1,6 @@
 var faker = require("faker");
 var firebase = require("firebase");
-
+// THIS IS OUTDATED U SHOULD PROB LOOK AT DATA_GEN2.JS NOW
 // TODO SCROLL TO THE BOTTOM OF THE FILE DO NOT EDIT ANYTHING ELSE. Please run this program with node data_gen.js
 
 // All classes except its just the constructors

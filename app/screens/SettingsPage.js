@@ -23,6 +23,15 @@ import {
   Montserrat_400Regular,
   Montserrat_500Medium,
 } from "@expo-google-fonts/montserrat";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
+import Drawer from "./Drawer";
+import HouseholdPage from "./HouseholdPage";
+
+/* Function to navigate to household page */
+
+const Stack = createNativeStackNavigator();
 
 export class SettingsPage extends React.Component {
   /*Variables for specific the notifications*/
@@ -54,112 +63,180 @@ export class SettingsPage extends React.Component {
   toggleChatNotifications = (value) => {
     this.setState({ ChatNotifications: value });
   };
+
   render() {
     return (
-      <ImageBackground
-        style={{ flex: 1 }}
-        source={require("../assets/background-gradient.jpg")}
-      >
-        <SafeAreaView>
-          <View style={styles.settingsBox}>
-            {/*Task Notifications button setting*/}
-            <View style={styles.textAlign}>
-              <Text style={{ fontSize: 24, fontFamily: "Montserrat_500Medium" }}>Task Notifications</Text>
-              <View style={styles.largeButton}>
-                <Switch
-                  onValueChange={this.toggleTaskNotifcations}
-                  value={this.state.TaskNotifcations}
-                />
+      /* container for any navigation needed */
+      (
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="HouseholdPage">
+            <Stack.Screen name="Household" component={HouseholdPage} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      ),
+      (
+        ////* the UI of the whole settings *////
+        <ImageBackground
+          style={{ flex: 1 }}
+          source={require("../assets/background-gradient.jpg")}
+        >
+          <SafeAreaView>
+            <View style={styles.settingsBox}>
+              {/*Task Notifications button setting*/}
+              <View style={styles.textAlign}>
+                <Text style={{ fontSize: 24, fontFamily: "Montserrat_500Medium" }}>Task Notifications</Text>
+                <View style={styles.largeButton}>
+                  <Switch
+                    onValueChange={this.toggleTaskNotifcations}
+                    value={this.state.TaskNotifcations}
+                  />
+                </View>
               </View>
-            </View>
 
-            {/*Approaching deadline button setting*/}
-            <View style={styles.subTextAlign}>
-              <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Approaching deadline</Text>
-              <View style={styles.smallButton}>
-                <Switch
-                  style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
-                  onValueChange={this.toggleTnApproach}
-                  value={this.state.TnApproach}
-                />
-              </View>
-            </View>
 
-            {/*Deadline passed button setting*/}
-            <View style={styles.subTextAlign}>
-              <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
-              <View style={styles.smallButton}>
-                <Switch
-                  style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
-                  onValueChange={this.toggleTnDeadlinePass}
-                  value={this.state.TnDeadlinePass}
-                />
-              </View>
-            </View>
 
-            {/*Task incomplete button setting*/}
-            <View style={styles.subTextAlign}>
-              <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Task incomplete</Text>
-              <View style={styles.smallButton}>
-                <Switch
-                  style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
-                  onValueChange={this.toggleTnTaskInc}
-                  value={this.state.TnTaskInc}
-                />
-              </View>
-            </View>
 
-            {/*Housemate completion button setting*/}
-            <View style={styles.subTextAlign}>
-              <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Housemate completion</Text>
-              <View style={styles.smallButton}>
-                <Switch
-                  style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
-                  onValueChange={this.toggleTnHousemateComplete}
-                  value={this.state.TnHousemateComplete}
-                />
-              </View>
-            </View>
 
-            {/*Chat notifications*/}
-            <View style={styles.textAlign}>
-              <Text style={{ fontSize: 24, fontFamily: "Montserrat_500Medium" }}>Chat Notifications</Text>
-              <View style={styles.largeButton}>
-                <Switch
-                  onValueChange={this.toggleChatNotifications}
-                  value={this.state.ChatNotifications}
-                />
+        {/* TODO: FIX FONT TO THIS!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Approaching deadline</Text>
+ */}
+
+
+
+              {/*Approaching deadline button setting*/}
+              <View style={styles.subTextAlign}>
+                <Text>Approaching deadline</Text>
+                <View style={styles.smallButton}>
+                  <Switch
+                    style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
+                    onValueChange={this.toggleTnApproach}
+                    value={this.state.TnApproach}
+                  />
+                </View>
+              </View>
+
+
+
+
+
+{/*TODO: FIX FONT!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
+ */}
+
+
+
+
+ 
+              {/*Deadline passed button setting*/}
+              <View style={styles.subTextAlign}>
+                <Text>Deadline passed</Text>
+                <View style={styles.smallButton}>
+                  <Switch
+                    style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
+                    onValueChange={this.toggleTnDeadlinePass}
+                    value={this.state.TnDeadlinePass}
+                  />
+                </View>
+              </View>
+
+
+
+
+{/*TODO: FIX FONT!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
+ */}
+
+
+
+
+
+
+ 
+              {/*Task incomplete button setting*/}
+              <View style={styles.subTextAlign}>
+                <Text>Task incomplete</Text>
+                <View style={styles.smallButton}>
+                  <Switch
+                    style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
+                    onValueChange={this.toggleTnTaskInc}
+                    value={this.state.TnTaskInc}
+                  />
+                </View>
+              </View>
+
+
+
+
+{/*TODO: FIX FONT!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
+ */}
+
+
+
+
+ 
+              {/*Housemate completion button setting*/}
+              <View style={styles.subTextAlign}>
+                <Text>Housemate completion</Text>
+                <View style={styles.smallButton}>
+                  <Switch
+                    style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
+                    onValueChange={this.toggleTnHousemateComplete}
+                    value={this.state.TnHousemateComplete}
+                  />
+                </View>
+              </View>
+
+
+
+
+
+{/*TODO: FIX FONT!!! <Text style={{ fontSize: 24, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
+ */}
+
+
+
+
+
+
+
+              {/*Chat notifications*/}
+              <View style={styles.textAlign}>
+                <Text style={{ fontSize: 24 }}>Chat Notifications</Text>
+                <View style={styles.largeButton}>
+                  <Switch
+                    onValueChange={this.toggleChatNotifications}
+                    value={this.state.ChatNotifications}
+                  />
+                </View>
               </View>
             </View>
+          </SafeAreaView>
+
+          <View style={styles.bottomTextStart}>
+            {/*Change Household button link*/}
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate("HouseholdSelectionPage")
+                }
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: "Montserrat_500medium",
+                    paddingBottom: "3%",
+                  }}
+                >
+                  Change Household
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {/*Sign out button*/}
+            <Button
+              color="red"
+              onPress={() => Alert.alert("Button with adjusted color pressed")}
+              title="Sign Out"
+            ></Button>
           </View>
-        </SafeAreaView>
-        <SafeAreaView style={styles.bottomTextStart}>
-          {/*Initial change household button*/}
-          {/* <Button
-            title="Change Household"
-            color="black"
-            onPress={() => Alert.alert("Button with adjusted color pressed")}
-          /> */}
-
-          {/*Altered change household button to add custom font*/}
-          <TouchableOpacity onPress={() => Alert.alert("Button with adjusted color pressed")}>
-            <Text style={{ fontSize: 20, fontFamily: "Montserrat_500Medium" }}>Change Household</Text>
-          </TouchableOpacity>
-
-          {/*Initial sign out button*/}
-          {/* <Button
-            color="red"
-            onPress={() => Alert.alert("Button with adjusted color pressed")}
-            title="Sign Out"
-          ></Button> */}
-
-          {/*Altered sign out button to add custom font*/}
-          <TouchableOpacity onPress={() => Alert.alert("Button with adjusted color pressed")}>
-            <Text style={{ color: "red", fontSize: 20, fontFamily: "Montserrat_500Medium", paddingTop: "5%" }}>Sign out</Text>
-          </TouchableOpacity>
-
-        </SafeAreaView>
-      </ImageBackground>
+        </ImageBackground>
+      )
     );
   }
 }
@@ -208,16 +285,7 @@ const styles = StyleSheet.create({
   bottomTextStart: {
     position: "absolute",
     alignSelf: "center",
-    //textAlign: 'center',
-    //paddingBottom: "3%",
-    //fontSize: 30,
-    //paddingTop: "90%",
-    //marginTop: "100%",
-    //height: "90%",
     alignItems: "center",
-    //alignContent: 'flex-end',
-    //justifyContent: 'center',
-    //marginLeft:"25%",
     bottom: "4%",
   },
 
@@ -227,14 +295,12 @@ const styles = StyleSheet.create({
     color: "red",
   },
   largeButton: {
-    //flex: 1,
     position: "absolute",
     alignItems: "center",
     marginLeft: "85%",
     paddingTop: "4%",
   },
   smallButton: {
-    //flex: 1,
     position: "absolute",
     alignItems: "center",
     marginLeft: "90%",

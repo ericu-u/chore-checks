@@ -9,6 +9,7 @@ import {
   ImageBackground,
   TouchableHighlight,
 } from "react-native";
+import * as firebase from "firebase";
 import AppLoading from "expo-app-loading";
 import {
   useFonts,
@@ -17,85 +18,80 @@ import {
   Montserrat_600SemiBold,
 } from "@expo-google-fonts/montserrat";
 
+const personIDD = "p0VVeQsUlU6suH3g5ru5R";
+
+console.log(firebase.auth().currentUser);
 function ProfilePage(props) {
-  let [fontsLoaded] = useFonts({
-    Montserrat_400Regular,
-    Montserrat_500Medium,
-  });
-
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  } else {
-    return (
-      //Replace profile picture with firebase profile
-      //FlatList is default scrollable. Can be made unscrollable.
-      //Most statistics are calculatable.
-      <ImageBackground
-        style={{ flex: 1 }}
-        source={require("../assets/background-gradient.jpg")}
-      >
-        <SafeAreaView style={styles.container}>
-          <View style={{ flex: 0.65 }}>
-            <Image
-              source={require("../assets/standard-account90.png")}
-              style={styles.image}
-            />
-            <Text style={styles.username}>Username</Text>
-          </View>
-
-          <View style={styles.householdBackground}>
-            <View style={styles.container}>
-              <Text style={styles.householdName}>Total Points</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              flex: 1.2,
-              flexDirection: "row",
-              alignItems: "space-evenly",
+    //Replace profile picture with firebase profile
+    //FlatList is default scrollable. Can be made unscrollable.
+    //Most statistics are calculatable.
+    <ImageBackground
+      style={{ flex: 1 }}
+      source={require("../assets/background-gradient.jpg")}
+    >
+      <SafeAreaView style={styles.container}>
+        <View style={{ flex: 0.65 }}>
+          <Image
+            source={{
+              uri: "https://lh3.googleusercontent.com/a-/AOh14GjpWcYnEoZq4pnBEIBPsbzpE7MlS1yok8cEQjR2=s96-c",
             }}
-          >
-            <View style={styles.nestedContainerBackground}>
-              <View style={styles.container}>
-                <Text style={styles.nestedContainerTitle}>Tasks</Text>
-                <FlatList
-                  data={[
-                    { key: "Walk the dog" },
-                    { key: "Walk the other dog" },
-                    { key: "Take a shower" },
-                    { key: "Buy groceries" },
-                    { key: "Invest this month's rent in Gamestop stonks" },
-                    { key: "Lose it all" },
-                  ]}
-                  renderItem={({ item }) => (
-                    <Text style={styles.list}>{item.key}</Text>
-                  )}
-                />
-              </View>
-            </View>
-            <View style={styles.nestedContainerBackground}>
-              <View style={styles.container}>
-                <Text style={styles.nestedContainerTitle}>Statistics</Text>
-                <FlatList
-                  data={[
-                    { key: "Tasks Done: \n 60" },
-                    { key: "Completion Rate: \n 91.7%" },
-                    { key: "On Time Tasks: \n 50" },
-                    { key: "Late Tasks: \n 5" },
-                    { key: "Missed Tasks: \n 5" },
-                  ]}
-                  renderItem={({ item }) => (
-                    <Text style={styles.list}>{item.key}</Text>
-                  )}
-                />
-              </View>
+            style={styles.image}
+          />
+          <Text style={styles.username}>Bubloo 7</Text>
+        </View>
+
+        <View style={styles.householdBackground}>
+          <View style={styles.container}>
+            <Text style={styles.householdName}>Total Points</Text>
+          </View>
+        </View>
+        <View
+          style={{
+            flex: 1.2,
+            flexDirection: "row",
+          }}
+        >
+          <View style={styles.nestedContainerBackground}>
+            <View style={styles.container}>
+              <Text style={styles.nestedContainerTitle}>Tasks</Text>
+              <FlatList
+                data={[
+                  { key: "Walk the dog" },
+                  { key: "Walk the other dog" },
+                  { key: "Take a shower" },
+                  { key: "Buy groceries" },
+                  { key: "Invest this month's rent in Gamestop stonks" },
+                  { key: "Lose it all" },
+                ]}
+                renderItem={({ item }) => (
+                  <Text style={styles.list}>{item.key}</Text>
+                )}
+              />
             </View>
           </View>
-        </SafeAreaView>
-      </ImageBackground>
-    );
-  }
+          <View style={styles.nestedContainerBackground}>
+            <View style={styles.container}>
+              <Text style={styles.nestedContainerTitle}>Statistics</Text>
+              <FlatList
+                data={[
+                  { key: "Tasks Done: \n 60" },
+                  { key: "Completion Rate: \n 91.7%" },
+                  { key: "On Time Tasks: \n 50" },
+                  { key: "Late Tasks: \n 5" },
+                  { key: "Missed Tasks: \n 5" },
+                ]}
+                renderItem={({ item }) => (
+                  <Text style={styles.list}>{item.key}</Text>
+                )}
+              />
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
+  );
 }
+
 //All styles
 const styles = StyleSheet.create({
   container: {
@@ -108,6 +104,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: 130,
     height: 130,
+    borderRadius: 130 / 2,
     alignItems: "center",
     marginTop: "5%",
     marginLeft: "1.5%",
@@ -118,7 +115,6 @@ const styles = StyleSheet.create({
     bottom: "1%",
     left: "1.6%",
     textAlign: "center",
-    fontFamily: "Montserrat_600SemiBold",
   },
   householdBackground: {
     flex: 0.15,
@@ -139,7 +135,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "center",
-    fontFamily: "Montserrat_600SemiBold",
   },
   nestedContainerBackground: {
     flex: 1,
@@ -158,7 +153,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
-    fontFamily: "Montserrat_600SemiBold",
   },
   list: {
     marginLeft: "10%",
@@ -166,7 +160,6 @@ const styles = StyleSheet.create({
     marginRight: "10%",
     fontSize: 17,
     textAlign: "left",
-    fontFamily: "Montserrat_400Regular",
   },
 });
 

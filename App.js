@@ -14,7 +14,15 @@ import Drawer from "./app/screens/Drawer";
 import HouseholdPage2 from "./app/screens/HouseholdPage2";
 import { TasksPage2 } from "./app/screens/TasksPage2";
 import { HousePage3 } from "./app/screens/HouseHoldPage3";
+import BigChat from "./app/screens/chatMasterThing";
+import ScuffedLogin from "./app/screens/ScuffedLogin";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
+import "react-native-gesture-handler";
+import ProfilePage from "./app/screens/ProfilePage";
+
+firebase.auth().signOut();
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
   authDomain: "chores-97427.firebaseapp.com",
@@ -34,27 +42,37 @@ if (!firebase.apps.length) {
 }
 
 const db = firebase.firestore();
-console.log("refreshed");
 var docRef = db.doc("/messages/XBdku2O78W9iwkbev3y2");
 docRef.get().then((doc) => {
-  console.log(doc.data());
+  //  console.log(doc.data());
 });
+
+const AuthStack = createStackNavigator();
 
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
-    <Drawer></Drawer>
-    // <TasksPage></TasksPage>
-    // <TaskPageClass></TaskPageClass>
-    // <TasksPage2></TasksPage2>
+    <NavigationContainer independent={true}>
+      <AuthStack.Navigator independent={true}>
+        <AuthStack.Screen
+          independent={true}
+          name="LoginPage"
+          component={LoginPage}
+          options={{ headerShown: false }}
+        />
+
+        <AuthStack.Screen
+          independent={true}
+          name="Drawer"
+          component={Drawer}
+          options={{ headerShown: false }}
+        />
+      </AuthStack.Navigator>
+    </NavigationContainer>
     // <LoginPage></LoginPage>
-    // <Test></Test>
-    // <SettingsPage></SettingsPage>
-    // <HouseholdPage></HouseholdPage>
-    // <HouseholdPage2></HouseholdPage2>
-    // <TasksPage2></TasksPage2>
-    // <HousePage3></HousePage3>
-    // <ChatboxPage></ChatboxPage>
+    // <Help></Help>
+    // <Help2></Help2>
+    // <ProfilePage></ProfilePage>
   );
 }
 

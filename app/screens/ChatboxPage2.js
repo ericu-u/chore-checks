@@ -23,7 +23,7 @@ if (firebase.apps.length === 0) {
 }
 
 const db = firebase.firestore();
-const chatsRef = db.collection("chats");
+const chatsRef = db.collection("chat2");
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -65,8 +65,11 @@ export default function App() {
     }
   }
   async function handlePress() {
-    const _id = Math.random().toString(36).substring(7);
-    const user = { _id, name };
+    const _id = firebase.auth().currentUser.uid;
+    const name = firebase.auth().currentUser.displayName;
+    const avatar = firebase.auth().currentUser.photoURL;
+    console.log("avatar", avatar);
+    const user = { _id, name, avatar };
     await AsyncStorage.setItem("user", JSON.stringify(user));
     setUser(user);
   }
@@ -75,7 +78,20 @@ export default function App() {
     await Promise.all(writes);
   }
 
-  console.log("refreshed");
+  // console.log("refresheds");
+  console.log("curr user:", firebase.auth().currentUser.photoURL);
+
+  // firebase
+  //   .auth()
+  //   .signOut()
+  //   .then(() => {
+  //     console.log("signed out");
+  //     console.log(firebase.auth().currentUser);
+  //   })
+  //   .catch((error) => {
+  //     // An error happened.
+  //   });
+
   if (!user) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
