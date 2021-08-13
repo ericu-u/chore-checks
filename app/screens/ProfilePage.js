@@ -9,9 +9,16 @@ import {
   ImageBackground,
   TouchableHighlight,
 } from "react-native";
+import * as firebase from "firebase";
 
+const personIDD = "p0VVeQsUlU6suH3g5ru5R";
+
+console.log(firebase.auth().currentUser);
 function ProfilePage(props) {
   return (
+    //Replace profile picture with firebase profile
+    //FlatList is default scrollable. Can be made unscrollable.
+    //Most statistics are calculatable.
     <ImageBackground
       style={{ flex: 1 }}
       source={require("../assets/background-gradient.jpg")}
@@ -19,10 +26,12 @@ function ProfilePage(props) {
       <SafeAreaView style={styles.container}>
         <View style={{ flex: 0.65 }}>
           <Image
-            source={require("../assets/standard-account90.png")}
+            source={{
+              uri: "https://lh3.googleusercontent.com/a-/AOh14GjpWcYnEoZq4pnBEIBPsbzpE7MlS1yok8cEQjR2=s96-c",
+            }}
             style={styles.image}
           />
-          <Text style={styles.username}>Username</Text>
+          <Text style={styles.username}>Bubloo 7</Text>
         </View>
 
         <View style={styles.householdBackground}>
@@ -34,7 +43,6 @@ function ProfilePage(props) {
           style={{
             flex: 1.2,
             flexDirection: "row",
-            alignItems: "space-evenly",
           }}
         >
           <View style={styles.nestedContainerBackground}>
@@ -90,6 +98,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: 130,
     height: 130,
+    borderRadius: 130 / 2,
     alignItems: "center",
     marginTop: "5%",
     marginLeft: "1.5%",

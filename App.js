@@ -22,7 +22,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-gesture-handler";
 import ProfilePage from "./app/screens/ProfilePage";
 
-// firebase.auth().signOut();
+firebase.auth().signOut();
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
   authDomain: "chores-97427.firebaseapp.com",
@@ -52,27 +52,27 @@ const AuthStack = createStackNavigator();
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
-    // <NavigationContainer independent={true}>
-    //   <AuthStack.Navigator independent={true}>
-    //     <AuthStack.Screen
-    //       independent={true}
-    //       name="LoginPage"
-    //       component={LoginPage}
-    //       options={{ headerShown: false }}
-    //     />
+    <NavigationContainer independent={true}>
+      <AuthStack.Navigator independent={true}>
+        <AuthStack.Screen
+          independent={true}
+          name="LoginPage"
+          component={LoginPage}
+          options={{ headerShown: false }}
+        />
 
-    //     <AuthStack.Screen
-    //       independent={true}
-    //       name="Drawer"
-    //       component={Drawer}
-    //       options={{ headerShown: false }}
-    //     />
-    //   </AuthStack.Navigator>
-    // </NavigationContainer>
+        <AuthStack.Screen
+          independent={true}
+          name="Drawer"
+          component={Drawer}
+          options={{ headerShown: false }}
+        />
+      </AuthStack.Navigator>
+    </NavigationContainer>
     // <LoginPage></LoginPage>
     // <Help></Help>
     // <Help2></Help2>
-    <ProfilePage></ProfilePage>
+    // <ProfilePage></ProfilePage>
   );
 }
 
