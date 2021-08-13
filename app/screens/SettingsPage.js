@@ -17,23 +17,13 @@ import {
 import { Header, withTheme } from "react-native-elements";
 import { sub } from "react-native-reanimated";
 import { moderateScale } from "react-native-size-matters";
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {createStackNavigator} from '@react-navigation/stack';
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import Drawer from "./Drawer";
 import HouseholdPage from "./HouseholdPage";
 
 /* Function to navigate to household page */
-function Changehouse({navigation}){
-  navigation = useNavigation();
-  return (
-    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-      <TouchableOpacity onPress={() => navigation.navigate('Household')}>
-        <Text style={{fontSize:20, fontFamily:"Montserrat_500medium", paddingBottom: "3%"}}>Change Household</Text>
-              </TouchableOpacity>
-    </View>
-  )
-}
 
 const Stack = createNativeStackNavigator();
 
@@ -67,110 +57,126 @@ export class SettingsPage extends React.Component {
   toggleChatNotifications = (value) => {
     this.setState({ ChatNotifications: value });
   };
-  
-  render() {
 
+  render() {
     return (
       /* container for any navigation needed */
-      <NavigationContainer>
-      <Stack.Navigator initialRouteName="HouseholdPage">
-      <Stack.Screen name="Household" component={HouseholdPage} />
-      </Stack.Navigator>
-      </NavigationContainer>,
+      (
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="HouseholdPage">
+            <Stack.Screen name="Household" component={HouseholdPage} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      ),
+      (
+        ////* the UI of the whole settings *////
+        <ImageBackground
+          style={{ flex: 1 }}
+          source={require("../assets/background-gradient.jpg")}
+        >
+          <SafeAreaView>
+            <View style={styles.settingsBox}>
+              {/*Task Notifications button setting*/}
+              <View style={styles.textAlign}>
+                <Text style={{ fontSize: 24 }}>Task Notifications</Text>
+                <View style={styles.largeButton}>
+                  <Switch
+                    onValueChange={this.toggleTaskNotifcations}
+                    value={this.state.TaskNotifcations}
+                  />
+                </View>
+              </View>
 
-    ////* the UI of the whole settings *////
-      <ImageBackground
-        style={{ flex: 1 }}
-        source={require("../assets/background-gradient.jpg")}
-      >
-        <SafeAreaView>
-          <View style={styles.settingsBox}>
-            {/*Task Notifications button setting*/}
-            <View style={styles.textAlign}>
-              <Text style={{ fontSize: 24 }}>Task Notifications</Text>
-              <View style={styles.largeButton}>
-                <Switch
-                  onValueChange={this.toggleTaskNotifcations}
-                  value={this.state.TaskNotifcations}
-                />
+              {/*Approaching deadline button setting*/}
+              <View style={styles.subTextAlign}>
+                <Text>Approaching deadline</Text>
+                <View style={styles.smallButton}>
+                  <Switch
+                    style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
+                    onValueChange={this.toggleTnApproach}
+                    value={this.state.TnApproach}
+                  />
+                </View>
+              </View>
+
+              {/*Deadline passed button setting*/}
+              <View style={styles.subTextAlign}>
+                <Text>Deadline passed</Text>
+                <View style={styles.smallButton}>
+                  <Switch
+                    style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
+                    onValueChange={this.toggleTnDeadlinePass}
+                    value={this.state.TnDeadlinePass}
+                  />
+                </View>
+              </View>
+
+              {/*Task incomplete button setting*/}
+              <View style={styles.subTextAlign}>
+                <Text>Task incomplete</Text>
+                <View style={styles.smallButton}>
+                  <Switch
+                    style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
+                    onValueChange={this.toggleTnTaskInc}
+                    value={this.state.TnTaskInc}
+                  />
+                </View>
+              </View>
+
+              {/*Housemate completion button setting*/}
+              <View style={styles.subTextAlign}>
+                <Text>Housemate completion</Text>
+                <View style={styles.smallButton}>
+                  <Switch
+                    style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
+                    onValueChange={this.toggleTnHousemateComplete}
+                    value={this.state.TnHousemateComplete}
+                  />
+                </View>
+              </View>
+
+              {/*Chat notifications*/}
+              <View style={styles.textAlign}>
+                <Text style={{ fontSize: 24 }}>Chat Notifications</Text>
+                <View style={styles.largeButton}>
+                  <Switch
+                    onValueChange={this.toggleChatNotifications}
+                    value={this.state.ChatNotifications}
+                  />
+                </View>
               </View>
             </View>
+          </SafeAreaView>
 
-            {/*Approaching deadline button setting*/}
-            <View style={styles.subTextAlign}>
-              <Text>Approaching deadline</Text>
-              <View style={styles.smallButton}>
-                <Switch
-                  style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
-                  onValueChange={this.toggleTnApproach}
-                  value={this.state.TnApproach}
-                />
-              </View>
+          <View style={styles.bottomTextStart}>
+            {/*Change Household button link*/}
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate("HouseholdSelectionPage")
+                }
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: "Montserrat_500medium",
+                    paddingBottom: "3%",
+                  }}
+                >
+                  Change Household
+                </Text>
+              </TouchableOpacity>
             </View>
-
-            {/*Deadline passed button setting*/}
-            <View style={styles.subTextAlign}>
-              <Text>Deadline passed</Text>
-              <View style={styles.smallButton}>
-                <Switch
-                  style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
-                  onValueChange={this.toggleTnDeadlinePass}
-                  value={this.state.TnDeadlinePass}
-                />
-              </View>
-            </View>
-
-            {/*Task incomplete button setting*/}
-            <View style={styles.subTextAlign}>
-              <Text>Task incomplete</Text>
-              <View style={styles.smallButton}>
-                <Switch
-                  style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
-                  onValueChange={this.toggleTnTaskInc}
-                  value={this.state.TnTaskInc}
-                />
-              </View>
-            </View>
-
-            {/*Housemate completion button setting*/}
-            <View style={styles.subTextAlign}>
-              <Text>Housemate completion</Text>
-              <View style={styles.smallButton}>
-                <Switch
-                  style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
-                  onValueChange={this.toggleTnHousemateComplete}
-                  value={this.state.TnHousemateComplete}
-                />
-              </View>
-            </View>
-
-            {/*Chat notifications*/}
-            <View style={styles.textAlign}>
-              <Text style={{ fontSize: 24 }}>Chat Notifications</Text>
-              <View style={styles.largeButton}>
-                <Switch
-                  onValueChange={this.toggleChatNotifications}
-                  value={this.state.ChatNotifications}
-                />
-              </View>
-            </View>
+            {/*Sign out button*/}
+            <Button
+              color="red"
+              onPress={() => Alert.alert("Button with adjusted color pressed")}
+              title="Sign Out"
+            ></Button>
           </View>
-        </SafeAreaView>
-        
-        <View style={styles.bottomTextStart}>
-          {/*Change Household button link*/}
-          <Changehouse/>
-          {/*Sign out button*/}
-          <Button
-            color="red"
-            onPress={() => Alert.alert("Button with adjusted color pressed")}
-            title="Sign Out"
-            
-          ></Button>
-        </View>
-      </ImageBackground>
+        </ImageBackground>
+      )
     );
-    
   }
 }
 

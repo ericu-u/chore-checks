@@ -5,6 +5,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MaterialIcons } from "@expo/vector-icons";
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Montserrat_400Regular,
+  Montserrat_600SemiBold,
+} from "@expo-google-fonts/montserrat";
 
 import ProfilePage from "./ProfilePage";
 import TasksPage from "./TasksPage";
@@ -13,7 +19,7 @@ import ChatboxPage from "./ChatboxPage";
 import HouseholdPage from "./HouseholdPage";
 import SettingsPage from "./SettingsPage";
 import CustomDrawer from "./CustomDrawer";
-
+import HouseholdSelectionPage from "./HouseholdSelectionPage";
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
@@ -270,14 +276,14 @@ const SettingsStack = createStackNavigator();
 
 function SettingsNavigator() {
   return (
-    <SettingsStack.Navigator independent={true}>
+    <SettingsStack.Navigator>
       <SettingsStack.Screen
-        independent={true}
         name="Settings"
         component={SettingsPage}
         options={({ navigation }) => ({
           title: "Settings",
           headerTitleStyle: {
+            fontFamily: "Montserrat_600SemiBold",
             fontSize: 20,
           },
           headerLeft: () => (
@@ -299,6 +305,10 @@ function SettingsNavigator() {
           },
         })}
       />
+      <SettingsStack.Screen
+        name="HouseholdSelectionPage"
+        component={HouseholdSelectionPage}
+      ></SettingsStack.Screen>
     </SettingsStack.Navigator>
   );
 }

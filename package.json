@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo-google-fonts/montserrat": "^0.2.0",
     "@react-native-async-storage/async-storage": "^1.15.5",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/netinfo": "^6.0.0",
@@ -17,6 +18,7 @@
     "@react-navigation/stack": "^5.14.5",
     "@use-expo/font": "^2.0.0",
     "expo": "~42.0.1",
+    "expo-app-loading": "^1.1.2",
     "expo-font": "~9.2.1",
     "expo-google-app-auth": "^8.2.2",
     "expo-image-picker": "~10.2.2",
@@ -29,6 +31,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-dialog": "^8.2.0",
     "react-native-dotenv": "^3.1.1",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~1.10.2",
