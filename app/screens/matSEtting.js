@@ -74,7 +74,7 @@ export class SettingsPage extends React.Component {
     return (
       /* container for any navigation needed */
       (
-        <NavigationContainer>
+        <NavigationContainer >
           <Stack.Navigator initialRouteName="HouseholdPage">
             <Stack.Screen name="Household" component={HouseholdPage} />
           </Stack.Navigator>

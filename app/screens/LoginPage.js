@@ -12,7 +12,6 @@ import { Header } from "react-native-elements";
 import { set } from "react-native-reanimated";
 import * as firebase from "firebase";
 import * as Google from "expo-google-app-auth";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
 
 function LoginPage({ navigation }) {
   const [oatmealfact, setFact] = useState("");
