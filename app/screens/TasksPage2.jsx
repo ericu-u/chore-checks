@@ -111,14 +111,7 @@ export class TasksPage2 extends React.Component {
         style={{ flex: 1 }}
         source={require("../assets/background-gradient.jpg")}
       >
-        <Header
-          leftComponent={{
-            icon: "menu",
-            color: "#fff",
-            iconStyle: { color: "#fff" },
-          }}
-          centerComponent={{ text: "Tasks", style: { color: "#fff" } }}
-        />
+     
 
         <SectionList
           sections={ this.state.sectionedTasks }

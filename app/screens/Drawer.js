@@ -11,6 +11,7 @@ import TasksPage from "./TasksPage";
 import ChatboxPage from "./ChatboxPage";
 import HouseholdPage from "./HouseholdPage";
 import SettingsPage from "./SettingsPage";
+import { TasksPage2 } from "./TasksPage2";
 
 const Drawer = createDrawerNavigator();
 
@@ -148,7 +149,7 @@ function TasksNavigator() {
     <TasksStack.Navigator>
       <TasksStack.Screen
         name="Tasks"
-        component={TasksPage}
+        component={TasksPage2}
         options={({ navigation }) => ({
           title: "Tasks",
           headerLeft: () => (
