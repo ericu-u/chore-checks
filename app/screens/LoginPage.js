@@ -7,6 +7,7 @@ import {
   Image,
   StatusBar,
   ImageBackground,
+  TouchableOpacity
 } from "react-native";
 import { Header } from "react-native-elements";
 import { set } from "react-native-reanimated";
@@ -165,14 +166,16 @@ function LoginPage({ navigation }) {
         <Text style={styles.titleText}>Chore Checks</Text>
       </View>
 
-      <View style={{ flex: 2, alignItems: "center", justifyContent: "center" }}>
-        <Text style={styles.text} onPress={login}>
-          Google Sign-in here
-        </Text>
-      </View>
+      <TouchableOpacity onPress={login}>
+        <Image 
+        style={{resizeMode: "contain" , width: 300, height: 60}}
+        source= {require("../assets/Gsignin.png")}>
+        </Image>
+      </TouchableOpacity>
+
 
       <View style={{ flex: 2, alignItems: "center", justifyContent: "center" }}>
-        <Text>{oatmealfact}</Text>
+        <Text>Oats contain more soluble fiber than whole wheat, rice or corn!</Text>
       </View>
 
       <StatusBar style="auto" />
