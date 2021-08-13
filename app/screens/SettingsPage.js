@@ -17,7 +17,25 @@ import {
 import { Header, withTheme } from "react-native-elements";
 import { sub } from "react-native-reanimated";
 import { moderateScale } from "react-native-size-matters";
-import * as firebase from "firebase";
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createStackNavigator} from '@react-navigation/stack';
+import Drawer from "./Drawer";
+import HouseholdPage from "./HouseholdPage";
+
+/* Function to navigate to household page */
+function Changehouse({navigation}){
+  navigation = useNavigation();
+  return (
+    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <TouchableOpacity onPress={() => navigation.navigate('Household')}>
+        <Text style={{fontSize:20, fontFamily:"Montserrat_500medium", paddingBottom: "3%"}}>Change Household</Text>
+              </TouchableOpacity>
+    </View>
+  )
+}
+
+const Stack = createNativeStackNavigator();
 
 export class SettingsPage extends React.Component {
   /*Variables for specific the notifications*/
@@ -49,8 +67,18 @@ export class SettingsPage extends React.Component {
   toggleChatNotifications = (value) => {
     this.setState({ ChatNotifications: value });
   };
+  
   render() {
+
     return (
+      /* container for any navigation needed */
+      <NavigationContainer>
+      <Stack.Navigator initialRouteName="HouseholdPage">
+      <Stack.Screen name="Household" component={HouseholdPage} />
+      </Stack.Navigator>
+      </NavigationContainer>,
+
+    ////* the UI of the whole settings *////
       <ImageBackground
         style={{ flex: 1 }}
         source={require("../assets/background-gradient.jpg")}
@@ -128,26 +156,21 @@ export class SettingsPage extends React.Component {
             </View>
           </View>
         </SafeAreaView>
-        <SafeAreaView style={styles.bottomTextStart}>
+        
+        <View style={styles.bottomTextStart}>
           {/*Change Household button link*/}
-          <Button
-            title="Change Household"
-            color="black"
-            onPress={() => Alert.alert("Button with adjusted color pressed")}
-          />
-
+          <Changehouse/>
           {/*Sign out button*/}
           <Button
             color="red"
-            onPress={async () => {
-              await firebase.auth().signOut();
-              console.log("signed out");
-            }}
+            onPress={() => Alert.alert("Button with adjusted color pressed")}
             title="Sign Out"
+            
           ></Button>
-        </SafeAreaView>
+        </View>
       </ImageBackground>
     );
+    
   }
 }
 
@@ -195,16 +218,7 @@ const styles = StyleSheet.create({
   bottomTextStart: {
     position: "absolute",
     alignSelf: "center",
-    //textAlign: 'center',
-    //paddingBottom: "3%",
-    //fontSize: 30,
-    //paddingTop: "90%",
-    //marginTop: "100%",
-    //height: "90%",
     alignItems: "center",
-    //alignContent: 'flex-end',
-    //justifyContent: 'center',
-    //marginLeft:"25%",
     bottom: "4%",
   },
 
@@ -214,14 +228,12 @@ const styles = StyleSheet.create({
     color: "red",
   },
   largeButton: {
-    //flex: 1,
     position: "absolute",
     alignItems: "center",
     marginLeft: "85%",
     paddingTop: "4%",
   },
   smallButton: {
-    //flex: 1,
     position: "absolute",
     alignItems: "center",
     marginLeft: "90%",
