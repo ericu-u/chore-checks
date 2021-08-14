@@ -12,8 +12,7 @@ import {
   SectionList,
   Pressable,
   FlatList,
-  TouchableOpacity,
-  clickHandler,
+  TextInput,
 } from "react-native";
 import config from "../../config";
 import * as firebase from "firebase";
@@ -275,7 +274,12 @@ const InputModal = (props) => {
 
           <Text style={styles.modalHeader}>Create New Task</Text>
 
-          
+          <TextInput style = {styles.input}
+               underlineColorAndroid = "transparent"
+               placeholder = "Task Name"
+               placeholderTextColor = "#788fb3"
+               autoCapitalize = "sentences"
+               onChangeText = {() => null}/>
 
           <View style={{ position: 'absolute', bottom: 10 }}>
             <Button
@@ -452,6 +456,13 @@ const styles = StyleSheet.create({
     right: 5,
     bottom: 5,
     backgroundColor: '#071b7a'
+  },
+  input: {
+    margin: 15,
+    height: 40,
+    width: 200,
+    borderColor: '#192e4f',
+    borderWidth: 1
   },
   item: {
     flexDirection: "row",
