@@ -32,6 +32,7 @@ export class TasksPage2 extends React.Component {
       unsubscribe: null, // Firebase subscription. Calling this method will mean we stop listening to firebase for updates whenever the database changes
       sectionedTasks: [],
       modalVisible: false,
+      inputModalVisible: false,
       selectedTask: null,
     };
   }
@@ -98,6 +99,10 @@ export class TasksPage2 extends React.Component {
     this.setState({ modalVisible: visible });
   }
 
+  setInputModalVisible = (visible) => {
+    this.setState({ inputModalVisible: visible });
+  }
+
   setTask = (task) => {
     this.setState({ selectedTask: task });
   }
@@ -156,30 +161,44 @@ export class TasksPage2 extends React.Component {
           modalVisible={this.state.modalVisible}
           setModalVisible={this.setModalVisible}
           selectedTask={this.state}
-         />
+          inputModalVisible={this.state.inputModalVisible}
+          setInputModalVisible={this.setInputModalVisible}
+        />
 
-        <AddButton></AddButton>
+        <AddButton
+          inputModalVisible={this.state.inputModalVisible}
+          setInputModalVisible={this.setInputModalVisible}
+        />
       </ImageBackground>
     );
   }
 }
 
-const AddButton = () => (
+const AddButton = (props) => (
   <FAB
     style={styles.fab}
     icon="plus"
     color="white"
-    onPress={() => console.log('Pressed')}
+    onPress={() => { props.setInputModalVisible(!props.inputModalVisible) }}
   />
 );
 
-const TaskModal = (modalVisible) => {
+const TaskModal = (props) => {
+
+  if (props.inputModalVisible == true) {
+    return (
+      <InputModal
+        inputModalVisible={props.inputModalVisible}
+        setInputModalVisible={props.setInputModalVisible}
+      />
+    )
+  }
 
   let error = new TypeError('temp error');
 
   try {
-    selectedTask = modalVisible.selectedTask.selectedTask;
-    selectedTaskKeys = Object.keys(selectedTask);
+
+    var selectedTask = props.selectedTask.selectedTask;
 
     listData = [
       {
@@ -202,41 +221,73 @@ const TaskModal = (modalVisible) => {
         key: 'Description',
         property: selectedTask.description
       },
-    ]
+    ];
 
     return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={props.modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          props.setModalVisible(!props.modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalHeader}>{selectedTask.name}</Text>
+            <FlatList
+              data={listData}
+              renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.key}: {item.property}</Text>}
+            />
+            <View style={{ position: 'absolute', bottom: 10 }}>
+              <Button
+                style={styles.modalButton}
+                onPress={() => props.setModalVisible(!props.modalVisible)}
+                title="Close"
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+    )
+
+  } catch (error) {
+    return null;
+  }
+}
+
+const InputModal = (props) => {
+
+  return (
     <Modal
       animationType="slide"
       transparent={true}
-      visible={modalVisible.modalVisible}
+      visible={props.inputModalVisible}
       onRequestClose={() => {
         Alert.alert("Modal has been closed.");
-        modalVisible.setModalVisible(!modalVisible.modalVisible);
+        props.setInputModalVisible(!props.inputModalVisible);
       }}
->
+    >
+
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalHeader}>{selectedTask.name}</Text>
-          <FlatList
-            data={listData}
-            renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.key}: {item.property}</Text>}
-          />
+
+          <Text style={styles.modalHeader}>Create New Task</Text>
+
+          
+
           <View style={{ position: 'absolute', bottom: 10 }}>
             <Button
               style={styles.modalButton}
-              onPress={() => modalVisible.setModalVisible(!modalVisible.modalVisible)}
+              onPress={() => props.setInputModalVisible(!props.inputModalVisible)}
               title="Close"
             />
           </View>
         </View>
       </View>
     </Modal>
-    )
-
-  } catch (error) {
-    return null;
-  }
-  
+  )
 }
 
 const StatusButton = (task) => {
@@ -282,6 +333,7 @@ const Item = ({ task, setModalVisible, modalVisible, setTask }) => {
 
   var deadline = new Date(task.deadline); // deadline
   var currTime = new Date(); // Now
+  var timeLeft = task.deadline - currTime.valueOf()
 
   function msToTime(duration) {
     var seconds = Math.floor((duration / 1000) % 60),
@@ -295,102 +347,54 @@ const Item = ({ task, setModalVisible, modalVisible, setTask }) => {
     return hours + ":" + minutes + ":" + seconds;
   }
 
-  console.log(new Date(1628987787089).toString());
-
-  if ((task.deadline - currTime.valueOf()) < 0 ) {
-    return (
-      <View style={styles.item}>
-    
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
-          <Image
-            source={require('../assets/oatmeal_bowl.png')}
-            style={{ height: 45, width: 50 } /* 44.44444 for hexagon_green_1.png */}
-          />
-          <Text style={{position: 'absolute', bottom: 3, /*color: 'white'*/}}>{task.points}</Text>
-        </View>
-    
-        <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
-          <Pressable
-            style={[styles.button, styles.buttonOpen]}
-            onPress={() => { setModalVisible(!modalVisible.modalVisible); setTask(task); }}
-          >
-            <Text style={{ fontSize: 18 }}>{task.name}</Text>
-          </Pressable>
-          
-          <Text style={{ fontSize: 13, color: '#db1414' }}>
-            Due Date: Overdue! {/* TODO: Add if statement to display time if less than 24 hours */}
-          </Text>
-        </View>
-        
-        <View style={{ flex: 2, justifyContent: "center" }}>
-          <StatusButton props={task} />
-        </View>
-      </View>
+  if (timeLeft < 0 ) {
+    var timeDisplay = (
+      <Text style={{ fontSize: 13, color: '#db1414' }}>
+        Due Date: Overdue!
+      </Text>
     )
   }
   else if ((task.deadline - currTime.valueOf()) < 86400000 ) {
-    
-    return (
-      <View style={styles.item}>
-    
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
-          <Image
-            source={require('../assets/oatmeal_bowl.png')}
-            style={{ height: 45, width: 50 } /* 44.44444 for hexagon_green_1.png */}
-          />
-          <Text style={{position: 'absolute', bottom: 3, /*color: 'white'*/}}>{task.points}</Text>
-        </View>
-    
-        <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
-          <Pressable
-            style={[styles.button, styles.buttonOpen]}
-            onPress={() => { setModalVisible(!modalVisible.modalVisible); setTask(task); }}
-          >
-            <Text style={{ fontSize: 18 }}>{task.name}</Text>
-          </Pressable>
-          
-          <Text style={{ fontSize: 13, color: '#db1414' }}>
-            Due in: {msToTime(task.deadline - currTime.valueOf())} {/* TODO: Add if statement to display time if less than 24 hours */}
-          </Text>
-        </View>
-        
-        <View style={{ flex: 2, justifyContent: "center" }}>
-          <StatusButton props={task} />
-        </View>
-      </View>
+    var timeDisplay = (
+      <Text style={{ fontSize: 13, color: '#db1414' }}>
+        Due in: {msToTime(task.deadline - currTime.valueOf())} {/* TODO: Add if statement to display time if less than 24 hours */}
+      </Text>
     )
   }
   else {
-    return (
-      <View style={styles.item}>
-    
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
-          <Image
-            source={require('../assets/oatmeal_bowl.png')}
-            style={{ height: 45, width: 50 } /* 44.44444 for hexagon_green_1.png */}
-          />
-          <Text style={{position: 'absolute', bottom: 3, /*color: 'white'*/}}>{task.points}</Text>
-        </View>
-    
-        <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
-          <Pressable
-            style={[styles.button, styles.buttonOpen]}
-            onPress={() => { setModalVisible(!modalVisible.modalVisible); setTask(task); }}
-          >
-            <Text style={{ fontSize: 18 }}>{task.name}</Text>
-          </Pressable>
-          
-          <Text style={{ fontSize: 13, color: '#db1414' }}>
-            Due Date: {deadline.getMonth() + 1} / {deadline.getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
-          </Text>
-        </View>
-        
-        <View style={{ flex: 2, justifyContent: "center" }}>
-          <StatusButton props={task} />
-        </View>
-      </View>
+    var timeDisplay = (
+      <Text style={{ fontSize: 13, color: '#db1414' }}>
+        Due Date: {deadline.getMonth() + 1} / {deadline.getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
+      </Text>
     )
   }
+
+return (
+  <View style={styles.item}>
+
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
+      <Image
+        source={require('../assets/oatmeal_bowl.png')}
+        style={{ height: 45, width: 50 } /* 44.44444 for hexagon_green_1.png */}
+      />
+      <Text style={{position: 'absolute', bottom: 3, /*color: 'white'*/}}>{task.points}</Text>
+    </View>
+
+    <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
+      <Pressable
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => { setModalVisible(!modalVisible.modalVisible); setTask(task); }}
+      >
+        <Text style={{ fontSize: 18 }}>{task.name}</Text>
+        {timeDisplay}
+      </Pressable>
+    </View>
+    
+    <View style={{ flex: 2, justifyContent: "center" }}>
+      <StatusButton props={task} />
+    </View>
+  </View>
+)
 }
 
 function onPressButton() {
