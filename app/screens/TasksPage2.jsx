@@ -152,11 +152,11 @@ export class TasksPage2 extends React.Component {
         />
 
         <TaskModal
+          stateStuff={this.state}
           modalVisible={this.state.modalVisible}
           setModalVisible={this.setModalVisible}
-          selectedTask={this.state.selectedTask}
-          setTask={this.setTask}
-        ></TaskModal>
+          selectedTask={this.state}
+         />
 
         <AddButton></AddButton>
       </ImageBackground>
@@ -173,61 +173,70 @@ const AddButton = () => (
   />
 );
 
-const TaskModal = (modalVisible, selectedTask, setTask) => {
+const TaskModal = (modalVisible) => {
 
-  console.log(selectedTask);
-  
-  return <Modal
-  animationType="slide"
-  transparent={true}
-  visible={modalVisible.modalVisible}
-  onRequestClose={() => {
-    Alert.alert("Modal has been closed.");
-    modalVisible.setModalVisible(!modalVisible.modalVisible);
-  }}
+  let error = new TypeError('temp error');
+
+  try {
+    selectedTask = modalVisible.selectedTask.selectedTask;
+    selectedTaskKeys = Object.keys(selectedTask);
+
+    listData = [
+      {
+        key: 'Deadline',
+        property: new Date(selectedTask.deadline).toDateString()
+      },
+      {
+        key: 'In progress by',
+        property: 'your mom'
+      },
+      {
+        key: 'Points',
+        property: selectedTask.points
+      },
+      {
+        key: 'Start Date',
+        property: new Date(selectedTask.startDate).toDateString()
+      },
+      {
+        key: 'Description',
+        property: selectedTask.description
+      },
+    ]
+
+    return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible.modalVisible}
+      onRequestClose={() => {
+        Alert.alert("Modal has been closed.");
+        modalVisible.setModalVisible(!modalVisible.modalVisible);
+      }}
 >
-  <View style={styles.centeredView}>
-    <View style={styles.modalView}>
-      <Text style={styles.modalHeader}>Task Name Here</Text>
-      <FlatList
-        data={[
-          {
-            key: 'Task Property 1',
-            propertyName: 'property'
-          },
-          {
-            key: 'Task Property 2',
-            propertyName: 'property'
-          },
-          {
-            key: 'Task Property 3',
-            propertyName: 'property'
-          },
-          {
-            key: 'Task Property 4',
-            propertyName: 'property'
-          },
-          {
-            key: 'Task Property 5',
-            propertyName: 'property'
-          },
-          {
-            key: 'Task Property 6',
-            propertyName: 'property'
-          },
-        ]}
-        renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.propertyName}: {item.key}</Text>}
-      />
-      <View style={{ position: 'absolute', bottom: 10 }}>
-        <Button
-          style={styles.modalButton}
-          onPress={() => modalVisible.setModalVisible(!modalVisible.modalVisible)}
-          title="Close"
-        />
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalHeader}>{selectedTask.name}</Text>
+          <FlatList
+            data={listData}
+            renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.key}: {item.property}</Text>}
+          />
+          <View style={{ position: 'absolute', bottom: 10 }}>
+            <Button
+              style={styles.modalButton}
+              onPress={() => modalVisible.setModalVisible(!modalVisible.modalVisible)}
+              title="Close"
+            />
+          </View>
+        </View>
       </View>
-    </View>
-  </View>
-</Modal>
+    </Modal>
+    )
+
+  } catch (error) {
+    return null;
+  }
+  
 }
 
 const StatusButton = (task) => {
@@ -269,37 +278,120 @@ const StatusButton = (task) => {
   }
 }
   
+const Item = ({ task, setModalVisible, modalVisible, setTask }) => {
 
-const Item = ({ task, setModalVisible, modalVisible, setTask }) => (
+  var deadline = new Date(task.deadline); // deadline
+  var currTime = new Date(); // Now
 
-  <View style={styles.item}>
+  function msToTime(duration) {
+    var seconds = Math.floor((duration / 1000) % 60),
+      minutes = Math.floor((duration / (1000 * 60)) % 60),
+      hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+  
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+  
+    return hours + ":" + minutes + ":" + seconds;
+  }
 
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
-      <Image
-        source={require('../assets/hexagon.png')}
-        style={{ height: 50, width: 50 }}
-      />
-      <Text style={{position: 'absolute'}}>{task.points}</Text>
-    </View>
+  console.log(new Date(1628987787089).toString());
 
-    <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
-      <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => { setModalVisible(!modalVisible.modalVisible); setTask(task); }}
-      >
-        <Text style={{ fontSize: 18 }}>{task.name}</Text>
-      </Pressable>
-      
-      <Text style={{ fontSize: 13, color: '#db1414' }}>
-        Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
-      </Text>
-    </View>
+  if ((task.deadline - currTime.valueOf()) < 0 ) {
+    return (
+      <View style={styles.item}>
     
-    <View style={{ flex: 2, justifyContent: "center" }}>
-      <StatusButton props={task} />
-    </View>
-  </View>
-);
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
+          <Image
+            source={require('../assets/oatmeal_bowl.png')}
+            style={{ height: 45, width: 50 } /* 44.44444 for hexagon_green_1.png */}
+          />
+          <Text style={{position: 'absolute', bottom: 3, /*color: 'white'*/}}>{task.points}</Text>
+        </View>
+    
+        <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
+          <Pressable
+            style={[styles.button, styles.buttonOpen]}
+            onPress={() => { setModalVisible(!modalVisible.modalVisible); setTask(task); }}
+          >
+            <Text style={{ fontSize: 18 }}>{task.name}</Text>
+          </Pressable>
+          
+          <Text style={{ fontSize: 13, color: '#db1414' }}>
+            Due Date: Overdue! {/* TODO: Add if statement to display time if less than 24 hours */}
+          </Text>
+        </View>
+        
+        <View style={{ flex: 2, justifyContent: "center" }}>
+          <StatusButton props={task} />
+        </View>
+      </View>
+    )
+  }
+  else if ((task.deadline - currTime.valueOf()) < 86400000 ) {
+    
+    return (
+      <View style={styles.item}>
+    
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
+          <Image
+            source={require('../assets/oatmeal_bowl.png')}
+            style={{ height: 45, width: 50 } /* 44.44444 for hexagon_green_1.png */}
+          />
+          <Text style={{position: 'absolute', bottom: 3, /*color: 'white'*/}}>{task.points}</Text>
+        </View>
+    
+        <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
+          <Pressable
+            style={[styles.button, styles.buttonOpen]}
+            onPress={() => { setModalVisible(!modalVisible.modalVisible); setTask(task); }}
+          >
+            <Text style={{ fontSize: 18 }}>{task.name}</Text>
+          </Pressable>
+          
+          <Text style={{ fontSize: 13, color: '#db1414' }}>
+            Due in: {msToTime(task.deadline - currTime.valueOf())} {/* TODO: Add if statement to display time if less than 24 hours */}
+          </Text>
+        </View>
+        
+        <View style={{ flex: 2, justifyContent: "center" }}>
+          <StatusButton props={task} />
+        </View>
+      </View>
+    )
+  }
+  else {
+    return (
+      <View style={styles.item}>
+    
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
+          <Image
+            source={require('../assets/oatmeal_bowl.png')}
+            style={{ height: 45, width: 50 } /* 44.44444 for hexagon_green_1.png */}
+          />
+          <Text style={{position: 'absolute', bottom: 3, /*color: 'white'*/}}>{task.points}</Text>
+        </View>
+    
+        <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
+          <Pressable
+            style={[styles.button, styles.buttonOpen]}
+            onPress={() => { setModalVisible(!modalVisible.modalVisible); setTask(task); }}
+          >
+            <Text style={{ fontSize: 18 }}>{task.name}</Text>
+          </Pressable>
+          
+          <Text style={{ fontSize: 13, color: '#db1414' }}>
+            Due Date: {deadline.getMonth() + 1} / {deadline.getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
+          </Text>
+        </View>
+        
+        <View style={{ flex: 2, justifyContent: "center" }}>
+          <StatusButton props={task} />
+        </View>
+      </View>
+    )
+  }
+}
 
 function onPressButton() {
   alert("Status has been changed."); // TODO: Alert and/or Button to be replaced
