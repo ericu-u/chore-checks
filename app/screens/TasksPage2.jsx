@@ -307,7 +307,7 @@ const InputModal = (props) => {
 
           
 
-          <View style={{ position: 'absolute', bottom: 10 }}>
+          <View style={ styles.closeModal }>
             <Button
               style={styles.modalButton}
               onPress={() => props.setInputModalVisible(!props.inputModalVisible)}
@@ -405,12 +405,12 @@ return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
       <Image
         source={require('../assets/stroke5.png')}
-        style={{ height: 45, width: 53 } /* 44.44444 for hexagon_green_1.png */}
+        style={ styles.oatmealPoints }
       />
       <Text style={{position: 'absolute', bottom: 3, /*color: 'white'*/}}>{task.points}</Text>
     </View>
 
-    <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
+    <View style={ styles.taskPreview }>
       <Pressable
         style={[styles.button, styles.buttonOpen]}
         onPress={() => { setModalVisible(!modalVisible.modalVisible); setTask(task); }}
@@ -434,40 +434,46 @@ function onPressButton() {
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+console.log(windowHeight);
+console.log(windowWidth);
+
 // TODO: STYLE USING DIMENSIONS
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: windowHeight * 0.023696682464455,
   },
   claimStatus: {
-    marginRight: 20,
-    marginLeft: 10,
-    //marginTop: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
+    marginRight: windowWidth * 0.0512820512820513,
+    marginLeft: windowWidth * 0.0256410256410256,
+    paddingTop: windowHeight * 0.0118483412322275,
+    paddingBottom: windowHeight * 0.0118483412322275,
     backgroundColor: '#2588cf',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'black',
   },
   claimedStatus: {
-    marginRight: 20,
-    marginLeft: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
+    marginRight: windowWidth * 0.0512820512820513,
+    marginLeft: windowWidth * 0.0256410256410256,
+    paddingTop: windowHeight * 0.0118483412322275,
+    paddingBottom: windowHeight * 0.0118483412322275,
     backgroundColor: 'gray',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'black',
   },
+  closeModal: {
+    position: 'absolute',
+    bottom: windowHeight * 0.0118483412322275,
+  },
   doneStatus: {
-    marginRight: 20,
-    marginLeft: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
+    marginRight: windowWidth * 0.0512820512820513,
+    marginLeft: windowWidth * 0.0256410256410256,
+    paddingTop: windowHeight * 0.0118483412322275,
+    paddingBottom: windowHeight * 0.0118483412322275,
     backgroundColor: 'green',
     borderRadius: 10,
     borderWidth: 1,
@@ -476,33 +482,33 @@ const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     margin: 20,
-    right: 5,
-    bottom: 5,
+    right: windowWidth * 0.0128205128205128,
+    bottom: windowHeight * 0.0059241706161137,
     backgroundColor: '#071b7a'
   },
   input: {
     flex: 3,
     margin: 15,
-    height: 20,
-    width: 200,
+    height: windowHeight * 0.03,
+    width: windowWidth * 0.512,
     borderColor: '#192e4f',
     borderWidth: 1
   },
   inputHeader: {
     margin: 15,
-    height: 40,
-    width: 200,
+    height: windowHeight * 0.05,
+    width: windowWidth * 0.65,
     borderColor: '#192e4f',
     borderWidth: 1
   },
   inputRow: {
     flexDirection: 'row',
     backgroundColor: 'red',
-    width: 250//styles.modalView.width * ( 4/5 )
+    width: windowWidth * 0.65 //styles.modalView.width * ( 4/5 )
   },
   item: {
     flexDirection: "row",
-    height: 70,
+    height: windowHeight * 0.083,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -520,8 +526,8 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    height: 400,
-    width: 300,
+    height: windowHeight * 0.6,
+    width: windowWidth * 0.85,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
@@ -535,8 +541,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
+  oatmealPoints: {
+    height: windowHeight * 0.0533175355450237,
+    width: windowWidth * 0.1358974358974359,
+  },
   statusHeader: {
-    height: 70, // TODO: replace with relative positioning based on device
+    height: windowHeight * 0.083, // TODO: replace with relative positioning based on device
     justifyContent: "center",
     borderBottomWidth: 0.5,
     borderTopWidth: 0.5,
@@ -555,15 +565,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   takenStatus: {
-    marginRight: 20,
-    marginLeft: 10,
-    //marginTop: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
+    marginRight: windowWidth * 0.0512820512820513,
+    marginLeft: windowWidth * 0.0256410256410256,
+    paddingTop: windowHeight * 0.0118483412322275,
+    paddingBottom: windowHeight * 0.0118483412322275,
     backgroundColor: 'red',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'black',
+  },
+  taskPreview: {
+    flex: 4,
+    marginLeft: windowWidth * 0.077,
+    flexDirection: 'column',
   },
 });
 
