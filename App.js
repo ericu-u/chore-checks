@@ -14,7 +14,6 @@ import Drawer from "./app/screens/Drawer";
 import HouseholdPage2 from "./app/screens/HouseholdPage2";
 import { TasksPage2 } from "./app/screens/TasksPage2";
 import { HousePage3 } from "./app/screens/HouseHoldPage3";
-import BigChat from "./app/screens/chatMasterThing";
 import ScuffedLogin from "./app/screens/ScuffedLogin";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -22,7 +21,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-gesture-handler";
 import ProfilePage from "./app/screens/ProfilePage";
 
-firebase.auth().signOut();
+// firebase.auth().signOut();
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
   authDomain: "chores-97427.firebaseapp.com",
@@ -42,14 +41,11 @@ if (!firebase.apps.length) {
 }
 
 const db = firebase.firestore();
-var docRef = db.doc("/messages/XBdku2O78W9iwkbev3y2");
-docRef.get().then((doc) => {
-  //  console.log(doc.data());
-});
 
 const AuthStack = createStackNavigator();
 
 export default function App() {
+  
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
     <NavigationContainer independent={true}>

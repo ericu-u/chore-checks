@@ -15,10 +15,11 @@ import SettingsPage from "./SettingsPage";
 import CustomDrawer from "./CustomDrawer";
 
 const Drawer = createDrawerNavigator();
-
+console.log("refreshed");
 function MyDrawer() {
   return (
     <Drawer.Navigator
+      screenOptions={{ headerShown: false }}
       independent={true}
       drawerStyle={{ backgroundColor: "#e5e5e5" }}
       drawerContent={(props) => <CustomDrawer {...props} />}
