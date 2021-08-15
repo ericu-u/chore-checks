@@ -84,7 +84,7 @@ export class SettingsPage extends React.Component {
             <View style={styles.settingsBox}>
               {/*Task Notifications button setting*/}
               <View style={styles.textAlign}>
-                <Text style={{ fontSize: 24, fontFamily: "Montserrat_500Medium" }}>Task Notifications</Text>
+                <Text style={{ fontSize: 24 }}>Task Notifications</Text>
                 <View style={styles.largeButton}>
                   <Switch
                     onValueChange={this.toggleTaskNotifcations}
@@ -220,7 +220,6 @@ export class SettingsPage extends React.Component {
                 <Text
                   style={{
                     fontSize: 20,
-                    fontFamily: "Montserrat_500medium",
                     paddingBottom: "3%",
                   }}
                 >
