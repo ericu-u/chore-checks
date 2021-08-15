@@ -7,6 +7,7 @@ import {
   Image,
   StatusBar,
   ImageBackground,
+  TouchableOpacity,
 } from "react-native";
 import { Header } from "react-native-elements";
 import { set } from "react-native-reanimated";
@@ -18,7 +19,6 @@ import segoesc from "../assets/fonts/segoesc.ttf";
 import { FontAwesome } from "@expo/vector-icons";
 
 function LoginPage({ navigation }) {
-  
   const [oatmealfact, setFact] = useState("");
 
   useEffect;
@@ -154,7 +154,7 @@ function LoginPage({ navigation }) {
   let [fontsLoaded] = useFonts({
     segoesc: require("../assets/fonts/segoesc.ttf"),
   });
-  
+
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
@@ -171,19 +171,24 @@ function LoginPage({ navigation }) {
         <View
           style={
             (styles.container,
-            { flex: 0.5, alignItems: "center", justifyContent: "center", marginTop: "10%" })
+            {
+              flex: 0.5,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: "5%",
+              marginBottom: "5%",
+            })
           }
         >
           <Text style={styles.titleText}>Chore Checks</Text>
         </View>
 
-        <View
-          style={{ flex: 2, alignItems: "center", justifyContent: "center" }}
-        >
-          <Text style={styles.text} onPress={login}>
-            Google Sign-in here
-          </Text>
-        </View>
+        <TouchableOpacity onPress={login}>
+          <Image
+            style={{ resizeMode: "contain", width: 300, height: 60 }}
+            source={require("../assets/Gsignin.png")}
+          ></Image>
+        </TouchableOpacity>
 
         <View
           style={{ flex: 2, alignItems: "center", justifyContent: "center" }}
