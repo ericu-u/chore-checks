@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Button,
+  Dimensions,
   View,
   Text,
   StyleSheet,
@@ -8,7 +9,6 @@ import {
   Image,
   TouchableHighlight,
   Modal,
-  StatusBar,
   SectionList,
   Pressable,
   FlatList,
@@ -109,8 +109,6 @@ export class TasksPage2 extends React.Component {
   render() {
     // Returns what we want the user to see
     return (
-      // TODO: replace all margins/paddings with relative positioning based on device
-
       <ImageBackground
         style={{ flex: 1 }}
         source={require("../assets/background-gradient.jpg")}
@@ -199,6 +197,13 @@ const TaskModal = (props) => {
 
     var selectedTask = props.selectedTask.selectedTask;
 
+    if (!selectedTask.inProgressBy) {
+      var inProgressPerson = 'Not claimed yet!';
+    }
+    else {
+      var inProgressPerson = selectedTask.inProgressBy;
+    }
+
     listData = [
       {
         key: 'Deadline',
@@ -206,7 +211,7 @@ const TaskModal = (props) => {
       },
       {
         key: 'In progress by',
-        property: 'your mom'
+        property: inProgressPerson
       },
       {
         key: 'Points',
@@ -272,14 +277,35 @@ const InputModal = (props) => {
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
 
-          <Text style={styles.modalHeader}>Create New Task</Text>
+          <TextInput 
+            style={styles.inputHeader}
+            underlineColorAndroid = "transparent"
+            placeholder = "Task Name"
+            placeholderTextColor = "#788fb3"
+            autoCapitalize = "sentences"
+            onChangeText = {() => null}
+          />
 
-          <TextInput style = {styles.input}
-               underlineColorAndroid = "transparent"
-               placeholder = "Task Name"
-               placeholderTextColor = "#788fb3"
-               autoCapitalize = "sentences"
-               onChangeText = {() => null}/>
+          <View style={styles.inputRow}>
+            <Text 
+              style={{flex: 1}}
+              numberOfLines={1}
+              allowFontScaling={true}
+              adjustsFontSizeToFit={true}
+            >
+              Deadline: 
+            </Text>
+            <TextInput
+              style = {styles.input}
+              underlineColorAndroid = "transparent"
+              placeholder = "Task Name"
+              placeholderTextColor = "#788fb3"
+              autoCapitalize = "sentences"
+              onChangeText = {() => null}
+            />
+          </View>
+
+          
 
           <View style={{ position: 'absolute', bottom: 10 }}>
             <Button
@@ -335,8 +361,8 @@ const StatusButton = (task) => {
   
 const Item = ({ task, setModalVisible, modalVisible, setTask }) => {
 
-  var deadline = new Date(task.deadline); // deadline
-  var currTime = new Date(); // Now
+  var deadline = new Date(task.deadline);
+  var currTime = new Date();
   var timeLeft = task.deadline - currTime.valueOf()
 
   function msToTime(duration) {
@@ -361,14 +387,14 @@ const Item = ({ task, setModalVisible, modalVisible, setTask }) => {
   else if ((task.deadline - currTime.valueOf()) < 86400000 ) {
     var timeDisplay = (
       <Text style={{ fontSize: 13, color: '#db1414' }}>
-        Due in: {msToTime(task.deadline - currTime.valueOf())} {/* TODO: Add if statement to display time if less than 24 hours */}
+        Due in: {msToTime(task.deadline - currTime.valueOf())}
       </Text>
     )
   }
   else {
     var timeDisplay = (
       <Text style={{ fontSize: 13, color: '#db1414' }}>
-        Due Date: {deadline.getMonth() + 1} / {deadline.getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
+        Due Date: {deadline.getMonth() + 1} / {deadline.getDate()}
       </Text>
     )
   }
@@ -378,8 +404,8 @@ return (
 
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
       <Image
-        source={require('../assets/oatmeal_bowl.png')}
-        style={{ height: 45, width: 50 } /* 44.44444 for hexagon_green_1.png */}
+        source={require('../assets/stroke5.png')}
+        style={{ height: 45, width: 53 } /* 44.44444 for hexagon_green_1.png */}
       />
       <Text style={{position: 'absolute', bottom: 3, /*color: 'white'*/}}>{task.points}</Text>
     </View>
@@ -405,8 +431,11 @@ function onPressButton() {
   alert("Status has been changed."); // TODO: Alert and/or Button to be replaced
 }
 
-const styles = StyleSheet.create({
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
+// TODO: STYLE USING DIMENSIONS
+const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -427,7 +456,6 @@ const styles = StyleSheet.create({
   claimedStatus: {
     marginRight: 20,
     marginLeft: 10,
-    //marginTop: 10,
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: 'gray',
@@ -435,14 +463,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
   },
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
   doneStatus: {
     marginRight: 20,
     marginLeft: 10,
-    //marginTop: 10,
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: 'green',
@@ -458,17 +481,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#071b7a'
   },
   input: {
+    flex: 3,
+    margin: 15,
+    height: 20,
+    width: 200,
+    borderColor: '#192e4f',
+    borderWidth: 1
+  },
+  inputHeader: {
     margin: 15,
     height: 40,
     width: 200,
     borderColor: '#192e4f',
     borderWidth: 1
   },
+  inputRow: {
+    flexDirection: 'row',
+    backgroundColor: 'red',
+    width: 250//styles.modalView.width * ( 4/5 )
+  },
   item: {
     flexDirection: "row",
-    //padding: 20,
-    //marginVertical: 8,
-    //marginHorizontal: 16,
     height: 70,
     justifyContent: 'center',
     alignItems: 'center',
