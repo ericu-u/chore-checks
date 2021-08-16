@@ -132,7 +132,7 @@ export default class Person {
       var putIn = await dataRef.withConverter(Task.taskConverter).get();
       // console.log("putin", putIn.data());
       var theData = putIn.data();
-      if (theData["completedBy"] === this.personID) {
+      if (theData["completed"] === this.personID) {
         allTasks.push(putIn.data());
       }
     }

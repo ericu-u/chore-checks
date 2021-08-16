@@ -45,7 +45,6 @@ const db = firebase.firestore();
 const AuthStack = createStackNavigator();
 
 export default function App() {
-  
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
     <NavigationContainer independent={true}>
