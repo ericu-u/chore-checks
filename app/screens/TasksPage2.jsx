@@ -113,9 +113,16 @@ export class TasksPage2 extends React.Component {
         style={{ flex: 1 }}
         source={require("../assets/background-gradient.jpg")}
       >
-    
+        <Header
+          leftComponent={{
+            icon: "menu",
+            color: "#fff",
+            iconStyle: { color: "#fff" },
+          }}
+          centerComponent={{ text: "Tasks", style: { color: "#fff" } }}
+        />
+
         <SectionList
-          showsVerticalScrollIndicator={false}
           sections={ this.state.sectionedTasks }
           keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => <Item task={item} setModalVisible={this.setModalVisible} modalVisible={this.state.modalVisible} setTask={this.setTask} />}
@@ -256,6 +263,62 @@ const TaskModal = (props) => {
 
 const InputModal = (props) => {
 
+  var newTask;
+  var inputData = [
+    {
+      key: 'Deadline',
+      property: (
+        <TextInput
+          style = {styles.input}
+          underlineColorAndroid = "transparent"
+          placeholder = "Deadline"
+          placeholderTextColor = "#788fb3"
+          autoCapitalize = "sentences"
+          onChangeText = {() => null}
+        />
+      )
+    },
+    {
+      key: 'Points',
+      property: (
+        <TextInput
+          style = {styles.input}
+          underlineColorAndroid = "transparent"
+          placeholder = "Points"
+          placeholderTextColor = "#788fb3"
+          autoCapitalize = "sentences"
+          onChangeText = {() => null}
+        />
+      )
+    },
+    {
+      key: 'Start Date',
+      property: (
+        <TextInput
+          style = {styles.input}
+          underlineColorAndroid = "transparent"
+          placeholder = "Start Date"
+          placeholderTextColor = "#788fb3"
+          autoCapitalize = "sentences"
+          onChangeText = {() => null}
+        />
+      )
+    },
+    {
+      key: 'Description',
+      property: (
+        <TextInput
+          style = {styles.input}
+          underlineColorAndroid = "transparent"
+          placeholder = "Description"
+          placeholderTextColor = "#788fb3"
+          autoCapitalize = "sentences"
+          onChangeText = {() => null}
+        />
+      )
+    },
+  ];
+  
   return (
     <Modal
       animationType="slide"
@@ -266,7 +329,6 @@ const InputModal = (props) => {
         props.setInputModalVisible(!props.inputModalVisible);
       }}
     >
-
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
 
@@ -279,26 +341,26 @@ const InputModal = (props) => {
             onChangeText = {() => null}
           />
 
-          <View style={styles.inputRow}>
-            <Text 
-              style={{flex: 0}}
-              numberOfLines={1}
-              allowFontScaling={true}
-              adjustsFontSizeToFit={true}
-            >
-              Deadline: 
-            </Text>
-            <TextInput
-              style = {styles.input}
-              underlineColorAndroid = "transparent"
-              placeholder = "Task Name"
-              placeholderTextColor = "#788fb3"
-              autoCapitalize = "sentences"
-              onChangeText = {() => null}
+            <FlatList
+              data={inputData}
+              renderItem={({ item }) => {
+                return (
+                  <View style={styles.inputRow}>
+                    <Text 
+                      style={{flex: 1, textAlignVertical: 'center'}}
+                      numberOfLines={1}
+                      allowFontScaling={true}
+                      adjustsFontSizeToFit={true}
+                    >
+                      {item.key}
+                    </Text>
+                    {item.property}
+                  </View>
+                
+                )
+              }
+            }
             />
-          </View>
-
-          
 
           <View style={ styles.closeModal }>
             <Button
@@ -427,7 +489,7 @@ function onPressButton() {
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-// TODO: Check dimensions for other devices.
+// TODO: Test dimensions on other devices.
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
@@ -493,9 +555,8 @@ const styles = StyleSheet.create({
   },
   inputRow: {
     flexDirection: 'row',
-    flex: 1,
-    backgroundColor: 'red',
-    width: windowWidth * 0.65
+    alignItems: 'center',
+    width: windowWidth * 0.65 //styles.modalView.width * ( 4/5 )
   },
   item: {
     flexDirection: "row",
@@ -537,7 +598,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.1358974358974359,
   },
   statusHeader: {
-    height: windowHeight * 0.083,
+    height: windowHeight * 0.083, // TODO: replace with relative positioning based on device
     justifyContent: "center",
     borderBottomWidth: 0.5,
     borderTopWidth: 0.5,
