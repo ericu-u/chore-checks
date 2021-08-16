@@ -2,7 +2,6 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 import LoginPage from "./app/screens/LoginPage";
-import TasksPage from "./app/screens/TasksPage";
 import HouseholdPage from "./app/screens/HouseholdPage";
 import ChatboxPage from "./app/screens/ChatboxPage";
 import * as firebase from "firebase";
