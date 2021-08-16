@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { Image, StyleSheet, Button, View, Text } from "react-native";
-import { Header } from "react-native-elements";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import ProfilePage from "./ProfilePage";
-import TasksPage from "./TasksPage";
 import { TasksPage2 } from "./TasksPage2";
 import ChatboxPage from "./ChatboxPage";
 import HouseholdPage from "./HouseholdPage";
