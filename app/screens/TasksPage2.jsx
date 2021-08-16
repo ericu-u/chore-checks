@@ -113,9 +113,9 @@ export class TasksPage2 extends React.Component {
         style={{ flex: 1 }}
         source={require("../assets/background-gradient.jpg")}
       >
-     
-
+    
         <SectionList
+          showsVerticalScrollIndicator={false}
           sections={ this.state.sectionedTasks }
           keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => <Item task={item} setModalVisible={this.setModalVisible} modalVisible={this.state.modalVisible} setTask={this.setTask} />}
@@ -281,7 +281,7 @@ const InputModal = (props) => {
 
           <View style={styles.inputRow}>
             <Text 
-              style={{flex: 1}}
+              style={{flex: 0}}
               numberOfLines={1}
               allowFontScaling={true}
               adjustsFontSizeToFit={true}
@@ -427,10 +427,7 @@ function onPressButton() {
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-console.log(windowHeight);
-console.log(windowWidth);
-
-// TODO: STYLE USING DIMENSIONS
+// TODO: Check dimensions for other devices.
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
@@ -496,8 +493,9 @@ const styles = StyleSheet.create({
   },
   inputRow: {
     flexDirection: 'row',
+    flex: 1,
     backgroundColor: 'red',
-    width: windowWidth * 0.65 //styles.modalView.width * ( 4/5 )
+    width: windowWidth * 0.65
   },
   item: {
     flexDirection: "row",
@@ -539,7 +537,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.1358974358974359,
   },
   statusHeader: {
-    height: windowHeight * 0.083, // TODO: replace with relative positioning based on device
+    height: windowHeight * 0.083,
     justifyContent: "center",
     borderBottomWidth: 0.5,
     borderTopWidth: 0.5,
