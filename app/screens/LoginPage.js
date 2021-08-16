@@ -13,6 +13,10 @@ import { Header } from "react-native-elements";
 import { set } from "react-native-reanimated";
 import * as firebase from "firebase";
 import * as Google from "expo-google-app-auth";
+import AppLoading from "expo-app-loading";
+import { useFonts } from "@expo-google-fonts/montserrat";
+import segoesc from "../assets/fonts/segoesc.ttf";
+import { FontAwesome } from "@expo/vector-icons";
 
 function LoginPage({ navigation }) {
   const [oatmealfact, setFact] = useState("");
@@ -147,40 +151,55 @@ function LoginPage({ navigation }) {
 
   const handleTap = () => console.log("sign in to google");
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={{ flex: 0.25 }}></View>
-      <View style={{ flex: 1.25 }}>
-        <Image
-          source={require("../assets/oatmeal-logo.jpg")}
-          style={styles.image}
-        />
-      </View>
+  let [fontsLoaded] = useFonts({
+    segoesc: require("../assets/fonts/segoesc.ttf"),
+  });
 
-      <View
-        style={
-          (styles.container,
-          { flex: 0.5, alignItems: "center", justifyContent: "center" })
-        }
-      >
-        <Text style={styles.titleText}>Chore Checks</Text>
-      </View>
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={{ flex: 0.25 }}></View>
+        <View style={{ flex: 1.25 }}>
+          <Image
+            source={require("../assets/oatmeal-logo.jpg")}
+            style={styles.image}
+          />
+        </View>
 
-      <TouchableOpacity onPress={login}>
-        <Image 
-        style={{resizeMode: "contain" , width: 300, height: 60}}
-        source= {require("../assets/Gsignin.png")}>
-        </Image>
-      </TouchableOpacity>
+        <View
+          style={
+            (styles.container,
+            {
+              flex: 0.5,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: "5%",
+              marginBottom: "5%",
+            })
+          }
+        >
+          <Text style={styles.titleText}>Chore Checks</Text>
+        </View>
 
+        <TouchableOpacity onPress={login}>
+          <Image
+            style={{ resizeMode: "contain", width: 300, height: 60 }}
+            source={require("../assets/Gsignin.png")}
+          ></Image>
+        </TouchableOpacity>
 
-      <View style={{ flex: 2, alignItems: "center", justifyContent: "center" }}>
-        <Text>Oats contain more soluble fiber than whole wheat, rice or corn!</Text>
-      </View>
+        <View
+          style={{ flex: 2, alignItems: "center", justifyContent: "center" }}
+        >
+          <Text>Oats contain more soluble fiber than whole wheat, rice or corn!</Text>
+        </View>
 
-      <StatusBar style="auto" />
-    </SafeAreaView>
-  );
+        <StatusBar style="auto" />
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -192,7 +211,6 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-
     width: 200,
     height: 200,
     borderRadius: 200 / 2,
@@ -200,6 +218,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 40,
     color: "white",
+    fontFamily: "segoesc",
   },
   text: {
     fontSize: 20,

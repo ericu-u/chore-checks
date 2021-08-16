@@ -114,7 +114,6 @@ export class TasksPage2 extends React.Component {
         source={require("../assets/background-gradient.jpg")}
       >
      
-
         <SectionList
           sections={ this.state.sectionedTasks }
           keyExtractor={(item, index) => item + index}

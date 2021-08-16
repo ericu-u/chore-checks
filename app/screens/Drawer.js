@@ -21,6 +21,7 @@ import CustomDrawer from "./CustomDrawer";
 import HouseholdSelectionPage from "./HouseholdSelectionPage";
 const Drawer = createDrawerNavigator();
 
+// drawer navigator screens
 function MyDrawer() {
   return (
     <Drawer.Navigator
@@ -30,7 +31,7 @@ function MyDrawer() {
       drawerContentOptions={{
         inactiveTintColor: "black",
         itemStyle: { marginVertical: 15 },
-        labelStyle: { fontSize: 20 },
+        labelStyle: { fontSize: 20, fontFamily: "Montserrat_400Regular" },
       }}
     >
       <Drawer.Screen
@@ -115,14 +116,23 @@ const styles = StyleSheet.create({
 });
 
 export default function MenuPage() {
-  return (
-    <NavigationContainer independent={true}>
-      <MyDrawer independent={true} />
-    </NavigationContainer>
-  );
+  let [fontsLoaded] = useFonts({
+    Montserrat_400Regular,
+    Montserrat_600SemiBold,
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      <NavigationContainer independent={true}>
+        <MyDrawer independent={true}/>
+      </NavigationContainer>
+    );
+  }
 }
 
-// stack navigators
+// stack navigator screens
 const ProfileStack = createStackNavigator();
 
 function ProfileNavigator() {
@@ -135,6 +145,7 @@ function ProfileNavigator() {
         options={({ navigation }) => ({
           title: "Profile",
           headerTitleStyle: {
+            fontFamily: "Montserrat_600SemiBold",
             fontSize: 20,
           },
           headerLeft: () => (
@@ -172,6 +183,7 @@ function TasksNavigator() {
         options={({ navigation }) => ({
           title: "Tasks",
           headerTitleStyle: {
+            fontFamily: "Montserrat_600SemiBold",
             fontSize: 20,
           },
           headerLeft: () => (
@@ -209,6 +221,7 @@ function ChatboxNavigator() {
         options={({ navigation }) => ({
           title: "Chatbox",
           headerTitleStyle: {
+            fontFamily: "Montserrat_600SemiBold",
             fontSize: 20,
           },
           headerLeft: () => (
@@ -246,6 +259,7 @@ function HouseholdNavigator() {
         options={({ navigation }) => ({
           title: "Household",
           headerTitleStyle: {
+            fontFamily: "Montserrat_600SemiBold",
             fontSize: 20,
           },
           headerLeft: () => (

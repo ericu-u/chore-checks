@@ -44,6 +44,7 @@
     "react-native-screens": "~3.4.0",
     "react-native-web": "~0.13.12",
     "react-navigation": "^3.0.9",
+    "undefined": "@expo-google-fonts/",
     "underscore": "^1.13.1"
   },
   "devDependencies": {

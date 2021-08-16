@@ -16,6 +16,8 @@ import {
   Switch,
 } from "react-native";
 import ProfilePage from "./ProfilePage";
+import AppLoading from "expo-app-loading";
+import { useFonts, Montserrat_500Medium } from "@expo-google-fonts/montserrat";
 
 function Changehouse({ navigation }) {
   navigation = useNavigation();
@@ -30,6 +32,10 @@ function Changehouse({ navigation }) {
 const Stack = createNativeStackNavigator();
 
 function HouseholdSelectionPage(navigation) {
+  let [fontsLoaded] = useFonts({
+    Montserrat_500Medium,
+  });
+
   const handleJoin = () => console.log("Join Household");
   //const handleCreate = () => console.log("Create Household");
   const [visible, setVisible] = useState(false);
@@ -50,80 +56,92 @@ function HouseholdSelectionPage(navigation) {
     navigation.navigate("ProfilePage");
   };
 
-  return (
-    (
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="ProfilePage">
-          <Stack.Screen name="ProfilePage" component={ProfilePage} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    ),
-    (
-      <ImageBackground
-        style={{ flex: 1 }}
-        source={require("../assets/background-gradient.jpg")}
-      >
-        <SafeAreaView style={styles.container}>
-          <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-          >
-            <Image
-              source={require("../assets/householdSelect.png")}
-              style={styles.image}
-            />
-            <Text style={styles.titleText}>Would you like to...</Text>
-          </View>
-
-          <View
-            style={{
-              flex: 1.2,
-              flexDirection: "column",
-              alignItems: "space-evenly",
-            }}
-          >
-            <TouchableHighlight
-              style={styles.joinBackground}
-              onPress={handleJoin}
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      (
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="ProfilePage">
+            <Stack.Screen name="ProfilePage" component={ProfilePage} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      ),
+      (
+        <ImageBackground
+          style={{ flex: 1 }}
+          source={require("../assets/background-gradient.jpg")}
+        >
+          <SafeAreaView style={styles.container}>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              <View style={styles.container}>
-                <Text style={styles.buttonText}>
-                  Join Existing {"\n"} Household
-                </Text>
-              </View>
-            </TouchableHighlight>
+              <Image
+                source={require("../assets/householdSelect.png")}
+                style={styles.image}
+              />
+              <Text style={styles.titleText}>Would you like to...</Text>
+            </View>
 
-            <TouchableHighlight
-              style={styles.createBackground}
-              onPress={showDialogCreate}
+            <View
+              style={{
+                flex: 1.2,
+                flexDirection: "column",
+                alignItems: "space-evenly",
+              }}
             >
-              <View style={styles.container}>
-                <Text style={styles.buttonText}>
-                  Create New {"\n"} Household
-                </Text>
-                <Dialog.Container visible={visible}>
-                  <Dialog.Title>Enter Household Name</Dialog.Title>
-                  <Dialog.Description>
-                    Please enter the full household name. This cannot be undone.
-                  </Dialog.Description>
-                  <Dialog.Input
-                    clearButtonMode="while-editing"
-                    clearTextOnFocus={true}
-                    maxLength={20}
-                    placeholder="Your Household Name"
-                    placeholderTextColor="#777"
-                    onChangeText={(householdName) => setName(householdName)}
-                    defaultValue={householdName}
-                  ></Dialog.Input>
-                  <Dialog.Button label="Cancel" onPress={handleCancelCreate} />
-                  <Changehouse />
-                </Dialog.Container>
-              </View>
-            </TouchableHighlight>
-          </View>
-        </SafeAreaView>
-      </ImageBackground>
-    )
-  );
+              <TouchableHighlight
+                style={styles.joinBackground}
+                onPress={handleJoin}
+              >
+                <View style={styles.container}>
+                  <Text style={styles.buttonText}>
+                    Join Existing {"\n"} Household
+                  </Text>
+                </View>
+              </TouchableHighlight>
+
+              <TouchableHighlight
+                style={styles.createBackground}
+                onPress={showDialogCreate}
+              >
+                <View style={styles.container}>
+                  <Text style={styles.buttonText}>
+                    Create New {"\n"} Household
+                  </Text>
+                  <Dialog.Container visible={visible}>
+                    <Dialog.Title>Enter Household Name</Dialog.Title>
+                    <Dialog.Description>
+                      Please enter the full household name. This cannot be
+                      undone.
+                    </Dialog.Description>
+                    <Dialog.Input
+                      clearButtonMode="while-editing"
+                      clearTextOnFocus={true}
+                      maxLength={20}
+                      placeholder="Your Household Name"
+                      placeholderTextColor="#777"
+                      onChangeText={(householdName) => setName(householdName)}
+                      defaultValue={householdName}
+                    ></Dialog.Input>
+                    <Dialog.Button
+                      label="Cancel"
+                      onPress={handleCancelCreate}
+                    />
+                    <Changehouse />
+                  </Dialog.Container>
+                </View>
+              </TouchableHighlight>
+            </View>
+          </SafeAreaView>
+        </ImageBackground>
+      )
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -139,10 +157,11 @@ const styles = StyleSheet.create({
     height: 230,
   },
   titleText: {
-    fontSize: 35,
+    fontSize: 30,
     color: "black",
     textAlign: "center",
     marginBottom: "16%",
+    fontFamily: "Montserrat_500Medium",
   },
   text: {
     fontSize: 20,
@@ -177,6 +196,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "center",
+    fontFamily: "Montserrat_500Medium",
   },
 });
 

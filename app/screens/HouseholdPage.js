@@ -20,9 +20,26 @@ import Household from "../classes/household";
 import Task from "../classes/task";
 import { Header } from "react-native-elements";
 import Person from "../classes/person";
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+} from "@expo-google-fonts/montserrat";
 
 var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
 export default class HouseholdPage extends React.Component {
+  // TODO: ADD THIS PART IN FOR FONT
+
+  //   let [fontsLoaded] = useFonts({
+  //     Montserrat_400Regular,
+  //     Montserrat_500Medium,
+  //   });
+
+  // if (!fontsLoaded) {
+  //    return <AppLoading />;
+  // }
+  // else {
   constructor(props) {
     super(props);
     this.state = {
@@ -136,6 +153,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     justifyContent: "center",
     textAlign: "center",
+    fontFamily: "Montserrat_500Medium",
   },
   individualGroup: {
     justifyContent: "space-evenly",
@@ -224,16 +242,25 @@ const Item = ({ title, index, tasksDone }) => (
           flex: 1,
           textAlign: "center",
           paddingBottom: "3%",
+          fontFamily: "Montserrat_500Medium"
         }}
       >
         {title.name}
       </Text>
-      <Text style={{ textAlign: "center" }}>Points: {title.points}</Text>
-      <Text style={{ textAlign: "center" }}>
+      <Text
+        style={{ textAlign: "center", fontFamily: "Montserrat_400Regular" }}
+      >
+        Points: {title.points}
+      </Text>
+      <Text
+        style={{ textAlign: "center", fontFamily: "Montserrat_400Regular" }}
+      >
         Tasks Completed: {title.tasksCompleted}
       </Text>
 
-      <Text style={{ textAlign: "center" }}>
+      <Text
+        style={{ textAlign: "center", fontFamily: "Montserrat_400Regular" }}
+      >
         Completion Rate: {title.successRate}
       </Text>
     </View>
