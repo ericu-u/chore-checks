@@ -51,6 +51,7 @@ const AuthStack = createStackNavigator();
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
+    /*
     <NavigationContainer independent={true}>
       <AuthStack.Navigator independent={true}>
         <AuthStack.Screen
@@ -67,7 +68,8 @@ export default function App() {
           options={{ headerShown: false }}
         />
       </AuthStack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer>*/
+    <Drawer></Drawer>
     // <LoginPage></LoginPage>
     // <Help></Help>
     // <Help2></Help2>

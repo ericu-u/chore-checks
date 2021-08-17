@@ -22,53 +22,113 @@ import Person from "../classes/person";
 function LoginPage({ navigation }) {
   const [oatmealfact, setFact] = useState("");
 
+  //const [unsub, setUnsub] = useState(null);
+  const [unsubscriber, setUnsubscriber] = useState(null);
+
   console.log("boobs");
 
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      const db = firebase.firestore();
+  useEffect(() => {
+    const please = firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        const db = firebase.firestore();
 
-      (async () => {
-        var docRef = db.doc("users/" + user.uid);
-        var doc = await docRef.get();
-        console.log("boobs2");
+        (async () => {
+          var docRef = db.doc("users/" + user.uid);
+          var doc = await docRef.get();
+          console.log("boobs2");
 
-        if (doc.exists) {
-          console.log("doc exists!!!!!!!!!!!!!!!!");
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "Drawer" }],
-          });
-        } else {
-          console.log("first time!!!!!");
-          var newP = new Person(
-            user.uid,
-            user.displayName,
-            user.photoURL,
-            null,
-            0,
-            0,
-            0,
-            0,
-            true,
-            true,
-            true,
-            true,
-            true
-          );
+          if (doc.exists) {
+            console.log("doc exists!!!!!!!!!!!!!!!!");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Drawer" }],
+            });
+          } else {
+            console.log("first time!!!!!");
+            var newP = new Person(
+              user.uid,
+              user.displayName,
+              user.photoURL,
+              null,
+              0,
+              0,
+              0,
+              0,
+              true,
+              true,
+              true,
+              true,
+              true
+            );
 
-          await docRef.withConverter(Person.personConverter).set(newP);
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "Drawer" }],
-          });
-        }
-      })();
-    } else {
-      // No user is signed in.
-    }
+            await docRef.withConverter(Person.personConverter).set(newP);
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Drawer" }],
+            });
+          }
+        })();
+      } else {
+        // No user is signed in.
+      }
+    });
+    return function cleanup() {
+      // unsub();
+      if (unsubscriber !== null) {
+        unsubscriber();
+      }
+      please();
+    };
   });
 
+  /*
+  setUnsub(
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        const db = firebase.firestore();
+
+        (async () => {
+          var docRef = db.doc("users/" + user.uid);
+          var doc = await docRef.get();
+          console.log("boobs2");
+
+          if (doc.exists) {
+            console.log("doc exists!!!!!!!!!!!!!!!!");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Drawer" }],
+            });
+          } else {
+            console.log("first time!!!!!");
+            var newP = new Person(
+              user.uid,
+              user.displayName,
+              user.photoURL,
+              null,
+              0,
+              0,
+              0,
+              0,
+              true,
+              true,
+              true,
+              true,
+              true
+            );
+
+            await docRef.withConverter(Person.personConverter).set(newP);
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Drawer" }],
+            });
+          }
+        })();
+      } else {
+        // No user is signed in.
+      }
+    })
+  );
+*/
   useEffect;
   () => {
     console.log("effect");
@@ -104,6 +164,7 @@ function LoginPage({ navigation }) {
     var unsubscribe = firebase.auth().onAuthStateChanged(
       function (firebaseUser) {
         unsubscribe();
+        setUnsubscriber(unsubscribe);
         // Check if we are already signed-in Firebase with the correct user.
         if (!this.isUserEqual(googleUser, firebaseUser)) {
           // Build Firebase credential with the Google ID token.
