@@ -26,13 +26,44 @@ import {
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createStackNavigator } from "@react-navigation/stack";
-import Drawer from "./Drawer";
-import HouseholdPage from "./HouseholdPage";
+import LoginPage from "./LoginPage";
+import * as firebase from "firebase";
+import { StackActions, NavigationActions } from 'react-navigation';
 
+const LogStack = createStackNavigator();
+const logoutAction = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'LoginPage' })],
+});
+function LogOutButton() {
+  const navigation = useNavigation();
+  firebase.auth().signOut();
+  console.log(firebase.auth().currentUser)
+  return (
+    <TouchableOpacity
+                onPress={() =>
+                  navigation.dispatch(logoutAction)
+                }
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: "red",
+                  }}
+                >
+                  Sign Out
+                </Text>
+              </TouchableOpacity>
+  );
+}
+function myStack(){
+  return(
+    <Stack.Navigator>
+      <Stack.Screen name="LoginPage" component={LoginPage} />
+    </Stack.Navigator>
+  )
+}
 /* Function to navigate to household page */
-
-const Stack = createNativeStackNavigator();
-
 export class SettingsPage extends React.Component {
   /*Variables for specific the notifications*/
   state = {
@@ -67,13 +98,8 @@ export class SettingsPage extends React.Component {
   render() {
     return (
       /* container for any navigation needed */
-      (
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="HouseholdPage">
-            <Stack.Screen name="Household" component={HouseholdPage} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      ),
+      <myStack/>
+,
       (
         ////* the UI of the whole settings *////
         <ImageBackground
@@ -227,12 +253,10 @@ export class SettingsPage extends React.Component {
                 </Text>
               </TouchableOpacity>
             </View>
+
             {/*Sign out button*/}
-            <Button
-              color="red"
-              onPress={() => Alert.alert("Button with adjusted color pressed")}
-              title="Sign Out"
-            ></Button>
+              <LogOutButton/>
+
           </View>
         </ImageBackground>
       )
