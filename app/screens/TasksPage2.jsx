@@ -19,7 +19,6 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 import Household from "../classes/household";
 import Task from "../classes/task";
-import { Header } from "react-native-elements";
 import _, { map } from 'underscore';
 import { FAB } from 'react-native-paper';
 
@@ -33,6 +32,11 @@ export class TasksPage2 extends React.Component {
       modalVisible: false,
       inputModalVisible: false,
       selectedTask: null,
+      newName: null,
+      newPoints: null,
+      newDeadline: null,
+      newStartDate: null,
+      newDescription: null,
     };
   }
 
@@ -106,7 +110,31 @@ export class TasksPage2 extends React.Component {
     this.setState({ selectedTask: task });
   }
 
+  setNewName = (name) => {
+    this.setState({ newName: name });
+  }
+
+  setNewPoints = (points) => {
+    this.setState({ newPoints: points });
+  }
+
+  setNewDeadline = (deadline) => {
+    this.setState({ newDeadline: deadline });
+  }
+
+  setNewStartDate = (startDate) => {
+    this.setState({ newStartDate: startDate });
+  }
+
+  setNewDescription = (description) => {
+    this.setState({ newDescription: description });
+  }
+
   render() {
+
+    console.log(this.state.newName); // state holds each new property value, so a function to add to database just needs
+    // to take in those values.
+
     // Returns what we want the user to see
     return (
       <ImageBackground
@@ -146,12 +174,16 @@ export class TasksPage2 extends React.Component {
         />
 
         <TaskModal
-          stateStuff={this.state}
           modalVisible={this.state.modalVisible}
           setModalVisible={this.setModalVisible}
-          selectedTask={this.state}
+          selectedTask={this.state.selectedTask}
           inputModalVisible={this.state.inputModalVisible}
           setInputModalVisible={this.setInputModalVisible}
+          setNewName={this.setNewName}
+          setNewDeadline={this.setNewDeadline}
+          setNewDescription={this.setNewDescription}
+          setNewPoints={this.setNewPoints}
+          setNewStartDate={this.setNewStartDate}
         />
 
         <AddButton
@@ -179,6 +211,11 @@ const TaskModal = (props) => {
       <InputModal
         inputModalVisible={props.inputModalVisible}
         setInputModalVisible={props.setInputModalVisible}
+        setNewName={props.setNewName}
+        setNewDeadline={props.setNewDeadline}
+        setNewDescription={props.setNewDescription}
+        setNewPoints={props.setNewPoints}
+        setNewStartDate={props.setNewStartDate}
       />
     )
   }
@@ -187,7 +224,7 @@ const TaskModal = (props) => {
 
   try {
 
-    var selectedTask = props.selectedTask.selectedTask;
+    var selectedTask = props.selectedTask;
 
     if (!selectedTask.inProgressBy) {
       var inProgressPerson = 'Not claimed yet!';
@@ -255,10 +292,9 @@ const TaskModal = (props) => {
 
 const InputModal = (props) => {
 
-  var newTask;
   var inputData = [
     {
-      key: 'Deadline',
+      key: 'Deadline:',
       property: (
         <TextInput
           style = {styles.input}
@@ -266,12 +302,12 @@ const InputModal = (props) => {
           placeholder = "Deadline"
           placeholderTextColor = "#788fb3"
           autoCapitalize = "sentences"
-          onChangeText = {() => null}
+          onChangeText = {text => props.setNewDeadline(text)}
         />
       )
     },
     {
-      key: 'Points',
+      key: 'Points:',
       property: (
         <TextInput
           style = {styles.input}
@@ -279,12 +315,12 @@ const InputModal = (props) => {
           placeholder = "Points"
           placeholderTextColor = "#788fb3"
           autoCapitalize = "sentences"
-          onChangeText = {() => null}
+          onChangeText = {text => props.setNewPoints(text)}
         />
       )
     },
     {
-      key: 'Start Date',
+      key: 'Start Date:',
       property: (
         <TextInput
           style = {styles.input}
@@ -292,12 +328,12 @@ const InputModal = (props) => {
           placeholder = "Start Date"
           placeholderTextColor = "#788fb3"
           autoCapitalize = "sentences"
-          onChangeText = {() => null}
+          onChangeText = {text => props.setNewStartDate(text)}
         />
       )
     },
     {
-      key: 'Description',
+      key: 'Description:',
       property: (
         <TextInput
           style = {styles.input}
@@ -305,7 +341,7 @@ const InputModal = (props) => {
           placeholder = "Description"
           placeholderTextColor = "#788fb3"
           autoCapitalize = "sentences"
-          onChangeText = {() => null}
+          onChangeText = {text => props.setNewDescription(text)}
         />
       )
     },
@@ -324,14 +360,24 @@ const InputModal = (props) => {
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
 
-          <TextInput 
-            style={styles.inputHeader}
-            underlineColorAndroid = "transparent"
-            placeholder = "Task Name"
-            placeholderTextColor = "#788fb3"
-            autoCapitalize = "sentences"
-            onChangeText = {() => null}
-          />
+          <View style={styles.inputRow}>
+            <Text 
+              style={{flex: 1, textAlignVertical: 'center'}}
+              numberOfLines={2}
+              allowFontScaling={true}
+              adjustsFontSizeToFit={true}
+            >
+              Task Name:
+            </Text>
+            <TextInput 
+              style={styles.inputHeader}
+              underlineColorAndroid = "transparent"
+              placeholder = "Task Name"
+              placeholderTextColor = "#788fb3"
+              autoCapitalize = "sentences"
+              onChangeText = {text => props.setNewName(text)}
+            />
+          </View>
 
             <FlatList
               data={inputData}
@@ -348,7 +394,6 @@ const InputModal = (props) => {
                     </Text>
                     {item.property}
                   </View>
-                
                 )
               }
             }
@@ -539,9 +584,10 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   inputHeader: {
+    flex: 3,
     margin: 15,
     height: windowHeight * 0.05,
-    width: windowWidth * 0.65,
+    width: windowWidth * 0.512,
     borderColor: '#192e4f',
     borderWidth: 1
   },
