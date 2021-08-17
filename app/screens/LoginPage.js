@@ -7,7 +7,7 @@ import {
   Image,
   StatusBar,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { Header } from "react-native-elements";
 import { set } from "react-native-reanimated";
@@ -17,19 +17,61 @@ import AppLoading from "expo-app-loading";
 import { useFonts } from "@expo-google-fonts/montserrat";
 import segoesc from "../assets/fonts/segoesc.ttf";
 import { FontAwesome } from "@expo/vector-icons";
+import Person from "../classes/person";
 
 function LoginPage({ navigation }) {
   const [oatmealfact, setFact] = useState("");
 
+  console.log("boobs");
+
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      const db = firebase.firestore();
+
+      (async () => {
+        var docRef = db.doc("users/" + user.uid);
+        var doc = await docRef.get();
+        console.log("boobs2");
+
+        if (doc.exists) {
+          console.log("doc exists!!!!!!!!!!!!!!!!");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Drawer" }],
+          });
+        } else {
+          console.log("first time!!!!!");
+          var newP = new Person(
+            user.uid,
+            user.displayName,
+            user.photoURL,
+            null,
+            0,
+            0,
+            0,
+            0,
+            true,
+            true,
+            true,
+            true,
+            true
+          );
+
+          await docRef.withConverter(Person.personConverter).set(newP);
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Drawer" }],
+          });
+        }
+      })();
+    } else {
+      // No user is signed in.
+    }
+  });
+
   useEffect;
   () => {
     console.log("effect");
-    if (firebase.auth().currentUser !== null) {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Drawer" }],
-      });
-    }
     var oatmealfacts_array = [
       "Oatmeal fact ",
       "Oatmeal fact2",
@@ -131,20 +173,12 @@ function LoginPage({ navigation }) {
 
       if (result.type === "success") {
         this.onSignIn(result);
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Drawer" }],
-        });
+
         return result.accessToken;
       } else {
         return { cancelled: true };
       }
     } else {
-      // navigation.push("Drawer");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Drawer" }],
-      });
       console.log("already logged in");
     }
   };
@@ -193,7 +227,9 @@ function LoginPage({ navigation }) {
         <View
           style={{ flex: 2, alignItems: "center", justifyContent: "center" }}
         >
-          <Text>Oats contain more soluble fiber than whole wheat, rice or corn!</Text>
+          <Text>
+            Oats contain more soluble fiber than whole wheat, rice or corn!
+          </Text>
         </View>
 
         <StatusBar style="auto" />
