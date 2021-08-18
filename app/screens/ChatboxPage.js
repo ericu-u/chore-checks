@@ -1,5 +1,4 @@
 //@refresh _reset
-
 import React, { useState, useEffect, useCallback } from "react";
 import { GiftedChat } from "react-native-gifted-chat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -33,6 +32,8 @@ export default function App() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
+    AsyncStorage.removeItem("user");
+
     readUser();
     const unsubscribe = chatsRef.onSnapshot((querySnapshot) => {
       const messagesFirestore = querySnapshot
@@ -65,8 +66,12 @@ export default function App() {
     }
   }
   async function handlePress() {
-    const _id = Math.random().toString(36).substring(7);
-    const user = { _id, name };
+    // const _id = Math.random().toString(36).substring(7);
+    // const user = { _id, name };
+    const _id = firebase.auth().currentUser.uid;
+    const name = firebase.auth().currentUser.displayName;
+    const avatar = firebase.auth().currentUser.photoURL;
+    const user = { _id, name, avatar };
     await AsyncStorage.setItem("user", JSON.stringify(user));
     setUser(user);
   }
@@ -76,16 +81,7 @@ export default function App() {
   }
 
   if (!user) {
-    return (
-      <View alignitmes="center">
-        <TextInput
-          placeholder="Future google signin"
-          value={name}
-          onChangeText={setName}
-        />
-        <Button onPress={handlePress} title="type here" />
-      </View>
-    );
+    handlePress();
   }
 
   return (

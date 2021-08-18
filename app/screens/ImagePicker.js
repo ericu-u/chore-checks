@@ -120,10 +120,9 @@ export default class ImgPicker extends React.Component {
               createdAt: firebase.firestore.Timestamp.now(),
               image: this.state.imageURL,
               user: {
-                _id: 1,
-                avatar:
-                  "https://lh3.googleusercontent.com EbXw8rOdYxOGdXEFjgNP8lh-YAuUxwhOAe2jhrz3sgqvPeMac6a6tHvT35V6YMbyNvkZL4R_a2hcYBrtfUhLvhf-N2X3OB9cvH4uMw=w1064-v0",
-                name: "photo admin thingy",
+                _id: firebase.auth().currentUser.uid,
+                avatar: firebase.auth().currentUser.photoURL,
+                name: firebase.auth().currentUser.displayName,
               },
             });
           });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -34,32 +34,39 @@ function ProfilePage(props) {
 
   // const [ontime, setOntime] = useState("Loading...");
   // const [late, setLate] = useState("Loading...");
-  firebase.auth().onAuthStateChanged(function (user) {
-    (async () => {
-      var pid = user.uid;
-      const db = firebase.firestore();
-      var pObj = (
-        await db
-          .doc("users/" + pid)
-          .withConverter(Person.personConverter)
-          .get()
-      ).data();
 
-      //console.log(pObj);
-      var tObjs = await pObj.getTasks();
-      // console.log("tasks", tObjs);
-      var taskName = [];
-      for (var i = 0; i < tObjs.length; i++) {
-        taskName.push({ key: tObjs[i].name });
-      }
-      setName(pObj.name);
-      setPoints(pObj.points + " points");
-      setTasks(taskName);
-      setTasksdone(pObj.tasksCompleted);
-      setCompletion(pObj.successRate);
-      setPfp(pObj.profilePic);
-      setTasksfailed(pObj.tasksFailed);
-    })();
+  useEffect(() => {
+    const pls = firebase.auth().onAuthStateChanged(function (user) {
+      (async () => {
+        var pid = user.uid;
+        const db = firebase.firestore();
+        var pObj = (
+          await db
+            .doc("users/" + pid)
+            .withConverter(Person.personConverter)
+            .get()
+        ).data();
+
+        //console.log(pObj);
+        var tObjs = await pObj.getTasks();
+        // console.log("tasks", tObjs);
+        var taskName = [];
+        for (var i = 0; i < tObjs.length; i++) {
+          taskName.push({ key: tObjs[i].name });
+        }
+        setName(pObj.name);
+        setPoints(pObj.points + " points");
+        setTasks(taskName);
+        setTasksdone(pObj.tasksCompleted);
+        setCompletion(pObj.successRate);
+        setPfp(pObj.profilePic);
+        setTasksfailed(pObj.tasksFailed);
+      })();
+    });
+
+    return function cleanup() {
+      pls();
+    };
   });
 
   //Replace profile picture with firebase profile

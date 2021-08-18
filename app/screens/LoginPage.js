@@ -74,7 +74,7 @@ function LoginPage({ navigation }) {
     });
     return function cleanup() {
       // unsub();
-      if (unsubscriber !== null) {
+      if (unsubscriber !== null && unsubscriber !== undefined) {
         unsubscriber();
       }
       please();
