@@ -8,7 +8,6 @@ import {
   ImageBackground,
   Image,
   TouchableHighlight,
-  Modal,
   SectionList,
   Pressable,
   FlatList,
@@ -21,6 +20,7 @@ import Household from "../classes/household";
 import Task from "../classes/task";
 import _, { map } from 'underscore';
 import { FAB } from 'react-native-paper';
+import Modal from 'react-native-modal';
 
 export class TasksPage2 extends React.Component {
   constructor(props) {
@@ -258,13 +258,10 @@ const TaskModal = (props) => {
 
     return (
       <Modal
-        animationType="slide"
-        transparent={true}
-        visible={props.modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          props.setModalVisible(!props.modalVisible);
-        }}
+        isVisible={props.modalVisible}
+        backdropOpacity={0.3}
+        animationOut='slideOutDown'
+        onBackdropPress={() => props.setModalVisible(false)}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -273,9 +270,14 @@ const TaskModal = (props) => {
               data={listData}
               renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.key}: {item.property}</Text>}
             />
-            <View style={{ position: 'absolute', bottom: 10 }}>
+            <View style={ styles.modalButtons }>
               <Button
                 style={styles.modalButton}
+                title="Edit Task"
+              />
+              <Button
+                style={styles.modalButton}
+                color='red'
                 onPress={() => props.setModalVisible(!props.modalVisible)}
                 title="Close"
               />
@@ -336,8 +338,10 @@ const InputModal = (props) => {
       key: 'Description:',
       property: (
         <TextInput
-          style = {styles.input}
+          style = { [styles.input, {height: windowHeight * 0.1,}] }
           underlineColorAndroid = "transparent"
+          multiline={true}
+          blurOnSubmit={true}
           placeholder = "Description"
           placeholderTextColor = "#788fb3"
           autoCapitalize = "sentences"
@@ -349,26 +353,15 @@ const InputModal = (props) => {
   
   return (
     <Modal
-      animationType="slide"
-      transparent={true}
-      visible={props.inputModalVisible}
-      onRequestClose={() => {
-        Alert.alert("Modal has been closed.");
-        props.setInputModalVisible(!props.inputModalVisible);
-      }}
+      isVisible={props.inputModalVisible}
+      backdropOpacity={0.3}
+      animationOut='bounceOut'
+      onBackdropPress={() => props.setInputModalVisible(!props.inputModalVisible)}
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
 
           <View style={styles.inputRow}>
-            <Text 
-              style={{flex: 1, textAlignVertical: 'center'}}
-              numberOfLines={2}
-              allowFontScaling={true}
-              adjustsFontSizeToFit={true}
-            >
-              Task Name:
-            </Text>
             <TextInput 
               style={styles.inputHeader}
               underlineColorAndroid = "transparent"
@@ -384,14 +377,6 @@ const InputModal = (props) => {
               renderItem={({ item }) => {
                 return (
                   <View style={styles.inputRow}>
-                    <Text 
-                      style={{flex: 1, textAlignVertical: 'center'}}
-                      numberOfLines={1}
-                      allowFontScaling={true}
-                      adjustsFontSizeToFit={true}
-                    >
-                      {item.key}
-                    </Text>
                     {item.property}
                   </View>
                 )
@@ -399,9 +384,14 @@ const InputModal = (props) => {
             }
             />
 
-          <View style={ styles.closeModal }>
+          <View style={ styles.modalButtons }>
             <Button
               style={styles.modalButton}
+              title="Create"
+            />
+            <Button
+              style={styles.modalButton}
+              color='red'
               onPress={() => props.setInputModalVisible(!props.inputModalVisible)}
               title="Close"
             />
@@ -554,10 +544,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
   },
-  closeModal: {
-    position: 'absolute',
-    bottom: windowHeight * 0.0118483412322275,
-  },
   doneStatus: {
     marginRight: windowWidth * 0.0512820512820513,
     marginLeft: windowWidth * 0.0256410256410256,
@@ -580,16 +566,22 @@ const styles = StyleSheet.create({
     margin: 15,
     height: windowHeight * 0.03,
     width: windowWidth * 0.512,
+    textAlign: 'center',
+    borderWidth: 1.5,
     borderColor: '#192e4f',
-    borderWidth: 1
+    borderRadius: 10,
+    backgroundColor : "#FFFFFF"
   },
   inputHeader: {
     flex: 3,
     margin: 15,
     height: windowHeight * 0.05,
     width: windowWidth * 0.512,
+    textAlign: 'center',
+    borderWidth: 1.5,
     borderColor: '#192e4f',
-    borderWidth: 1
+    borderRadius: 10,
+    backgroundColor : "#FFFFFF"
   },
   inputRow: {
     flexDirection: 'row',
@@ -608,6 +600,13 @@ const styles = StyleSheet.create({
     margin: 30,
     elevation: 2,
     position: 'absolute',
+  },
+  modalButtons: {
+    position: 'absolute',
+    bottom: windowHeight * 0.0118483412322275,
+    width: windowWidth * 0.65,
+    justifyContent: 'space-between',
+    flexDirection: 'row'
   },
   modalHeader: {
     fontSize: 25,
