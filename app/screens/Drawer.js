@@ -20,6 +20,7 @@ import SettingsPage from "./SettingsPage";
 import CustomDrawer from "./CustomDrawer";
 import HouseholdSelectionPage from "./HouseholdSelectionPage";
 import ScuffedLogin from "./ScuffedLogin";
+import LoginPage2 from "./LoginPage2";
 const Drawer = createDrawerNavigator();
 
 // drawer navigator screens
@@ -103,8 +104,22 @@ function MyDrawer() {
 
       <Drawer.Screen
         independent={true}
-        name="Scuffed Login"
+        name="Change Household"
         component={ScuffedNavigator}
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={require("../assets/chat.png")}
+              style={styles.chatIcon}
+            />
+          ),
+          gestureEnabled: false,
+        }}
+      />
+      <Drawer.Screen
+        independent={true}
+        name="Log out"
+        component={LogOutNavigator}
         options={{
           drawerIcon: () => (
             <Image
@@ -348,8 +363,8 @@ function ScuffedNavigator() {
   return (
     <ScuffedStack.Navigator>
       <ScuffedStack.Screen
-        name="ScuffedLogin"
-        component={ScuffedLogin}
+        name="HouseholdSelectionPage"
+        component={HouseholdSelectionPage}
         options={{
           headerShown: false,
         }}
@@ -360,5 +375,26 @@ function ScuffedNavigator() {
         options={{ headerShown: false }}
       ></ScuffedStack.Screen>
     </ScuffedStack.Navigator>
+  );
+}
+
+const LogOutStack = createStackNavigator();
+
+function LogOutNavigator() {
+  return (
+    <LogOutStack.Navigator>
+      <LogOutStack.Screen
+        name="HouseholdSelectionPage"
+        component={LoginPage2}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <LogOutStack.Screen
+        name="Drawer"
+        component={MenuPage}
+        options={{ headerShown: false }}
+      ></LogOutStack.Screen>
+    </LogOutStack.Navigator>
   );
 }
