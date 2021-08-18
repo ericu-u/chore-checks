@@ -37,6 +37,7 @@ export class TasksPage2 extends React.Component {
       newDeadline: null,
       newStartDate: null,
       newDescription: null,
+      newRepeat: null,
     };
   }
 
@@ -308,6 +309,7 @@ const TaskModal = (props) => {
 };
 
 const InputModal = (props) => {
+
   var inputData = [
     {
       key: "Deadline:",
@@ -417,6 +419,7 @@ const InputModal = (props) => {
                 var db = firebase.firestore()
                 var tRef = db.doc("/houses/h38219/Tasks/" + tID);
                 tRef.withConverter(Task.taskConverter).set(newT);
+                props.setInputModalVisible(!props.inputModalVisible)
               }}
             />
             <Button
