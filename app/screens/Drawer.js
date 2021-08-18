@@ -19,6 +19,7 @@ import HouseholdPage from "./HouseholdPage";
 import SettingsPage from "./SettingsPage";
 import CustomDrawer from "./CustomDrawer";
 import HouseholdSelectionPage from "./HouseholdSelectionPage";
+import ScuffedLogin from "./ScuffedLogin";
 const Drawer = createDrawerNavigator();
 
 // drawer navigator screens
@@ -99,6 +100,21 @@ function MyDrawer() {
           ),
         }}
       />
+
+      <Drawer.Screen
+        independent={true}
+        name="Scuffed Login"
+        component={ScuffedNavigator}
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={require("../assets/chat.png")}
+              style={styles.chatIcon}
+            />
+          ),
+          gestureEnabled: false,
+        }}
+      />
     </Drawer.Navigator>
   );
 }
@@ -126,7 +142,7 @@ export default function MenuPage() {
   } else {
     return (
       <NavigationContainer independent={true}>
-        <MyDrawer independent={true}/>
+        <MyDrawer independent={true} />
       </NavigationContainer>
     );
   }
@@ -323,5 +339,26 @@ function SettingsNavigator() {
         component={HouseholdSelectionPage}
       ></SettingsStack.Screen>
     </SettingsStack.Navigator>
+  );
+}
+
+const ScuffedStack = createStackNavigator();
+
+function ScuffedNavigator() {
+  return (
+    <ScuffedStack.Navigator>
+      <ScuffedStack.Screen
+        name="ScuffedLogin"
+        component={ScuffedLogin}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <ScuffedStack.Screen
+        name="MenuPage"
+        component={MenuPage}
+        options={{ headerShown: false }}
+      ></ScuffedStack.Screen>
+    </ScuffedStack.Navigator>
   );
 }

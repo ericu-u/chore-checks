@@ -114,8 +114,19 @@ export default class ScuffedLogin extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button title="login" onPress={this.login} />
-        <Button title="logout" color="#ff0000" onPress={this.logout} />
+        <Button
+          title="login"
+          onPress={() => {
+            this.props.navigation.navigate("MenuPage");
+          }}
+        />
+        <Button
+          title="logout"
+          color="#ff0000"
+          onPress={() => {
+            console.log("logout");
+          }}
+        />
       </View>
     );
   }
