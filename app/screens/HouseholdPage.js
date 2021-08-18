@@ -26,6 +26,16 @@ import {
   Montserrat_400Regular,
   Montserrat_500Medium,
 } from "@expo-google-fonts/montserrat";
+import SelectDropdown from 'react-native-select-dropdown';
+
+const sortList = [
+  "Completion Rate"
+  ,
+  "Tasks Completed"
+  ,
+  "Points"
+  ,
+]
 
 var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
 export default class HouseholdPage extends React.Component {
@@ -119,10 +129,29 @@ export default class HouseholdPage extends React.Component {
         style={{ flex: 1 }}
         source={require("../assets/background-gradient.jpg")}
       >
+
         <View style={{ flexDirection: "column", alignItems: "center" }}>
           <View style={styles.statusHeader}>
-            <Text style={styles.statusHeaderText}>Sort By Points</Text>
+            <Text style={styles.statusHeaderText}>Sort By</Text>
           </View>
+
+          {/* THE CRUCIAL DROP DOWN MENU FOR ACTUALLY SORTING*/}
+          <SelectDropdown style ={{color: "red"}}
+	          data={sortList}
+	          onSelect={(selectedItem, index) => {
+		        console.log(selectedItem, index)
+	          }}
+	        buttonTextAfterSelection={(selectedItem, index) => {
+		      // text represented after item is selected
+		      // if data array is an array of objects then return selectedItem.property to render after item is selected
+		      return selectedItem
+	        }}
+	        rowTextForSelection={(item, index) => {
+		      // text represented for each item in dropdown
+		      // if data array is an array of objects then return item.property to represent item in dropdown
+		      return item
+	        }}
+          />
         </View>
 
         <SectionList
