@@ -192,6 +192,10 @@ export class TasksPage2 extends React.Component {
           setNewDescription={this.setNewDescription}
           setNewPoints={this.setNewPoints}
           setNewStartDate={this.setNewStartDate}
+          newName={this.state.newName}
+          newDeadline={this.state.newDeadline}
+          newDescription={this.state.newDescription}
+          newPoints={this.state.newPoints}
         />
 
         <AddButton
@@ -225,6 +229,10 @@ const TaskModal = (props) => {
         setNewDescription={props.setNewDescription}
         setNewPoints={props.setNewPoints}
         setNewStartDate={props.setNewStartDate}
+        newName={props.newName}
+        newDeadline={props.newDeadline}
+        newDescription={props.newDescription}
+        newPoints={props.newPoints}
       />
     );
   }
@@ -393,12 +401,12 @@ const InputModal = (props) => {
               onPress={() => {
                 var tID = Math.random().toString(36).substring(7);
                 var newT = new Task(
-                  this.state.newName,
-                  this.state.newDeadline,
-                  this.state.newPoints,
+                  props.newName,
+                  props.newDeadline,
+                  props.newPoints,
                   "repeat value go here",
                   Date.now(),
-                  this.state.setNewDescription,
+                  props.newDescription,
                   "h38219",
                   null,
                   null,
