@@ -55,7 +55,7 @@ export default class Task {
         completed: Task.completed,
         inProgress: Task.inProgress,
         assigned: Task.assigned,
-        taskID: taskID,
+        taskID: Task.taskID,
       };
     },
 

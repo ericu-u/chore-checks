@@ -7,7 +7,6 @@ import ChatboxPage from "./app/screens/ChatboxPage";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import config from "./config";
-import Test from "./app/screens/Test";
 import SettingsPage from "./app/screens/SettingsPage";
 import Drawer from "./app/screens/Drawer";
 import HouseholdPage2 from "./app/screens/HouseholdPage2";
@@ -21,7 +20,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-gesture-handler";
 import ProfilePage from "./app/screens/ProfilePage";
 
-firebase.auth().signOut();
+// firebase.auth().signOut();
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
   authDomain: "chores-97427.firebaseapp.com",
