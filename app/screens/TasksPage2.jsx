@@ -135,8 +135,6 @@ export class TasksPage2 extends React.Component {
   };
 
   render() {
-    console.log(this.state.newName); // state holds each new property value, so a function to add to database just needs
-    // to take in those values.
 
     // Returns what we want the user to see
     return (
@@ -182,7 +180,7 @@ export class TasksPage2 extends React.Component {
           )}
         />
 
-        <TaskModal
+        <ModalRedirector
           modalVisible={this.state.modalVisible}
           setModalVisible={this.setModalVisible}
           selectedTask={this.state.selectedTask}
@@ -219,7 +217,20 @@ const AddButton = (props) => (
   />
 );
 
-const TaskModal = (props) => {
+const ModalRedirector = (props) => {
+
+  if (props.selectedTask) {
+    if (props.modalVisible == true) {
+      return (
+        <TaskModal
+          modalVisible={props.modalVisible}
+          setModalVisible={props.setModalVisible}
+          selectedTask={props.selectedTask}
+        />
+      )
+    }
+  }
+
   if (props.inputModalVisible == true) {
     return (
       <InputModal
@@ -238,18 +249,24 @@ const TaskModal = (props) => {
     );
   }
 
-  let error = new TypeError("temp error");
+  
 
-  try {
-    var selectedTask = props.selectedTask;
+  return null;
 
-    if (!selectedTask.inProgressBy) {
-      var inProgressPerson = "Not claimed yet!";
-    } else {
-      var inProgressPerson = selectedTask.inProgressBy;
-    }
+}
 
-    listData = [
+const TaskModal = (props) => {
+
+  var selectedTask = props.selectedTask;
+
+  if (!selectedTask.inProgressBy) {
+    var inProgressPerson = "Not claimed yet!";
+  } else {
+    var inProgressPerson = selectedTask.inProgressBy;
+  }
+
+  if (props.selectedTask) {
+    var listData = [
       {
         key: "Deadline",
         property: new Date(selectedTask.deadline).toDateString(),
@@ -291,19 +308,20 @@ const TaskModal = (props) => {
               )}
             />
             <View style={styles.modalButtons}>
-              <Button style={styles.modalButton} title="Edit Task" />
               <Button
                 style={styles.modalButton}
                 color="red"
                 onPress={() => props.setModalVisible(!props.modalVisible)}
                 title="Close"
               />
+              <Button style={styles.modalButton} title="Edit Task" />
             </View>
           </View>
         </View>
       </Modal>
-    );
-  } catch (error) {
+    )
+  }
+  else {
     return null;
   }
 };
@@ -399,6 +417,14 @@ const InputModal = (props) => {
           <View style={styles.modalButtons}>
             <Button
               style={styles.modalButton}
+              color="red"
+              onPress={() =>
+                props.setInputModalVisible(!props.inputModalVisible)
+              }
+              title="Close"
+            />
+            <Button
+              style={styles.modalButton}
               title="Create"
               onPress={() => {
                 var tID = Math.random().toString(36).substring(7);
@@ -421,14 +447,6 @@ const InputModal = (props) => {
                 tRef.withConverter(Task.taskConverter).set(newT);
                 props.setInputModalVisible(!props.inputModalVisible)
               }}
-            />
-            <Button
-              style={styles.modalButton}
-              color="red"
-              onPress={() =>
-                props.setInputModalVisible(!props.inputModalVisible)
-              }
-              title="Close"
             />
           </View>
         </View>
