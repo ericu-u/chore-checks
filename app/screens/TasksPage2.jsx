@@ -413,6 +413,8 @@ const InputModal = (props) => {
                   null,
                   tID
                 );
+                console.log("new Task: ", newT)
+                var db = firebase.firestore()
                 var tRef = db.doc("/houses/h38219/Tasks/" + tID);
                 tRef.withConverter(Task.taskConverter).set(newT);
               }}
