@@ -21,6 +21,7 @@ import Task from "../classes/task";
 import _, { map } from "underscore";
 import { FAB } from "react-native-paper";
 import Modal from "react-native-modal";
+import DatePicker from 'react-native-datepicker'
 
 export class TasksPage2 extends React.Component {
   constructor(props) {
@@ -29,9 +30,15 @@ export class TasksPage2 extends React.Component {
       tasks: [], // List of task objects
       unsubscribe: null, // Firebase subscription. Calling this method will mean we stop listening to firebase for updates whenever the database changes
       sectionedTasks: [],
+
+      // modal visibilities
       modalVisible: false,
       inputModalVisible: false,
+      editModalVisible: false,
+
       selectedTask: null,
+
+      // new task properties
       newName: null,
       newPoints: null,
       newDeadline: null,
@@ -110,6 +117,10 @@ export class TasksPage2 extends React.Component {
     this.setState({ inputModalVisible: visible });
   };
 
+  setEditModalVisible = (visible) => {
+    this.setState({ editModalVisible: visible });
+  };
+
   setTask = (task) => {
     this.setState({ selectedTask: task });
   };
@@ -184,6 +195,7 @@ export class TasksPage2 extends React.Component {
           modalVisible={this.state.modalVisible}
           setModalVisible={this.setModalVisible}
           selectedTask={this.state.selectedTask}
+
           inputModalVisible={this.state.inputModalVisible}
           setInputModalVisible={this.setInputModalVisible}
           setNewName={this.setNewName}
@@ -195,6 +207,9 @@ export class TasksPage2 extends React.Component {
           newDeadline={this.state.newDeadline}
           newDescription={this.state.newDescription}
           newPoints={this.state.newPoints}
+
+          editModalVisible={this.state.editModalVisible}
+          setEditModalVisible={this.setEditModalVisible}
         />
 
         <AddButton
@@ -219,19 +234,18 @@ const AddButton = (props) => (
 
 const ModalRedirector = (props) => {
 
-  if (props.selectedTask) {
-    if (props.modalVisible == true) {
-      return (
-        <TaskModal
-          modalVisible={props.modalVisible}
-          setModalVisible={props.setModalVisible}
-          selectedTask={props.selectedTask}
-        />
-      )
-    }
+  if (props.modalVisible && props.selectedTask) {
+    return (
+      <TaskModal
+        modalVisible={props.modalVisible}
+        setModalVisible={props.setModalVisible}
+        setEditModalVisible={props.setEditModalVisible}
+        selectedTask={props.selectedTask}
+      />
+    )
   }
 
-  if (props.inputModalVisible == true) {
+  if (props.inputModalVisible) {
     return (
       <InputModal
         inputModalVisible={props.inputModalVisible}
@@ -249,10 +263,18 @@ const ModalRedirector = (props) => {
     );
   }
 
-  
+  if (props.editModalVisible) {
+    return (
+      <EditModal
+        editModalVisible={props.editModalVisible}
+        setEditModalVisible={props.setEditModalVisible}
+        selectedTask={props.selectedTask}
+        setModalVisible={props.setModalVisible}
+      />
+    )
+  }
 
   return null;
-
 }
 
 const TaskModal = (props) => {
@@ -265,7 +287,6 @@ const TaskModal = (props) => {
     var inProgressPerson = selectedTask.inProgressBy;
   }
 
-  if (props.selectedTask) {
     var listData = [
       {
         key: "Deadline",
@@ -295,6 +316,7 @@ const TaskModal = (props) => {
         backdropOpacity={0.3}
         animationOut="slideOutDown"
         onBackdropPress={() => props.setModalVisible(false)}
+        useNativeDriver={true}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -311,34 +333,50 @@ const TaskModal = (props) => {
               <Button
                 style={styles.modalButton}
                 color="red"
-                onPress={() => props.setModalVisible(!props.modalVisible)}
+                onPress={() => props.setModalVisible(false)}
                 title="Close"
               />
-              <Button style={styles.modalButton} title="Edit Task" />
+              <Button
+                style={styles.modalButton}
+                title="Edit Task"
+                onPress={() => {props.setEditModalVisible(true); props.setModalVisible(false)}}
+              />
             </View>
           </View>
         </View>
       </Modal>
     )
-  }
-  else {
-    return null;
-  }
 };
 
 const InputModal = (props) => {
-
+  // date={props.newDeadline}
   var inputData = [
     {
       key: "Deadline:",
       property: (
-        <TextInput
-          style={styles.input}
-          underlineColorAndroid="transparent"
-          placeholder="Deadline"
-          placeholderTextColor="#788fb3"
-          autoCapitalize="sentences"
-          onChangeText={(text) => props.setNewDeadline(text)}
+        <DatePicker
+          style={{flex:3, margin:15}}
+          date='2021-08-18'
+          mode="date"
+          placeholder="select date and time"
+          format="YYYY-MM-DD"
+          
+          confirmBtnText="Confirm"
+          cancelBtnText="Cancel"
+          showIcon={false}
+          customStyles={{
+            
+            dateInput: {
+              height: windowHeight * 0.03,
+              width: windowWidth * 0.512,
+              
+              borderWidth: 1.5,
+              borderColor: "#192e4f",
+              borderRadius: 10,
+            }
+            // ... You can check the source to find the other keys.
+          }}
+          onDateChange={(date) => {props.setNewDeadline(date)}}
         />
       ),
     },
@@ -348,6 +386,8 @@ const InputModal = (props) => {
         <TextInput
           style={styles.input}
           underlineColorAndroid="transparent"
+          keyboardType='number-pad'
+          maxLength={2}
           placeholder="Points"
           placeholderTextColor="#788fb3"
           autoCapitalize="sentences"
@@ -393,6 +433,7 @@ const InputModal = (props) => {
       onBackdropPress={() =>
         props.setInputModalVisible(!props.inputModalVisible)
       }
+      useNativeDriver={true}
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
@@ -453,6 +494,74 @@ const InputModal = (props) => {
       </View>
     </Modal>
   );
+};
+
+const EditModal = (props) => {
+
+  var selectedTask = props.selectedTask;
+
+  if (!selectedTask.inProgressBy) {
+    var inProgressPerson = "Not claimed yet!";
+  } else {
+    var inProgressPerson = selectedTask.inProgressBy;
+  }
+
+  var listData = [
+    {
+      key: "Deadline",
+      property: new Date(selectedTask.deadline).toDateString(),
+    },
+    {
+      key: "In progress by",
+      property: inProgressPerson,
+    },
+    {
+      key: "Points",
+      property: selectedTask.points,
+    },
+    {
+      key: "Start Date",
+      property: new Date(selectedTask.startDate).toDateString(),
+    },
+    {
+      key: "Description",
+      property: selectedTask.description,
+    },
+  ];
+
+  return (
+    <Modal
+      isVisible={props.editModalVisible}
+      backdropOpacity={0.3}
+      animationOut="slideOutDown"
+      onBackdropPress={() => props.setEditModalVisible(false)}
+      useNativeDriver={true}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalHeader}>{selectedTask.name}</Text>
+          <FlatList
+            data={listData}
+            renderItem={({ item }) => (
+              <TextInput
+                style={{ fontSize: 15, textAlign: "left", margin: 5 }}
+                value={item.property}
+              />
+            )}
+          />
+          <View style={styles.modalButtons}>
+            <Button
+              style={styles.modalButton}
+              color="red"
+              onPress={() => {props.setEditModalVisible(false); props.setModalVisible(true)}}
+              title="Close"
+            />
+            <Button style={styles.modalButton} title="oof" />
+          </View>
+        </View>
+      </View>
+    </Modal>
+  )
 };
 
 const StatusButton = (task) => {
