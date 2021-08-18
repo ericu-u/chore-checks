@@ -3,6 +3,11 @@ import { Image, StyleSheet, Button, View, Text } from "react-native";
 import { Header } from "react-native-elements";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MaterialIcons } from "@expo/vector-icons";
 import AppLoading from "expo-app-loading";
@@ -11,7 +16,6 @@ import {
   Montserrat_400Regular,
   Montserrat_600SemiBold,
 } from "@expo-google-fonts/montserrat";
-
 import ProfilePage from "./ProfilePage";
 import { TasksPage2 } from "./TasksPage2";
 import ChatboxPage from "./ChatboxPage";
@@ -28,9 +32,10 @@ function MyDrawer() {
       independent={true}
       drawerStyle={{ backgroundColor: "#e5e5e5" }}
       drawerContent={(props) => <CustomDrawer {...props} />}
+      // drawerContent={({navigation}) => <CustomDrawer navigation={navigation} />}
       drawerContentOptions={{
         inactiveTintColor: "black",
-        itemStyle: { marginVertical: 15 },
+        itemStyle: { marginVertical: 25 },
         labelStyle: { fontSize: 20, fontFamily: "Montserrat_400Regular" },
       }}
     >
@@ -86,7 +91,7 @@ function MyDrawer() {
           ),
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         independent={true}
         name="Settings"
         component={SettingsNavigator}
@@ -98,7 +103,7 @@ function MyDrawer() {
             />
           ),
         }}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 }
@@ -285,43 +290,39 @@ function HouseholdNavigator() {
   );
 }
 
-const SettingsStack = createStackNavigator();
+// const SettingsStack = createStackNavigator();
 
-function SettingsNavigator() {
-  return (
-    <SettingsStack.Navigator>
-      <SettingsStack.Screen
-        name="Settings"
-        component={SettingsPage}
-        options={({ navigation }) => ({
-          title: "Settings",
-          headerTitleStyle: {
-            fontFamily: "Montserrat_600SemiBold",
-            fontSize: 20,
-          },
-          headerLeft: () => (
-            <MaterialIcons
-              style={styles.menuIcon}
-              name="menu"
-              size={30}
-              onPress={() => navigation.toggleDrawer()}
-            />
-          ),
-          headerStyle: {
-            backgroundColor: "#2B88D8",
-            shadowColor: "#656565",
-            shadowOpacity: 10,
-            shadowRadius: 10,
-            shadowOffset: {
-              height: 5,
-            },
-          },
-        })}
-      />
-      <SettingsStack.Screen
-        name="HouseholdSelectionPage"
-        component={HouseholdSelectionPage}
-      ></SettingsStack.Screen>
-    </SettingsStack.Navigator>
-  );
-}
+// function SettingsNavigator() {
+//   return (
+//     <SettingsStack.Navigator>
+//       <SettingsStack.Screen
+//         name="Settings"
+//         component={SettingsPage}
+//         options={({ navigation }) => ({
+//           title: "Settings",
+//           headerTitleStyle: {
+//             fontFamily: "Montserrat_600SemiBold",
+//             fontSize: 20,
+//           },
+//           headerLeft: () => (
+//             <MaterialIcons
+//               style={styles.menuIcon}
+//               name="menu"
+//               size={30}
+//               onPress={() => navigation.toggleDrawer()}
+//             />
+//           ),
+//           headerStyle: {
+//             backgroundColor: "#2B88D8",
+//             shadowColor: "#656565",
+//             shadowOpacity: 10,
+//             shadowRadius: 10,
+//             shadowOffset: {
+//               height: 5,
+//             },
+//           },
+//         })}
+//       />
+//     </SettingsStack.Navigator>
+//   );
+// }

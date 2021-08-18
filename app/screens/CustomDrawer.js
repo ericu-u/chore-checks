@@ -5,43 +5,54 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
+import { DrawerNavigator } from "react-navigation";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import AppLoading from "expo-app-loading";
 import {
   useFonts,
   Montserrat_400Regular,
+  Montserrat_500Medium,
   Montserrat_700Bold,
 } from "@expo-google-fonts/montserrat";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-function Sidebar({ ...props }) {
-
+function Sidebar(props) {
   let [fontsLoaded] = useFonts({
     Montserrat_400Regular,
+    Montserrat_500Medium,
     Montserrat_700Bold,
   });
 
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
-  return (
-    <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
-      <View style={styles.horizontalLine} />
-      <View style={styles.container}>
-        <View>
-          <Image
-            source={require("../assets/rounded-square.png")}
-            style={styles.square}
-          />
-          <View style={styles.textBorder}>
-            <Text style={styles.titleText}>*username*</Text>
-            <Text style={styles.bodyText}>{"\u2022"} *household*</Text>
-            <Text style={styles.bodyText}>{"\u2022"} *points*</Text>
-          </View>
+    return (
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+        <View style={styles.horizontalLine} />
+        {/* change household button */}
+        <View style={styles.changeHouseholdButton}>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate("HouseholdSelectionPage")
+            }
+          >
+            <Text style={styles.changeHouseholdText}>Change Household</Text>
+          </TouchableOpacity>
         </View>
-      </View>
-    </DrawerContentScrollView>
-  );
-}
+        {/* sign out button */}
+        <View style={styles.signOutButton}>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate("HouseholdSelectionPage") // gotta change this part
+            }
+          >
+            <Text style={styles.signOutText}>Sign Out</Text>
+          </TouchableOpacity>
+        </View>
+      </DrawerContentScrollView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -49,42 +60,46 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 1,
     margin: "10%",
-    marginTop: "8%",
-    marginBottom: "7%",
+    marginTop: "20%",
     backgroundColor: "black",
   },
-  container: {
-    flex: 1,
-    alignItems: "center",
-  },
-  square: {
-    width: 220,
-    height: 220,
-  },
-  textBorder: {
+  changeHouseholdButton: {
     position: "absolute",
-    right: 0,
-    left: 0,
-    top: 0,
-    bottom: 0,
-    paddingTop: "10%",
-    paddingBottom: "10%",
-    paddingLeft: "10%",
-    paddingRight: "10%",
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    top: "108%",
+    paddingTop: "4%",
+    paddingBottom: "4%",
+    paddingRight: "4%",
+    paddingLeft: "4%",
+    borderRadius: 50,
+    borderColor: "black",
+    borderWidth: 1,
   },
-  titleText: {
-    paddingBottom: "10%",
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 27,
-    fontFamily: "Montserrat_700Bold",
-  },
-  bodyText: {
-    paddingBottom: "8%",
-    paddingLeft: "10%",
-    paddingRight: "10%",
+  changeHouseholdText: {
+    color: "blue",
     fontSize: 20,
-    fontFamily: "Montserrat_400Regular",
+    fontFamily: "Montserrat_500Medium",
+  },
+  signOutButton: {
+    position: "absolute",
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    top: "125%",
+    paddingTop: "4%",
+    paddingBottom: "4%",
+    paddingRight: "4%",
+    paddingLeft: "4%",
+    borderRadius: 50,
+    borderColor: "black",
+    borderWidth: 1,
+  },
+  signOutText: {
+    color: "#D21404",
+    fontSize: 20,
+    fontFamily: "Montserrat_500Medium",
   },
 });
 
