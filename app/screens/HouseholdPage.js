@@ -28,7 +28,7 @@ import {
 } from "@expo-google-fonts/montserrat";
 import SelectDropdown from "react-native-select-dropdown";
 
-const sortList = ["Completion Rate", "Tasks Completed", "Points"];
+const sortList = ["Points", "Completion Rate", "Tasks Completed"];
 
 var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
 export default class HouseholdPage extends React.Component {
@@ -100,7 +100,6 @@ export default class HouseholdPage extends React.Component {
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
   render() {
-    // console.log(this.state.people);
     return (
       //replace all margins/paddings with relative positioning based on device
 
@@ -124,6 +123,8 @@ export default class HouseholdPage extends React.Component {
             rowStyle={styles.dropdown3RowStyle}
             defaultButtonText={"Select"}
 
+            defaultButtonText={"Points"}
+            style={{ color: "red" }}
             data={sortList}
             onSelect={(selectedItem, index) => {
               if (selectedItem === "Points") {
@@ -148,6 +149,10 @@ export default class HouseholdPage extends React.Component {
                     // console.log(doc.id, " => ", doc.data());
                     pain.push(doc.data());
                   });
+                  // this.setState({ tasks: pain });
+                  this.setState({ people: pain });
+
+                  // console.log(this.state.tasks);
                 })
                 .catch((error) => {
                   console.log("Error getting documents: ", error);
