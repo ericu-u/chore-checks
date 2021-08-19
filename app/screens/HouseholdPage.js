@@ -112,10 +112,18 @@ export default class HouseholdPage extends React.Component {
           <View style={styles.statusHeader}>
             <Text style={styles.statusHeaderText}>Sort By</Text>
           </View>
+        </View>
 
-          {/* THE CRUCIAL DROP DOWN MENU FOR ACTUALLY SORTING*/}
+        <View style ={{alignItems: 'center'}}>
+          {/* THE CRUCIAL DROP DOWN MENU 
+                FOR ACTUALLY SORTING      */}
           <SelectDropdown
-            style={{ color: "red" }}
+            styles={{}}
+            buttonStyle={styles.dropdown3BtnStyle}
+            dropdownStyle={styles.dropdown3DropdownStyle}
+            rowStyle={styles.dropdown3RowStyle}
+            defaultButtonText={"Select"}
+
             data={sortList}
             onSelect={(selectedItem, index) => {
               if (selectedItem === "Points") {
@@ -157,7 +165,7 @@ export default class HouseholdPage extends React.Component {
               return item;
             }}
           />
-        </View>
+          </View>
 
         <SectionList
           sections={[{ title: "Household", data: this.state.people }]}
@@ -181,7 +189,7 @@ const styles = StyleSheet.create({
     //height: "30%", //replace with relative positioning based on device
     justifyContent: "center",
     marginTop: "6%",
-    marginBottom: "6%",
+    //marginBottom: "6%",
   },
   statusHeaderText: {
     fontSize: 25,
@@ -230,6 +238,32 @@ const styles = StyleSheet.create({
     //margin: 'auto',
     paddingLeft: "20%",
     paddingTop: "15%",
+  },
+  dropdown3BtnStyle: {
+    width: "50%",
+    height: 30,
+    backgroundColor: "#FFF",
+    //paddingHorizontal: 0,
+    borderWidth: 0.2,
+    borderRadius: 6,
+    borderColor: "black",
+    marginBottom: "5%",
+    alignItems: 'center',
+    alignContent: 'center',
+    backgroundColor: "#dcf3fc"
+  },
+  dropdown3DropdownStyle: { backgroundColor: "slategray" },
+  dropdown3RowStyle: {
+    //backgroundColor: "slategray",
+    borderBottomColor: "#444",
+    height: 40,
+  },
+  dropdown3RowChildStyle: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingHorizontal: 18,
   },
 });
 
