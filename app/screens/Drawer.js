@@ -29,10 +29,9 @@ function MyDrawer() {
     <Drawer.Navigator
       independent={true}
       drawerStyle={{ backgroundColor: "#e5e5e5" }}
-      drawerContent={(props) => <CustomDrawer {...props} />}
       drawerContentOptions={{
         inactiveTintColor: "black",
-        itemStyle: { marginVertical: 15 },
+        itemStyle: { marginVertical: 20 },
         labelStyle: { fontSize: 20, fontFamily: "Montserrat_400Regular" },
       }}
     >
@@ -90,27 +89,13 @@ function MyDrawer() {
       />
       <Drawer.Screen
         independent={true}
-        name="Settings"
-        component={SettingsNavigator}
-        options={{
-          drawerIcon: () => (
-            <Image
-              source={require("../assets/settings.png")}
-              style={styles.icon}
-            />
-          ),
-        }}
-      />
-
-      <Drawer.Screen
-        independent={true}
         name="Change Household"
         component={ScuffedNavigator}
         options={{
           drawerIcon: () => (
             <Image
-              source={require("../assets/chat.png")}
-              style={styles.chatIcon}
+              source={require("../assets/change-household.png")}
+              style={styles.icon}
             />
           ),
           gestureEnabled: false,
@@ -118,13 +103,13 @@ function MyDrawer() {
       />
       <Drawer.Screen
         independent={true}
-        name="Log out"
+        name="Log Out"
         component={LogOutNavigator}
         options={{
           drawerIcon: () => (
             <Image
-              source={require("../assets/chat.png")}
-              style={styles.chatIcon}
+              source={require("../assets/log-out.png")}
+              style={styles.icon}
             />
           ),
           gestureEnabled: false,
@@ -138,9 +123,9 @@ const styles = StyleSheet.create({
   icon: {
     width: 40,
     height: 40,
-    marginLeft: "6%",
+    marginLeft: "5%",
   },
-  chatIcon: { width: 40, height: 37, marginLeft: "6%" },
+  chatIcon: { width: 40, height: 37, marginLeft: "5%" },
   menuIcon: {
     marginLeft: 20,
   },
@@ -313,47 +298,6 @@ function HouseholdNavigator() {
         })}
       />
     </HouseholdStack.Navigator>
-  );
-}
-
-const SettingsStack = createStackNavigator();
-
-function SettingsNavigator() {
-  return (
-    <SettingsStack.Navigator>
-      <SettingsStack.Screen
-        name="Settings"
-        component={SettingsPage}
-        options={({ navigation }) => ({
-          title: "Settings",
-          headerTitleStyle: {
-            fontFamily: "Montserrat_600SemiBold",
-            fontSize: 20,
-          },
-          headerLeft: () => (
-            <MaterialIcons
-              style={styles.menuIcon}
-              name="menu"
-              size={30}
-              onPress={() => navigation.toggleDrawer()}
-            />
-          ),
-          headerStyle: {
-            backgroundColor: "#2B88D8",
-            shadowColor: "#656565",
-            shadowOpacity: 10,
-            shadowRadius: 10,
-            shadowOffset: {
-              height: 5,
-            },
-          },
-        })}
-      />
-      <SettingsStack.Screen
-        name="HouseholdSelectionPage"
-        component={HouseholdSelectionPage}
-      ></SettingsStack.Screen>
-    </SettingsStack.Navigator>
   );
 }
 
