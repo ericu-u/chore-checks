@@ -67,7 +67,7 @@ function ProfilePage(props) {
     return function cleanup() {
       pls();
     };
-  });
+  }, []);
 
   //Replace profile picture with firebase profile
   //FlatList is default scrollable. Can be made unscrollable.
