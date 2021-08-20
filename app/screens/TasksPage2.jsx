@@ -25,6 +25,10 @@ import { FAB } from "react-native-paper";
 import Modal from "react-native-modal";
 import { MonthDateYearField } from 'react-native-datefield';
 import { SelectMultipleButton } from "react-native-selectmultiple-button";
+import {
+  useFonts,
+  Montserrat_500Medium
+} from "@expo-google-fonts/montserrat";
 
 
 
@@ -339,7 +343,7 @@ const TaskModal = (props) => {
             <FlatList
               data={listData}
               renderItem={({ item }) => (
-                <Text style={{ fontSize: 15, textAlign: "left", margin: 5 }}>
+                <Text style={{ fontSize: 15, textAlign: "left", margin: 5, fontFamily: 'Montserrat_500Medium', }}>
                   {item.key}: {item.property}
                 </Text>
               )}
@@ -388,6 +392,7 @@ const InputModal = (props) => {
             borderRadius: 10,
             borderColor: '#192e4f',
             borderWidth: 1.5,
+            fontFamily: 'Montserrat_500Medium',
           }}
           placeholderTextColor="#788fb3"
           onSubmit={(value) => {props.setNewDeadline(value.valueOf())}}
@@ -428,7 +433,7 @@ const InputModal = (props) => {
           }}
         >
           <Text
-            style={{color: '#788fb3'}}
+            style={{color: '#788fb3', fontFamily: 'Montserrat_500Medium', }}
           >
             Repeated (optional):
           </Text>
@@ -443,6 +448,7 @@ const InputModal = (props) => {
               key={selection}
               value={selection}
               displayValue={selection}
+              textStyle={{fontFamily: 'Montserrat_500Medium'}}
               highLightStyle={{
                 borderColor: "gray",
                 backgroundColor: "transparent",
@@ -451,7 +457,6 @@ const InputModal = (props) => {
                 backgroundTintColor: "#192e4f",
                 textTintColor: "white"
               }}
-              //buttonViewStyle={}
               selected={props.newRepeat == selection}
               singleTap={valueTap =>
                 {props.setNewRepeat(valueTap, selection)}
@@ -466,7 +471,7 @@ const InputModal = (props) => {
       key: "Description:",
       property: (
         <TextInput
-          style={[styles.inputHeader, { height: windowHeight * 0.1 }]}
+          style={[styles.inputHeader, { height: windowHeight * 0.1, }]}
           underlineColorAndroid="transparent"
           multiline={true}
           blurOnSubmit={true}
@@ -556,6 +561,7 @@ const InputModal = (props) => {
   );
 };
 
+// TODO: this next
 const EditModal = (props) => {
 
   var selectedTask = props.selectedTask;
@@ -696,17 +702,17 @@ const Item = ({ task, setModalVisible, modalVisible, setTask }) => {
 
   if (timeLeft < 0) {
     var timeDisplay = (
-      <Text style={{ fontSize: 13, color: "#db1414" }}>Due Date: Overdue!</Text>
+      <Text style={{ fontSize: 13, color: "#db1414", fontFamily: 'Montserrat_500Medium' }}>Due Date: Overdue!</Text>
     );
   } else if (task.deadline - currTime.valueOf() < 86400000) {
     var timeDisplay = (
-      <Text style={{ fontSize: 13, color: "#db1414" }}>
+      <Text style={{ fontSize: 13, color: "#db1414", fontFamily: 'Montserrat_500Medium' }}>
         Due in: {msToTime(task.deadline - currTime.valueOf())}
       </Text>
     );
   } else {
     var timeDisplay = (
-      <Text style={{ fontSize: 13, color: "#db1414" }}>
+      <Text style={{ fontSize: 13, color: "#db1414", fontFamily: 'Montserrat_500Medium' }}>
         Due Date: {deadline.getMonth() + 1} / {deadline.getDate()}
       </Text>
     );
@@ -726,7 +732,7 @@ const Item = ({ task, setModalVisible, modalVisible, setTask }) => {
           source={require("../assets/stroke5.png")}
           style={styles.oatmealPoints}
         />
-        <Text style={{ position: "absolute", bottom: 3 /*color: 'white'*/ }}>
+        <Text style={{ position: "absolute", bottom: 3, fontFamily: 'Montserrat_500Medium' }}>
           {task.points}
         </Text>
       </View>
@@ -739,7 +745,7 @@ const Item = ({ task, setModalVisible, modalVisible, setTask }) => {
             setTask(task);
           }}
         >
-          <Text style={{ fontSize: 18 }}>{task.name}</Text>
+          <Text style={{ fontSize: 18, fontFamily: 'Montserrat_500Medium' }}>{task.name}</Text>
           {timeDisplay}
         </Pressable>
       </View>
@@ -826,6 +832,7 @@ const styles = StyleSheet.create({
     borderColor: "#192e4f",
     borderRadius: 10,
     backgroundColor: "#FFFFFF",
+    fontFamily: 'Montserrat_500Medium'
   },
   inputRow: {
     flexDirection: "row",
@@ -854,6 +861,7 @@ const styles = StyleSheet.create({
   },
   modalHeader: {
     fontSize: 25,
+    fontFamily: 'Montserrat_500Medium',
     textAlign: "center",
     margin: 10,
   },
@@ -879,7 +887,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.1358974358974359,
   },
   statusHeader: {
-    height: windowHeight * 0.083, // TODO: replace with relative positioning based on device
+    height: windowHeight * 0.083,
     justifyContent: "center",
     borderBottomWidth: 0.5,
     borderTopWidth: 0.5,
@@ -890,12 +898,14 @@ const styles = StyleSheet.create({
   },
   statusHeaderText: {
     fontSize: 25,
+    fontFamily: 'Montserrat_500Medium',
     textAlign: "center",
     width: "100%",
   },
   statusText: {
     color: "#fff",
     textAlign: "center",
+    fontFamily: 'Montserrat_500Medium',
   },
   takenStatus: {
     marginRight: windowWidth * 0.0512820512820513,
