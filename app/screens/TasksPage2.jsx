@@ -2,6 +2,7 @@ import React from "react";
 import {
   Button,
   Dimensions,
+  Keyboard,
   View,
   Text,
   StyleSheet,
@@ -9,6 +10,7 @@ import {
   Image,
   TouchableHighlight,
   SectionList,
+  ScrollView,
   Pressable,
   FlatList,
   TextInput,
@@ -21,7 +23,10 @@ import Task from "../classes/task";
 import _, { map } from "underscore";
 import { FAB } from "react-native-paper";
 import Modal from "react-native-modal";
-import DatePicker from 'react-native-datepicker'
+import { MonthDateYearField } from 'react-native-datefield';
+import { SelectMultipleButton } from "react-native-selectmultiple-button";
+
+
 
 export class TasksPage2 extends React.Component {
   constructor(props) {
@@ -137,6 +142,10 @@ export class TasksPage2 extends React.Component {
     this.setState({ newDeadline: deadline });
   };
 
+  setNewRepeat = (valueTap, repeat) => {
+    this.setState({ newRepeat: repeat });
+  }
+
   setNewStartDate = (startDate) => {
     this.setState({ newStartDate: startDate });
   };
@@ -146,6 +155,7 @@ export class TasksPage2 extends React.Component {
   };
 
   render() {
+
 
     // Returns what we want the user to see
     return (
@@ -202,11 +212,13 @@ export class TasksPage2 extends React.Component {
           setNewDeadline={this.setNewDeadline}
           setNewDescription={this.setNewDescription}
           setNewPoints={this.setNewPoints}
+          setNewRepeat={this.setNewRepeat}
           setNewStartDate={this.setNewStartDate}
           newName={this.state.newName}
           newDeadline={this.state.newDeadline}
           newDescription={this.state.newDescription}
           newPoints={this.state.newPoints}
+          newRepeat={this.state.newRepeat}
 
           editModalVisible={this.state.editModalVisible}
           setEditModalVisible={this.setEditModalVisible}
@@ -254,11 +266,14 @@ const ModalRedirector = (props) => {
         setNewDeadline={props.setNewDeadline}
         setNewDescription={props.setNewDescription}
         setNewPoints={props.setNewPoints}
+        setNewRepeat={props.setNewRepeat}
         setNewStartDate={props.setNewStartDate}
-        newName={props.newName}
+        
         newDeadline={props.newDeadline}
         newDescription={props.newDescription}
+        newName={props.newName}
         newPoints={props.newPoints}
+        newRepeat={props.newRepeat}
       />
     );
   }
@@ -349,34 +364,33 @@ const TaskModal = (props) => {
 };
 
 const InputModal = (props) => {
-  // date={props.newDeadline}
+
   var inputData = [
     {
       key: "Deadline:",
       property: (
-        <DatePicker
-          style={{flex:3, margin:15}}
-          date='2021-08-18'
-          mode="date"
-          placeholder="select date and time"
-          format="YYYY-MM-DD"
-          
-          confirmBtnText="Confirm"
-          cancelBtnText="Cancel"
-          showIcon={false}
-          customStyles={{
-            
-            dateInput: {
-              height: windowHeight * 0.03,
-              width: windowWidth * 0.512,
-              
-              borderWidth: 1.5,
-              borderColor: "#192e4f",
-              borderRadius: 10,
-            }
-            // ... You can check the source to find the other keys.
+        <MonthDateYearField
+          labelDate="Day"
+          labelMonth="Month"
+          labelYear="Year"
+          containerStyle={{
+            flex: 1,
+            textAlign: 'center',
+            marginTop: windowHeight * 0.017,
+            marginLeft: windowWidth * 0.013,
+            marginRight: windowWidth * 0.013,
+            height: windowHeight * 0.05,
+            width: windowWidth * 0.5,
           }}
-          onDateChange={(date) => {props.setNewDeadline(date)}}
+          styleInput={{
+            height: windowHeight * 0.05,
+            width: windowWidth * 0.171,
+            borderRadius: 10,
+            borderColor: '#192e4f',
+            borderWidth: 1.5,
+          }}
+          placeholderTextColor="#788fb3"
+          onSubmit={(value) => {props.setNewDeadline(value.valueOf())}}
         />
       ),
     },
@@ -384,42 +398,82 @@ const InputModal = (props) => {
       key: "Points:",
       property: (
         <TextInput
-          style={styles.input}
+          style={styles.inputHeader}
           underlineColorAndroid="transparent"
           keyboardType='number-pad'
           maxLength={2}
           placeholder="Points"
           placeholderTextColor="#788fb3"
-          autoCapitalize="sentences"
-          onChangeText={(text) => props.setNewPoints(text)}
+          onEndEditing={(text) => {props.setNewPoints(text.nativeEvent.text)}}
         />
       ),
     },
     {
-      key: "Start Date:",
+      key: "Repeated (optional):",
       property: (
-        <TextInput
-          style={styles.input}
-          underlineColorAndroid="transparent"
-          placeholder="Start Date"
-          placeholderTextColor="#788fb3"
-          autoCapitalize="sentences"
-          onChangeText={(text) => props.setNewStartDate(text)}
-        />
+        <View
+          style={{
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: 'center',
+            marginTop: windowHeight * 0.017,
+            marginLeft: windowWidth * 0.013,
+            marginRight: windowWidth * 0.013,
+            height: windowHeight * 0.1,
+            width: windowWidth * 0.625,
+            borderWidth: 1.5,
+            borderColor: "#192e4f",
+            borderRadius: 10,
+            backgroundColor: "#FFFFFF",
+          }}
+        >
+          <Text
+            style={{color: '#788fb3'}}
+          >
+            Repeated (optional):
+          </Text>
+          <ScrollView
+            style={{
+              flexDirection: 'row'
+            }}
+            horizontal={true}
+          >
+          {['Daily', 'Weekly', 'Bi-Weekly', 'Monthly'].map(selection => (
+            <SelectMultipleButton
+              key={selection}
+              value={selection}
+              displayValue={selection}
+              highLightStyle={{
+                borderColor: "gray",
+                backgroundColor: "transparent",
+                textColor: "#192e4f",
+                borderTintColor: "#192e4f",
+                backgroundTintColor: "#192e4f",
+                textTintColor: "white"
+              }}
+              //buttonViewStyle={}
+              selected={props.newRepeat == selection}
+              singleTap={valueTap =>
+                {props.setNewRepeat(valueTap, selection)}
+              }
+            />
+          ))}
+          </ScrollView>
+        </View>
       ),
     },
     {
       key: "Description:",
       property: (
         <TextInput
-          style={[styles.input, { height: windowHeight * 0.1 }]}
+          style={[styles.inputHeader, { height: windowHeight * 0.1 }]}
           underlineColorAndroid="transparent"
           multiline={true}
           blurOnSubmit={true}
           placeholder="Description"
           placeholderTextColor="#788fb3"
           autoCapitalize="sentences"
-          onChangeText={(text) => props.setNewDescription(text)}
+          onEndEditing={(text) => {props.setNewDescription(text.nativeEvent.text)}}
         />
       ),
     },
@@ -436,61 +490,67 @@ const InputModal = (props) => {
       useNativeDriver={true}
     >
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <View style={styles.inputRow}>
-            <TextInput
-              style={styles.inputHeader}
-              underlineColorAndroid="transparent"
-              placeholder="Task Name"
-              placeholderTextColor="#788fb3"
-              autoCapitalize="sentences"
-              onChangeText={(text) => props.setNewName(text)}
-            />
-          </View>
+        <Pressable
+          onPress={Keyboard.dismiss}
+        >
+          <View style={styles.modalView}>
+            <View style={styles.inputRow}>
+              <TextInput
+                style={styles.inputHeader}
+                underlineColorAndroid="transparent"
+                placeholder="Task Name"
+                placeholderTextColor="#788fb3"
+                autoCapitalize="sentences"
+                onEndEditing={(text) => {props.setNewName(text.nativeEvent.text)}}
+              />
+            </View>
 
-          <FlatList
-            data={inputData}
-            renderItem={({ item }) => {
-              return <View style={styles.inputRow}>{item.property}</View>;
-            }}
-          />
-
-          <View style={styles.modalButtons}>
-            <Button
-              style={styles.modalButton}
-              color="red"
-              onPress={() =>
-                props.setInputModalVisible(!props.inputModalVisible)
-              }
-              title="Close"
-            />
-            <Button
-              style={styles.modalButton}
-              title="Create"
-              onPress={() => {
-                var tID = Math.random().toString(36).substring(7);
-                var newT = new Task(
-                  props.newName,
-                  props.newDeadline,
-                  props.newPoints,
-                  "repeat value go here",
-                  Date.now(),
-                  props.newDescription,
-                  "h38219",
-                  null,
-                  null,
-                  null,
-                  tID
-                );
-                console.log("new Task: ", newT)
-                var db = firebase.firestore()
-                var tRef = db.doc("/houses/h38219/Tasks/" + tID);
-                tRef.withConverter(Task.taskConverter).set(newT);
-                props.setInputModalVisible(!props.inputModalVisible)
+            <FlatList
+              data={inputData}
+              renderItem={({ item }) => {
+                return <View style={styles.inputRow}>{item.property}</View>;
               }}
             />
+
+            <View style={styles.modalButtons}>
+              <Button
+                style={styles.modalButton}
+                color="red"
+                onPress={() => {
+                  props.setInputModalVisible(!props.inputModalVisible)
+                  props.setNewRepeat(null)
+                }}
+                title="Close"
+              />
+              <Button
+                style={styles.modalButton}
+                title="Create"
+                onPress={() => {
+                  var tID = Math.random().toString(36).substring(7);
+                  var newT = new Task(
+                    props.newName,
+                    props.newDeadline,
+                    props.newPoints,
+                    props.newRepeat,
+                    Date.now(),
+                    props.newDescription,
+                    "h38219",
+                    null,
+                    null,
+                    null,
+                    tID
+                  );
+                  console.log("new Task: ", newT)
+                  var db = firebase.firestore()
+                  var tRef = db.doc("/houses/h38219/Tasks/" + tID);
+                  tRef.withConverter(Task.taskConverter).set(newT);
+                  props.setInputModalVisible(!props.inputModalVisible);
+                  props.setNewRepeat(null)
+                }}
+              />
+            </View>
           </View>
-        </View>
+        </Pressable>
       </View>
     </Modal>
   );
@@ -538,27 +598,31 @@ const EditModal = (props) => {
       useNativeDriver={true}
     >
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalHeader}>{selectedTask.name}</Text>
-          <FlatList
-            data={listData}
-            renderItem={({ item }) => (
-              <TextInput
-                style={{ fontSize: 15, textAlign: "left", margin: 5 }}
-                value={item.property}
-              />
-            )}
-          />
-          <View style={styles.modalButtons}>
-            <Button
-              style={styles.modalButton}
-              color="red"
-              onPress={() => {props.setEditModalVisible(false); props.setModalVisible(true)}}
-              title="Close"
+        <Pressable
+          onPress={Keyboard.dismiss}
+        >
+          <View style={styles.modalView}>
+            <Text style={styles.modalHeader}>{selectedTask.name}</Text>
+            <FlatList
+              data={listData}
+              renderItem={({ item }) => (
+                <TextInput
+                  style={{ fontSize: 15, textAlign: "left", margin: 5 }}
+                  value={item.property}
+                />
+              )}
             />
-            <Button style={styles.modalButton} title="oof" />
+            <View style={styles.modalButtons}>
+              <Button
+                style={styles.modalButton}
+                color="red"
+                onPress={() => {props.setEditModalVisible(false); props.setModalVisible(true)}}
+                title="Close"
+              />
+              <Button style={styles.modalButton} title="oof" />
+            </View>
           </View>
-        </View>
+        </Pressable>
       </View>
     </Modal>
   )
@@ -691,8 +755,8 @@ function onPressButton() {
   alert("Status has been changed."); // TODO: Alert and/or Button to be replaced
 }
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width; //390
+const windowHeight = Dimensions.get("window").height; //844
 
 // TODO: Test dimensions on other devices.
 const styles = StyleSheet.create({
@@ -751,8 +815,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   inputHeader: {
-    flex: 3,
-    margin: 15,
+    flex: 1,
+    marginTop: windowHeight * 0.017,
+    marginLeft: windowWidth * 0.013,
+    marginRight: windowWidth * 0.013,
     height: windowHeight * 0.05,
     width: windowWidth * 0.512,
     textAlign: "center",
