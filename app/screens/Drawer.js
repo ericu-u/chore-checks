@@ -19,6 +19,8 @@ import HouseholdPage from "./HouseholdPage";
 import SettingsPage from "./SettingsPage";
 import CustomDrawer from "./CustomDrawer";
 import HouseholdSelectionPage from "./HouseholdSelectionPage";
+import ScuffedLogin from "./ScuffedLogin";
+import LoginPage2 from "./LoginPage2";
 const Drawer = createDrawerNavigator();
 
 // drawer navigator screens
@@ -27,10 +29,9 @@ function MyDrawer() {
     <Drawer.Navigator
       independent={true}
       drawerStyle={{ backgroundColor: "#e5e5e5" }}
-      drawerContent={(props) => <CustomDrawer {...props} />}
       drawerContentOptions={{
         inactiveTintColor: "black",
-        itemStyle: { marginVertical: 15 },
+        itemStyle: { marginVertical: 20 },
         labelStyle: { fontSize: 20, fontFamily: "Montserrat_400Regular" },
       }}
     >
@@ -88,15 +89,30 @@ function MyDrawer() {
       />
       <Drawer.Screen
         independent={true}
-        name="Settings"
-        component={SettingsNavigator}
+        name="Change Household"
+        component={ScuffedNavigator}
         options={{
           drawerIcon: () => (
             <Image
-              source={require("../assets/settings.png")}
+              source={require("../assets/change-household.png")}
               style={styles.icon}
             />
           ),
+          gestureEnabled: false,
+        }}
+      />
+      <Drawer.Screen
+        independent={true}
+        name="Log Out"
+        component={LogOutNavigator}
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={require("../assets/log-out.png")}
+              style={styles.icon}
+            />
+          ),
+          gestureEnabled: false,
         }}
       />
     </Drawer.Navigator>
@@ -107,9 +123,9 @@ const styles = StyleSheet.create({
   icon: {
     width: 40,
     height: 40,
-    marginLeft: "6%",
+    marginLeft: "5%",
   },
-  chatIcon: { width: 40, height: 37, marginLeft: "6%" },
+  chatIcon: { width: 40, height: 37, marginLeft: "5%" },
   menuIcon: {
     marginLeft: 20,
   },
@@ -126,7 +142,7 @@ export default function MenuPage() {
   } else {
     return (
       <NavigationContainer independent={true}>
-        <MyDrawer independent={true}/>
+        <MyDrawer independent={true} />
       </NavigationContainer>
     );
   }
@@ -285,43 +301,44 @@ function HouseholdNavigator() {
   );
 }
 
-const SettingsStack = createStackNavigator();
+const ScuffedStack = createStackNavigator();
 
-function SettingsNavigator() {
+function ScuffedNavigator() {
   return (
-    <SettingsStack.Navigator>
-      <SettingsStack.Screen
-        name="Settings"
-        component={SettingsPage}
-        options={({ navigation }) => ({
-          title: "Settings",
-          headerTitleStyle: {
-            fontFamily: "Montserrat_600SemiBold",
-            fontSize: 20,
-          },
-          headerLeft: () => (
-            <MaterialIcons
-              style={styles.menuIcon}
-              name="menu"
-              size={30}
-              onPress={() => navigation.toggleDrawer()}
-            />
-          ),
-          headerStyle: {
-            backgroundColor: "#2B88D8",
-            shadowColor: "#656565",
-            shadowOpacity: 10,
-            shadowRadius: 10,
-            shadowOffset: {
-              height: 5,
-            },
-          },
-        })}
-      />
-      <SettingsStack.Screen
+    <ScuffedStack.Navigator>
+      <ScuffedStack.Screen
         name="HouseholdSelectionPage"
         component={HouseholdSelectionPage}
-      ></SettingsStack.Screen>
-    </SettingsStack.Navigator>
+        options={{
+          headerShown: false,
+        }}
+      />
+      <ScuffedStack.Screen
+        name="MenuPage"
+        component={MenuPage}
+        options={{ headerShown: false }}
+      ></ScuffedStack.Screen>
+    </ScuffedStack.Navigator>
+  );
+}
+
+const LogOutStack = createStackNavigator();
+
+function LogOutNavigator() {
+  return (
+    <LogOutStack.Navigator>
+      <LogOutStack.Screen
+        name="HouseholdSelectionPage"
+        component={LoginPage2}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <LogOutStack.Screen
+        name="Drawer"
+        component={MenuPage}
+        options={{ headerShown: false }}
+      ></LogOutStack.Screen>
+    </LogOutStack.Navigator>
   );
 }

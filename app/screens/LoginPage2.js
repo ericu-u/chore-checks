@@ -25,8 +25,8 @@ function LoginPage({ navigation }) {
   //const [unsub, setUnsub] = useState(null);
   const [unsubscriber, setUnsubscriber] = useState(null);
 
-  console.log("boobs");
-
+  console.log("tits");
+  firebase.auth().signOut();
   useEffect(() => {
     const please = firebase.auth().onAuthStateChanged(function (user) {
       if (user) {

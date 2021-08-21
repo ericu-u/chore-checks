@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -16,11 +16,59 @@ import {
   Montserrat_500Medium,
   Montserrat_600SemiBold,
 } from "@expo-google-fonts/montserrat";
+import Person from "../classes/person";
 
-const personIDD = "p0VVeQsUlU6suH3g5ru5R";
+// const personIDD = firebase.auth().currentUser.uid;
 
-console.log(firebase.auth().currentUser);
+// console.log(firebase.auth().currentUser);
 function ProfilePage(props) {
+  const [name, setName] = useState("Loading...");
+  const [points, setPoints] = useState("Loading...");
+  const [tasks, setTasks] = useState([{ key: "Loading..." }]);
+  const [tasksdone, setTasksdone] = useState("Loading...");
+  const [tasksfailed, setTasksfailed] = useState("Loading...");
+  const [completion, setCompletion] = useState("Loading...");
+  const [pfp, setPfp] = useState(
+    "https://firebasestorage.googleapis.com/v0/b/chores-97427.appspot.com/o/standard-account90.png?alt=media&token=a8c59bff-000f-48cc-a690-c51e845bc6d6"
+  );
+
+  // const [ontime, setOntime] = useState("Loading...");
+  // const [late, setLate] = useState("Loading...");
+
+  useEffect(() => {
+    const pls = firebase.auth().onAuthStateChanged(function (user) {
+      (async () => {
+        var pid = user.uid;
+        const db = firebase.firestore();
+        var pObj = (
+          await db
+            .doc("users/" + pid)
+            .withConverter(Person.personConverter)
+            .get()
+        ).data();
+
+        //console.log(pObj);
+        var tObjs = await pObj.getTasks();
+        // console.log("tasks", tObjs);
+        var taskName = [];
+        for (var i = 0; i < tObjs.length; i++) {
+          taskName.push({ key: tObjs[i].name });
+        }
+        setName(pObj.name);
+        setPoints(pObj.points + " points");
+        setTasks(taskName);
+        setTasksdone(pObj.tasksCompleted);
+        setCompletion(pObj.successRate);
+        setPfp(pObj.profilePic);
+        setTasksfailed(pObj.tasksFailed);
+      })();
+    });
+
+    return function cleanup() {
+      pls();
+    };
+  });
+
   //Replace profile picture with firebase profile
   //FlatList is default scrollable. Can be made unscrollable.
   //Most statistics are calculatable.
@@ -41,16 +89,16 @@ function ProfilePage(props) {
           <View style={{ flex: 0.65 }}>
             <Image
               source={{
-                uri: "https://lh3.googleusercontent.com/a-/AOh14GjpWcYnEoZq4pnBEIBPsbzpE7MlS1yok8cEQjR2=s96-c",
+                uri: pfp,
               }}
               style={styles.image}
             />
-            <Text style={styles.username}>Bubloo 7</Text>
+            <Text style={styles.username}>{name}</Text>
           </View>
 
           <View style={styles.householdBackground}>
             <View style={styles.container}>
-              <Text style={styles.householdName}>Total Points</Text>
+              <Text style={styles.householdName}>{points}</Text>
             </View>
           </View>
           <View
@@ -63,14 +111,7 @@ function ProfilePage(props) {
               <View style={styles.container}>
                 <Text style={styles.nestedContainerTitle}>Tasks</Text>
                 <FlatList
-                  data={[
-                    { key: "Walk the dog" },
-                    { key: "Walk the other dog" },
-                    { key: "Take a shower" },
-                    { key: "Buy groceries" },
-                    { key: "Invest this month's rent in Gamestop stonks" },
-                    { key: "Lose it all" },
-                  ]}
+                  data={tasks}
                   renderItem={({ item }) => (
                     <Text style={styles.list}>{item.key}</Text>
                   )}
@@ -82,11 +123,9 @@ function ProfilePage(props) {
                 <Text style={styles.nestedContainerTitle}>Statistics</Text>
                 <FlatList
                   data={[
-                    { key: "Tasks Done: \n 60" },
-                    { key: "Completion Rate: \n 91.7%" },
-                    { key: "On Time Tasks: \n 50" },
-                    { key: "Late Tasks: \n 5" },
-                    { key: "Missed Tasks: \n 5" },
+                    { key: "Tasks Done: " + tasksdone },
+                    { key: "Late Tasks: " + tasksfailed },
+                    { key: "Completion Rate: " + completion },
                   ]}
                   renderItem={({ item }) => (
                     <Text style={styles.list}>{item.key}</Text>

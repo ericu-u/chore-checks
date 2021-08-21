@@ -91,7 +91,7 @@ function HouseholdSelectionPage(navigation) {
               style={{
                 flex: 1.2,
                 flexDirection: "column",
-                alignItems: "space-evenly",
+                justifyContent: "space-evenly",
               }}
             >
               <TouchableHighlight
