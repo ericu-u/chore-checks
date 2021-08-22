@@ -93,15 +93,6 @@ export class SettingsPage extends React.Component {
                 </View>
               </View>
 
-
-
-
-
-        {/* TODO: FIX FONT TO THIS!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Approaching deadline</Text>
- */}
-
-
-
               {/*Approaching deadline button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Approaching deadline</Text>
@@ -114,17 +105,6 @@ export class SettingsPage extends React.Component {
                 </View>
               </View>
 
-
-
-
-
-{/*TODO: FIX FONT!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
- */}
-
-
-
-
- 
               {/*Deadline passed button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Deadline passed</Text>
@@ -137,18 +117,6 @@ export class SettingsPage extends React.Component {
                 </View>
               </View>
 
-
-
-
-{/*TODO: FIX FONT!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
- */}
-
-
-
-
-
-
- 
               {/*Task incomplete button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Task incomplete</Text>
@@ -161,16 +129,6 @@ export class SettingsPage extends React.Component {
                 </View>
               </View>
 
-
-
-
-{/*TODO: FIX FONT!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
- */}
-
-
-
-
- 
               {/*Housemate completion button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Housemate completion</Text>
@@ -182,19 +140,6 @@ export class SettingsPage extends React.Component {
                   />
                 </View>
               </View>
-
-
-
-
-
-{/*TODO: FIX FONT!!! <Text style={{ fontSize: 24, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
- */}
-
-
-
-
-
-
 
               {/*Chat notifications*/}
               <View style={styles.textAlign}>
