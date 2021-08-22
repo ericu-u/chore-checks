@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
+import { Text, View, StyleSheet, Button, Alert } from "react-native";
+import * as firebase from "firebase";
+import "firebase/firestore";
 import * as Google from "expo-google-app-auth";
-import firebase from "firebase";
 
-class LoginScreen extends Component {
+console.log("refreshed");
+export default class ScuffedLogin extends Component {
   isUserEqual = (googleUser, firebaseUser) => {
     if (firebaseUser) {
       var providerData = firebaseUser.providerData;
@@ -58,6 +60,7 @@ class LoginScreen extends Component {
       }.bind(this)
     ); // Sketch
   };
+
   signInWithGoogleAsync = async () => {
     try {
       const result = await Google.logInAsync({
@@ -80,16 +83,54 @@ class LoginScreen extends Component {
     }
   };
 
+  login = async () => {
+    // await firebase.auth().signOut();
+
+    if (firebase.auth().currentUser === null) {
+      const result = await Google.logInAsync({
+        behavior: "web",
+        androidClientId:
+          "409040868260-ahtufk4tk7f54bap4bi9e061dihn9grr.apps.googleusercontent.com",
+        iosClientId:
+          "409040868260-m4u2ubmsmbpgdqnk4f8g3frclv1k6mtn.apps.googleusercontent.com",
+        scopes: ["profile", "email"],
+      });
+
+      if (result.type === "success") {
+        this.onSignIn(result);
+        return result.accessToken;
+      } else {
+        return { cancelled: true };
+      }
+    } else {
+      console.log(":)", firebase.auth());
+    }
+  };
+
+  logout = async () => {
+    await firebase.auth().signOut();
+    console.log("signed out");
+  };
   render() {
     return (
       <View style={styles.container}>
-        <Button title="Sigsn in" onPress={() => this.signInWithGoogleAsync()} />
+        <Button
+          title="login"
+          onPress={() => {
+            this.props.navigation.navigate("MenuPage");
+          }}
+        />
+        <Button
+          title="logout"
+          color="#ff0000"
+          onPress={() => {
+            console.log("logout");
+          }}
+        />
       </View>
     );
   }
 }
-
-export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {

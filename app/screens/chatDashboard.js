@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
-import ChatboxPage2 from "./ChatboxPage2"
+import ChatboxPage2 from "./ChatboxPage2";
 
 class Dashboard extends Component {
   render() {

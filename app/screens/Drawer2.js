@@ -5,39 +5,30 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MaterialIcons } from "@expo/vector-icons";
-import AppLoading from "expo-app-loading";
-import {
-  useFonts,
-  Montserrat_400Regular,
-  Montserrat_600SemiBold,
-} from "@expo-google-fonts/montserrat";
 
 import ProfilePage from "./ProfilePage";
+import TasksPage from "./TasksPage";
 import { TasksPage2 } from "./TasksPage2";
 import ChatboxPage from "./ChatboxPage";
 import HouseholdPage from "./HouseholdPage";
 import SettingsPage from "./SettingsPage";
 import CustomDrawer from "./CustomDrawer";
-import HouseholdSelectionPage from "./HouseholdSelectionPage";
-import ScuffedLogin from "./ScuffedLogin";
-import LoginPage2 from "./LoginPage2";
+
 const Drawer = createDrawerNavigator();
 
 // drawer navigator screens
 function MyDrawer() {
   return (
     <Drawer.Navigator
-      independent={true}
       drawerStyle={{ backgroundColor: "#e5e5e5" }}
       drawerContent={(props) => <CustomDrawer {...props} />}
       drawerContentOptions={{
         inactiveTintColor: "black",
         itemStyle: { marginVertical: 15 },
-        labelStyle: { fontSize: 20, fontFamily: "Montserrat_400Regular" },
+        labelStyle: { fontSize: 20 },
       }}
     >
       <Drawer.Screen
-        independent={true}
         name="Profile"
         component={ProfileNavigator}
         options={{
@@ -50,7 +41,6 @@ function MyDrawer() {
         }}
       />
       <Drawer.Screen
-        independent={true}
         name="Tasks"
         component={TasksNavigator}
         options={{
@@ -63,7 +53,6 @@ function MyDrawer() {
         }}
       />
       <Drawer.Screen
-        independent={true}
         name="Chatbox"
         component={ChatboxNavigator}
         options={{
@@ -76,7 +65,6 @@ function MyDrawer() {
         }}
       />
       <Drawer.Screen
-        independent={true}
         name="Household"
         component={HouseholdNavigator}
         options={{
@@ -89,7 +77,6 @@ function MyDrawer() {
         }}
       />
       <Drawer.Screen
-        independent={true}
         name="Settings"
         component={SettingsNavigator}
         options={{
@@ -99,35 +86,6 @@ function MyDrawer() {
               style={styles.icon}
             />
           ),
-        }}
-      />
-
-      <Drawer.Screen
-        independent={true}
-        name="Change Household"
-        component={ScuffedNavigator}
-        options={{
-          drawerIcon: () => (
-            <Image
-              source={require("../assets/chat.png")}
-              style={styles.chatIcon}
-            />
-          ),
-          gestureEnabled: false,
-        }}
-      />
-      <Drawer.Screen
-        independent={true}
-        name="Log out"
-        component={LogOutNavigator}
-        options={{
-          drawerIcon: () => (
-            <Image
-              source={require("../assets/chat.png")}
-              style={styles.chatIcon}
-            />
-          ),
-          gestureEnabled: false,
         }}
       />
     </Drawer.Navigator>
@@ -147,20 +105,11 @@ const styles = StyleSheet.create({
 });
 
 export default function MenuPage() {
-  let [fontsLoaded] = useFonts({
-    Montserrat_400Regular,
-    Montserrat_600SemiBold,
-  });
-
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  } else {
-    return (
-      <NavigationContainer independent={true}>
-        <MyDrawer independent={true} />
-      </NavigationContainer>
-    );
-  }
+  return (
+    <NavigationContainer>
+      <MyDrawer />
+    </NavigationContainer>
+  );
 }
 
 // stack navigator screens
@@ -168,15 +117,13 @@ const ProfileStack = createStackNavigator();
 
 function ProfileNavigator() {
   return (
-    <ProfileStack.Navigator independent={true}>
+    <ProfileStack.Navigator>
       <ProfileStack.Screen
-        independent={true}
         name="Profile"
         component={ProfilePage}
         options={({ navigation }) => ({
           title: "Profile",
           headerTitleStyle: {
-            fontFamily: "Montserrat_600SemiBold",
             fontSize: 20,
           },
           headerLeft: () => (
@@ -206,15 +153,13 @@ const TasksStack = createStackNavigator();
 
 function TasksNavigator() {
   return (
-    <TasksStack.Navigator independent={true}>
+    <TasksStack.Navigator>
       <TasksStack.Screen
-        independent={true}
         name="Tasks"
         component={TasksPage2}
         options={({ navigation }) => ({
           title: "Tasks",
           headerTitleStyle: {
-            fontFamily: "Montserrat_600SemiBold",
             fontSize: 20,
           },
           headerLeft: () => (
@@ -244,15 +189,13 @@ const ChatboxStack = createStackNavigator();
 
 function ChatboxNavigator() {
   return (
-    <ChatboxStack.Navigator independent={true}>
+    <ChatboxStack.Navigator>
       <ChatboxStack.Screen
-        independent={true}
         name="Chatbox"
         component={ChatboxPage}
         options={({ navigation }) => ({
           title: "Chatbox",
           headerTitleStyle: {
-            fontFamily: "Montserrat_600SemiBold",
             fontSize: 20,
           },
           headerLeft: () => (
@@ -282,15 +225,13 @@ const HouseholdStack = createStackNavigator();
 
 function HouseholdNavigator() {
   return (
-    <HouseholdStack.Navigator independent={true}>
+    <HouseholdStack.Navigator>
       <HouseholdStack.Screen
-        independent={true}
         name="Household"
         component={HouseholdPage}
         options={({ navigation }) => ({
           title: "Household",
           headerTitleStyle: {
-            fontFamily: "Montserrat_600SemiBold",
             fontSize: 20,
           },
           headerLeft: () => (
@@ -327,7 +268,6 @@ function SettingsNavigator() {
         options={({ navigation }) => ({
           title: "Settings",
           headerTitleStyle: {
-            fontFamily: "Montserrat_600SemiBold",
             fontSize: 20,
           },
           headerLeft: () => (
@@ -349,52 +289,6 @@ function SettingsNavigator() {
           },
         })}
       />
-      <SettingsStack.Screen
-        name="HouseholdSelectionPage"
-        component={HouseholdSelectionPage}
-      ></SettingsStack.Screen>
     </SettingsStack.Navigator>
-  );
-}
-
-const ScuffedStack = createStackNavigator();
-
-function ScuffedNavigator() {
-  return (
-    <ScuffedStack.Navigator>
-      <ScuffedStack.Screen
-        name="HouseholdSelectionPage"
-        component={HouseholdSelectionPage}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <ScuffedStack.Screen
-        name="MenuPage"
-        component={MenuPage}
-        options={{ headerShown: false }}
-      ></ScuffedStack.Screen>
-    </ScuffedStack.Navigator>
-  );
-}
-
-const LogOutStack = createStackNavigator();
-
-function LogOutNavigator() {
-  return (
-    <LogOutStack.Navigator>
-      <LogOutStack.Screen
-        name="HouseholdSelectionPage"
-        component={LoginPage2}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <LogOutStack.Screen
-        name="Drawer"
-        component={MenuPage}
-        options={{ headerShown: false }}
-      ></LogOutStack.Screen>
-    </LogOutStack.Navigator>
   );
 }

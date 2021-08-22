@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Button,
+  Dimensions,
   View,
   Text,
   StyleSheet,
@@ -8,10 +9,10 @@ import {
   Image,
   TouchableHighlight,
   Modal,
-  StatusBar,
   SectionList,
   Pressable,
-  FlatList
+  FlatList,
+  TextInput,
 } from "react-native";
 import config from "../../config";
 import * as firebase from "firebase";
@@ -19,8 +20,8 @@ import "firebase/firestore";
 import Household from "../classes/household";
 import Task from "../classes/task";
 import { Header } from "react-native-elements";
-import Overlay from 'react-native-modal-overlay';
 import _, { map } from 'underscore';
+import { FAB } from 'react-native-paper';
 
 export class TasksPage2 extends React.Component {
   constructor(props) {
@@ -29,7 +30,9 @@ export class TasksPage2 extends React.Component {
       tasks: [], // List of task objects
       unsubscribe: null, // Firebase subscription. Calling this method will mean we stop listening to firebase for updates whenever the database changes
       sectionedTasks: [],
-      modalVisible: true, 
+      modalVisible: false,
+      inputModalVisible: false,
+      selectedTask: null,
     };
   }
 
@@ -65,8 +68,16 @@ export class TasksPage2 extends React.Component {
         });
         console.log("updated tasks");
         this.setState({ tasks: tempTasks }); // Makes the state.tasks equal tempTasks
-        var activeTasks = _.where(this.state.tasks, {completed: null});
-        var completedTasks = _.reject(this.state.tasks, function(task){ return task.completed != null; });
+        var activeTasks = _.where(this.state.tasks, {completed: null}); // Gets tasks without completion
+
+        // For loop that appends completed tasks
+        var completedTasks = [];
+        for (let task of this.state.tasks) {
+          if (typeof task.completed == 'string') {
+            completedTasks.push(task)
+          }
+        }
+
         var sections = [{
           title: 'Active',
           data: activeTasks
@@ -83,67 +94,30 @@ export class TasksPage2 extends React.Component {
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
 
-  state = {
-    modalVisible: true, 
-  }
-  
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   }
 
+  setInputModalVisible = (visible) => {
+    this.setState({ inputModalVisible: visible });
+  }
+
+  setTask = (task) => {
+    this.setState({ selectedTask: task });
+  }
+
   render() {
     // Returns what we want the user to see
-
     return (
-      // TODO: replace all margins/paddings with relative positioning based on device
-
       <ImageBackground
         style={{ flex: 1 }}
         source={require("../assets/background-gradient.jpg")}
       >
-        <Header
-          leftComponent={{
-            icon: "menu",
-            color: "#fff",
-            iconStyle: { color: "#fff" },
-          }}
-          centerComponent={{ text: "Tasks", style: { color: "#fff" } }}
-        />
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.state.modalVisible}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalHeader}>Task Name Here</Text>
-              <FlatList
-                data={[
-                  {key: 'Task Property 1'},
-                  {key: 'Task Property 2'},
-                  {key: 'Task Property 3'},
-                  {key: 'Task Property 4'},
-                  {key: 'Task Property 5'},
-                  {key: 'Task Property 6'},
-                ]}
-                renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left' }}>{item.key}</Text>}
-              />
-              <View style={{ position: 'absolute', bottom: 10 }}>
-                <Button
-                  style={styles.modalButton}
-                  onPress={() => this.setModalVisible(!this.state.modalVisible)}
-                  title="Close"
-                />
-              </View>
-            </View>
-          </View>
-        </Modal>
-
+     
         <SectionList
-          sections={this.state.sectionedTasks }
+          sections={ this.state.sectionedTasks }
           keyExtractor={(item, index) => item + index}
-          renderItem={({ item }) => <Item task={item} />}
+          renderItem={({ item }) => <Item task={item} setModalVisible={this.setModalVisible} modalVisible={this.state.modalVisible} setTask={this.setTask} />}
           renderSectionHeader={({ section: { title } }) => (
             <View style={styles.statusHeader}>
               <View
@@ -170,93 +144,415 @@ export class TasksPage2 extends React.Component {
             </View>
           )}
         />
+
+        <TaskModal
+          stateStuff={this.state}
+          modalVisible={this.state.modalVisible}
+          setModalVisible={this.setModalVisible}
+          selectedTask={this.state}
+          inputModalVisible={this.state.inputModalVisible}
+          setInputModalVisible={this.setInputModalVisible}
+        />
+
+        <AddButton
+          inputModalVisible={this.state.inputModalVisible}
+          setInputModalVisible={this.setInputModalVisible}
+        />
       </ImageBackground>
     );
   }
 }
 
+const AddButton = (props) => (
+  <FAB
+    style={styles.fab}
+    icon="plus"
+    color="white"
+    onPress={() => { props.setInputModalVisible(!props.inputModalVisible) }}
+  />
+);
 
+const TaskModal = (props) => {
 
-const Item = ({ task }) => (
+  if (props.inputModalVisible == true) {
+    return (
+      <InputModal
+        inputModalVisible={props.inputModalVisible}
+        setInputModalVisible={props.setInputModalVisible}
+      />
+    )
+  }
+
+  let error = new TypeError('temp error');
+
+  try {
+
+    var selectedTask = props.selectedTask.selectedTask;
+
+    if (!selectedTask.inProgressBy) {
+      var inProgressPerson = 'Not claimed yet!';
+    }
+    else {
+      var inProgressPerson = selectedTask.inProgressBy;
+    }
+
+    listData = [
+      {
+        key: 'Deadline',
+        property: new Date(selectedTask.deadline).toDateString()
+      },
+      {
+        key: 'In progress by',
+        property: inProgressPerson
+      },
+      {
+        key: 'Points',
+        property: selectedTask.points
+      },
+      {
+        key: 'Start Date',
+        property: new Date(selectedTask.startDate).toDateString()
+      },
+      {
+        key: 'Description',
+        property: selectedTask.description
+      },
+    ];
+
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={props.modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          props.setModalVisible(!props.modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalHeader}>{selectedTask.name}</Text>
+            <FlatList
+              data={listData}
+              renderItem={({item}) => <Text style={{ fontSize: 15, textAlign: 'left', margin: 5 }}>{item.key}: {item.property}</Text>}
+            />
+            <View style={{ position: 'absolute', bottom: 10 }}>
+              <Button
+                style={styles.modalButton}
+                onPress={() => props.setModalVisible(!props.modalVisible)}
+                title="Close"
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+    )
+
+  } catch (error) {
+    return null;
+  }
+}
+
+const InputModal = (props) => {
+
+  var newTask;
+  var inputData = [
+    {
+      key: 'Deadline',
+      property: (
+        <TextInput
+          style = {styles.input}
+          underlineColorAndroid = "transparent"
+          placeholder = "Deadline"
+          placeholderTextColor = "#788fb3"
+          autoCapitalize = "sentences"
+          onChangeText = {() => null}
+        />
+      )
+    },
+    {
+      key: 'Points',
+      property: (
+        <TextInput
+          style = {styles.input}
+          underlineColorAndroid = "transparent"
+          placeholder = "Points"
+          placeholderTextColor = "#788fb3"
+          autoCapitalize = "sentences"
+          onChangeText = {() => null}
+        />
+      )
+    },
+    {
+      key: 'Start Date',
+      property: (
+        <TextInput
+          style = {styles.input}
+          underlineColorAndroid = "transparent"
+          placeholder = "Start Date"
+          placeholderTextColor = "#788fb3"
+          autoCapitalize = "sentences"
+          onChangeText = {() => null}
+        />
+      )
+    },
+    {
+      key: 'Description',
+      property: (
+        <TextInput
+          style = {styles.input}
+          underlineColorAndroid = "transparent"
+          placeholder = "Description"
+          placeholderTextColor = "#788fb3"
+          autoCapitalize = "sentences"
+          onChangeText = {() => null}
+        />
+      )
+    },
+  ];
+  
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={props.inputModalVisible}
+      onRequestClose={() => {
+        Alert.alert("Modal has been closed.");
+        props.setInputModalVisible(!props.inputModalVisible);
+      }}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+
+          <TextInput 
+            style={styles.inputHeader}
+            underlineColorAndroid = "transparent"
+            placeholder = "Task Name"
+            placeholderTextColor = "#788fb3"
+            autoCapitalize = "sentences"
+            onChangeText = {() => null}
+          />
+
+            <FlatList
+              data={inputData}
+              renderItem={({ item }) => {
+                return (
+                  <View style={styles.inputRow}>
+                    <Text 
+                      style={{flex: 1, textAlignVertical: 'center'}}
+                      numberOfLines={1}
+                      allowFontScaling={true}
+                      adjustsFontSizeToFit={true}
+                    >
+                      {item.key}
+                    </Text>
+                    {item.property}
+                  </View>
+                
+                )
+              }
+            }
+            />
+
+          <View style={ styles.closeModal }>
+            <Button
+              style={styles.modalButton}
+              onPress={() => props.setInputModalVisible(!props.inputModalVisible)}
+              title="Close"
+            />
+          </View>
+        </View>
+      </View>
+    </Modal>
+  )
+}
+
+const StatusButton = (task) => {
+
+  if (task.props.inProgress == 'claimed') { //personID equal to user
+    return <TouchableHighlight
+    style={styles.claimedStatus}
+    onPress={onPressButton}
+    underlayColor='#96c7eb'>
+    <Text style={styles.statusText}>Claimed!</Text>
+  </TouchableHighlight>
+  }
+  else if (task.props.inProgress == 'taken') { //personID not equal to user
+    return <TouchableHighlight
+    style={styles.takenStatus}
+    onPress={onPressButton}
+    underlayColor='#c26969'>
+    <Text style={styles.statusText}>Taken</Text>
+  </TouchableHighlight>
+  }
+  else if (task.props.completed) {
+    return <TouchableHighlight
+    style={styles.doneStatus}
+    onPress={onPressButton}
+    underlayColor='#69c272'>
+    <Text style={styles.statusText}>Done</Text>
+  </TouchableHighlight>
+  }
+  else if (!task.props.inProgress) { //inProgress = null
+    return <TouchableHighlight
+    style={styles.claimStatus}
+    onPress={onPressButton}
+    underlayColor='#96c7eb'>
+    <Text style={styles.statusText}>Claim</Text>
+  </TouchableHighlight>
+  }
+  else {
+    return <Text>temporary error</Text>
+  }
+}
+  
+const Item = ({ task, setModalVisible, modalVisible, setTask }) => {
+
+  var deadline = new Date(task.deadline);
+  var currTime = new Date();
+  var timeLeft = task.deadline - currTime.valueOf()
+
+  function msToTime(duration) {
+    var seconds = Math.floor((duration / 1000) % 60),
+      minutes = Math.floor((duration / (1000 * 60)) % 60),
+      hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+  
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+  
+    return hours + ":" + minutes + ":" + seconds;
+  }
+
+  if (timeLeft < 0 ) {
+    var timeDisplay = (
+      <Text style={{ fontSize: 13, color: '#db1414' }}>
+        Due Date: Overdue!
+      </Text>
+    )
+  }
+  else if ((task.deadline - currTime.valueOf()) < 86400000 ) {
+    var timeDisplay = (
+      <Text style={{ fontSize: 13, color: '#db1414' }}>
+        Due in: {msToTime(task.deadline - currTime.valueOf())}
+      </Text>
+    )
+  }
+  else {
+    var timeDisplay = (
+      <Text style={{ fontSize: 13, color: '#db1414' }}>
+        Due Date: {deadline.getMonth() + 1} / {deadline.getDate()}
+      </Text>
+    )
+  }
+
+return (
   <View style={styles.item}>
 
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20}}>
       <Image
-        source={require('../assets/hexagon.png')}
-        style={{ height: 50, width: 50 }}
+        source={require('../assets/stroke5.png')}
+        style={ styles.oatmealPoints }
       />
-      <Text style={{position: 'absolute'}}>{task.points}</Text>
+      <Text style={{position: 'absolute', bottom: 3, /*color: 'white'*/}}>{task.points}</Text>
     </View>
 
-    <View style={{ flex: 4, marginLeft: 30, flexDirection: 'column' }}>
+    <View style={ styles.taskPreview }>
       <Pressable
-          style={[styles.button, styles.buttonOpen]}
-          onPress={() => this.setModalVisible(true)}
-        >
-          <Text style={{ fontSize: 18 }} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
-        {task.name}
-      </Text>
-        </Pressable>
-      
-      <Text style={{ fontSize: 13, color: '#db1414' }}>
-        Due Date: {new Date(task.deadline).getMonth()} / {new Date(task.deadline).getDate()} {/* TODO: Add if statement to display time if less than 24 hours */}
-      </Text>
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => { setModalVisible(!modalVisible.modalVisible); setTask(task); }}
+      >
+        <Text style={{ fontSize: 18 }}>{task.name}</Text>
+        {timeDisplay}
+      </Pressable>
     </View>
     
     <View style={{ flex: 2, justifyContent: "center" }}>
-      <TouchableHighlight
-        style={styles.claimStatus}
-        onPress={onPressButton}
-        underlayColor='#96c7eb'>
-        <Text style={styles.statusText}>Taken</Text>
-      </TouchableHighlight>
+      <StatusButton props={task} />
     </View>
   </View>
-);
+)
+}
 
 function onPressButton() {
   alert("Status has been changed."); // TODO: Alert and/or Button to be replaced
 }
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+// TODO: Test dimensions on other devices.
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: windowHeight * 0.023696682464455,
   },
   claimStatus: {
-    marginRight: 20,
-    marginLeft: 10,
-    //marginTop: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
+    marginRight: windowWidth * 0.0512820512820513,
+    marginLeft: windowWidth * 0.0256410256410256,
+    paddingTop: windowHeight * 0.0118483412322275,
+    paddingBottom: windowHeight * 0.0118483412322275,
     backgroundColor: '#2588cf',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'black',
   },
   claimedStatus: {
-    marginRight: 20,
-    marginLeft: 10,
-    //marginTop: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
+    marginRight: windowWidth * 0.0512820512820513,
+    marginLeft: windowWidth * 0.0256410256410256,
+    paddingTop: windowHeight * 0.0118483412322275,
+    paddingBottom: windowHeight * 0.0118483412322275,
     backgroundColor: 'gray',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'black',
   },
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+  closeModal: {
+    position: 'absolute',
+    bottom: windowHeight * 0.0118483412322275,
+  },
+  doneStatus: {
+    marginRight: windowWidth * 0.0512820512820513,
+    marginLeft: windowWidth * 0.0256410256410256,
+    paddingTop: windowHeight * 0.0118483412322275,
+    paddingBottom: windowHeight * 0.0118483412322275,
+    backgroundColor: 'green',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  fab: {
+    position: 'absolute',
+    margin: 20,
+    right: windowWidth * 0.0128205128205128,
+    bottom: windowHeight * 0.0059241706161137,
+    backgroundColor: '#071b7a'
+  },
+  input: {
+    flex: 3,
+    margin: 15,
+    height: windowHeight * 0.03,
+    width: windowWidth * 0.512,
+    borderColor: '#192e4f',
+    borderWidth: 1
+  },
+  inputHeader: {
+    margin: 15,
+    height: windowHeight * 0.05,
+    width: windowWidth * 0.65,
+    borderColor: '#192e4f',
+    borderWidth: 1
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: windowWidth * 0.65 //styles.modalView.width * ( 4/5 )
   },
   item: {
     flexDirection: "row",
-    //padding: 20,
-    //marginVertical: 8,
-    //marginHorizontal: 16,
-    height: 70,
+    height: windowHeight * 0.083,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -268,13 +564,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   modalHeader: {
-    fontSize: 30,
-    textAlign: "center"
+    fontSize: 25,
+    textAlign: "center",
+    margin: 10,
   },
   modalView: {
     margin: 20,
-    height: 400,
-    width: 300,
+    height: windowHeight * 0.6,
+    width: windowWidth * 0.85,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
@@ -288,8 +585,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
+  oatmealPoints: {
+    height: windowHeight * 0.0533175355450237,
+    width: windowWidth * 0.1358974358974359,
+  },
   statusHeader: {
-    height: 70, // TODO: replace with relative positioning based on device
+    height: windowHeight * 0.083, // TODO: replace with relative positioning based on device
     justifyContent: "center",
     borderBottomWidth: 0.5,
     borderTopWidth: 0.5,
@@ -308,15 +609,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   takenStatus: {
-    marginRight: 20,
-    marginLeft: 10,
-    //marginTop: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
+    marginRight: windowWidth * 0.0512820512820513,
+    marginLeft: windowWidth * 0.0256410256410256,
+    paddingTop: windowHeight * 0.0118483412322275,
+    paddingBottom: windowHeight * 0.0118483412322275,
     backgroundColor: 'red',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'black',
+  },
+  taskPreview: {
+    flex: 4,
+    marginLeft: windowWidth * 0.077,
+    flexDirection: 'column',
   },
 });
 

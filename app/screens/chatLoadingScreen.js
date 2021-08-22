@@ -10,7 +10,6 @@ class LoadingScreen extends Component {
   checkIfLoggedIn = () => {
     firebase.auth().onAuthStateChanged(
       function (user) {
-        console.log(user);
         if (user) {
           this.props.navigation.navigate("DashboardScreen");
         } else {

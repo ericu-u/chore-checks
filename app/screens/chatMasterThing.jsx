@@ -6,7 +6,6 @@ import Dashboard from "./chatDashboard";
 import LoginScreen from "./chatLoginScreen";
 import firebase from "firebase";
 
-console.log("hi");
 export default class BigChat extends React.Component {
   render() {
     return <AppNavigator></AppNavigator>;

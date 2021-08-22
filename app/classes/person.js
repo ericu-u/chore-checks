@@ -13,6 +13,11 @@ export default class Person {
    * @param {int} tasksCompleted The number of tasks the person completed
    * @param {int} tasksFailed The number of tasks the person failed
    * @param {String} successRate Percentage of tasks they finished
+   * @param {boolean} approachingDeadlineNotif If they have notifications enabled for approaching deadlines
+   * @param {boolean} deadlinePassedNotif If they have notifications enabled for deadlines passed
+   * @param {boolean} taskCompleteNotif if they have notifications enabled for tasks completed
+   * @param {boolean} housemateCompleteNotif if they have notifications enabled for when a housemate completes a task
+   * @param {boolean} chatNotif if they have notifications enabled for chat
    */
   constructor(
     personID,
@@ -22,7 +27,12 @@ export default class Person {
     points,
     tasksCompleted,
     tasksFailed,
-    successRate
+    successRate,
+    approachingDeadlineNotif,
+    deadlinePassedNotif,
+    taskCompleteNotif,
+    housemateCompleteNotif,
+    chatNotif
   ) {
     this.personID = personID;
     this.name = name;
@@ -32,6 +42,11 @@ export default class Person {
     this.tasksCompleted = tasksCompleted;
     this.tasksFailed = tasksFailed;
     this.successRate = successRate;
+    this.approachingDeadlineNotif = approachingDeadlineNotif;
+    this.deadlinePassedNotif = deadlinePassedNotif;
+    this.taskCompleteNotif = taskCompleteNotif;
+    this.housemateCompleteNotif = housemateCompleteNotif;
+    this.chatNotif = chatNotif;
   }
 
   /**
@@ -48,6 +63,11 @@ export default class Person {
         tasksCompleted: Person.tasksCompleted,
         tasksFailed: Person.tasksFailed,
         successRate: Person.successRate,
+        approachingDeadlineNotif: Person.approachingDeadlineNotif,
+        deadlinePassedNotif: Person.deadlinePassedNotif,
+        taskCompleteNotif: Person.taskCompleteNotif,
+        housemateCompleteNotif: Person.housemateCompleteNotif,
+        chatNotif: Person.chatNotif,
       };
     },
 
@@ -61,7 +81,12 @@ export default class Person {
         data.points,
         data.tasksCompleted,
         data.tasksFailed,
-        data.successRate
+        data.successRate,
+        data.approachingDeadlineNotif,
+        data.deadlinePassedNotif,
+        data.taskCompleteNotif,
+        data.housemateCompleteNotif,
+        data.chatNotif
       );
     },
   };
@@ -107,7 +132,7 @@ export default class Person {
       var putIn = await dataRef.withConverter(Task.taskConverter).get();
       // console.log("putin", putIn.data());
       var theData = putIn.data();
-      if (theData["completedBy"] === this.personID) {
+      if (theData["completed"] === this.personID) {
         allTasks.push(putIn.data());
       }
     }

@@ -1,34 +1,7 @@
 var faker = require("faker");
 var firebase = require("firebase");
-// THIS IS OUTDATED U SHOULD PROB LOOK AT DATA_GEN2.JS NOW
-// TODO SCROLL TO THE BOTTOM OF THE FILE DO NOT EDIT ANYTHING ELSE. Please run this program with node data_gen.js
 
-// All classes except its just the constructors
-
-class Household {
-  /**
-   * @param {String} name Name of the house
-   * @param {String} householdID ID of the house
-   */
-  constructor(name, householdID) {
-    this.name = name;
-    this.householdID = householdID;
-  }
-
-  static houseConverter = {
-    toFirestore: function (Household) {
-      return {
-        name: Household.name,
-        householdID: Household.householdID,
-      };
-    },
-
-    fromFirestore: function (snapshot, options) {
-      const data = snapshot.data(options);
-      return new Household(data.name, data.householdID);
-    },
-  };
-}
+// TODO SCROLL TO THE BOTTOM OF THE FILE DO NOT EDIT ANYTHING ELSE. Please run this program with node data_gen2.js
 
 class Person {
   /**
@@ -39,7 +12,12 @@ class Person {
    * @param {int} points The number of points the person has
    * @param {int} tasksCompleted The number of tasks the person completed
    * @param {int} tasksFailed The number of tasks the person failed
-   * @param {int} successRate Percentage of tasks they finished
+   * @param {String} successRate Percentage of tasks they finished
+   * @param {boolean} approachingDeadlineNotif If they have notifications enabled for approaching deadlines
+   * @param {boolean} deadlinePassedNotif If they have notifications enabled for deadlines passed
+   * @param {boolean} taskCompleteNotif if they have notifications enabled for tasks completed
+   * @param {boolean} housemateCompleteNotif if they have notifications enabled for when a housemate completes a task
+   * @param {boolean} chatNotif if they have notifications enabled for chat
    */
   constructor(
     personID,
@@ -49,7 +27,12 @@ class Person {
     points,
     tasksCompleted,
     tasksFailed,
-    successRate
+    successRate,
+    approachingDeadlineNotif,
+    deadlinePassedNotif,
+    taskCompleteNotif,
+    housemateCompleteNotif,
+    chatNotif
   ) {
     this.personID = personID;
     this.name = name;
@@ -59,6 +42,11 @@ class Person {
     this.tasksCompleted = tasksCompleted;
     this.tasksFailed = tasksFailed;
     this.successRate = successRate;
+    this.approachingDeadlineNotif = approachingDeadlineNotif;
+    this.deadlinePassedNotif = deadlinePassedNotif;
+    this.taskCompleteNotif = taskCompleteNotif;
+    this.housemateCompleteNotif = housemateCompleteNotif;
+    this.chatNotif = chatNotif;
   }
 
   /**
@@ -75,6 +63,11 @@ class Person {
         tasksCompleted: Person.tasksCompleted,
         tasksFailed: Person.tasksFailed,
         successRate: Person.successRate,
+        approachingDeadlineNotif: Person.approachingDeadlineNotif,
+        deadlinePassedNotif: Person.deadlinePassedNotif,
+        taskCompleteNotif: Person.taskCompleteNotif,
+        housemateCompleteNotif: Person.housemateCompleteNotif,
+        chatNotif: Person.chatNotif,
       };
     },
 
@@ -88,7 +81,12 @@ class Person {
         data.points,
         data.tasksCompleted,
         data.tasksFailed,
-        data.successRate
+        data.successRate,
+        data.approachingDeadlineNotif,
+        data.deadlinePassedNotif,
+        data.taskCompleteNotif,
+        data.housemateCompleteNotif,
+        data.chatNotif
       );
     },
   };
@@ -174,50 +172,6 @@ class Task {
   };
 }
 
-class Message {
-  /**
-   *
-   * @param {String} photoURL The url of the photo assosiated with the photo, if it exists
-   * @param {String} text The text of the message
-   * @param {String} messageID the id of the message
-   * @param {String} personID The id of the user who sent the msg
-   * @param {String} householdID The id of the household
-   */
-  constructor(text, photoURL, messageID, personID, householdID) {
-    this.text = text;
-    this.photoURL = photoURL;
-    this.messageID = messageID;
-    this.personID = personID;
-    this.householdID = householdID;
-  }
-
-  /**
-   * Static variable used to save and load Message object from firestore
-   */
-  static messageConverter = {
-    toFirestore: function (Message) {
-      return {
-        text: Message.text,
-        photoURL: Message.photoURL,
-        messageID: Message.messageID,
-        personID: Message.personID,
-        householdID: Message.householdID,
-      };
-    },
-
-    fromFirestore: function (snapshot, options) {
-      const data = snapshot.data(options);
-      return new Message(
-        data.text,
-        data.photoURL,
-        data.messageID,
-        data.personID,
-        data.householdID
-      );
-    },
-  };
-}
-
 /**
  * Helper method to generate IDs. Source: https://stackoverflow.com/questions/1497481/javascript-password-generator
  * @param {String} char Character to be appended to the start of the ID. m for messages, p for people etc.
@@ -242,46 +196,6 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-/**
- * Adds new households to the database
- * @param {number} num Number of new households to add
- * @returns list containing all the households you just added
- */
-async function newHousehold(num) {
-  var firebaseConfig = {
-    apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
-    authDomain: "chores-97427.firebaseapp.com",
-    projectId: "chores-97427",
-    storageBucket: "chores-97427.appspot.com",
-    messagingSenderId: "409040868260",
-    appId: "1:409040868260:web:7b6d1f00e29554af802731",
-    measurementId: "G-8D3XVC7R9T",
-  };
-
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  } else {
-    firebase.app();
-  }
-
-  var ids = [];
-
-  for (var i = 0; i < num; i++) {
-    const db = firebase.firestore();
-    var id = generateID("h");
-    ids.push(id);
-    var newHouse = new Household(faker.name.findName() + "'s house", id);
-    await db.doc("/houses/" + id).set(Object.assign({}, newHouse));
-  }
-  return ids;
-}
-
-/**
- * Adds num People to the househould with the given householdID
- * @param {String} householdID Household you want to add the person to
- * @param {number} num How many people do you want
- * @returns list containing ids of all the ppl u just added
- */
 async function newPerson(householdID, num) {
   var firebaseConfig = {
     apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
@@ -310,6 +224,12 @@ async function newPerson(householdID, num) {
 
     var failed = getRandomInt(10);
 
+    var approachingDeadlineNotif = getRandomInt(2) === 0;
+    var deadlinePassedNotif = getRandomInt(2) === 0;
+    var taskCompleteNotif = getRandomInt(2) === 0;
+    var housemateCompleteNotif = getRandomInt(2) === 0;
+    var chatNotif = getRandomInt(2) === 0;
+
     var newPerson = new Person(
       id,
       faker.name.findName(),
@@ -318,12 +238,15 @@ async function newPerson(householdID, num) {
       getRandomInt(1000),
       completed,
       failed,
-      ((completed / (completed + failed)) * 100).toFixed(2) + "%"
+      ((completed / (completed + failed)) * 100).toFixed(2) + "%",
+      approachingDeadlineNotif,
+      deadlinePassedNotif,
+      taskCompleteNotif,
+      housemateCompleteNotif,
+      chatNotif
     );
     ids.push(id);
-    await db
-      .doc("/houses/" + householdID + "/People/" + id)
-      .set(Object.assign({}, newPerson));
+    await db.doc("/users/" + id).set(Object.assign({}, newPerson));
   }
 
   return ids;
@@ -333,9 +256,10 @@ async function newPerson(householdID, num) {
  * Adds num Tasks to the given household
  * @param {String} householdID Household you want to add tasks into
  * @param {number} num number of tasks you want to add
+ * @param {Array} personIDs List of ppl in the household
  * @returns list containing ids of all the tasks you just added
  */
-async function newTask(householdID, num) {
+async function newTask(householdID, num, personIDs) {
   var firebaseConfig = {
     apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
     authDomain: "chores-97427.firebaseapp.com",
@@ -353,16 +277,6 @@ async function newTask(householdID, num) {
   }
 
   const db = firebase.firestore();
-
-  var pplRef = db.collection("/houses/" + householdID + "/People");
-
-  var personIDs = [];
-
-  var pppl = await pplRef.get();
-
-  pppl.forEach((data) => {
-    personIDs.push(data.data().personID);
-  });
 
   var ids = [];
 
@@ -421,13 +335,7 @@ async function newTask(householdID, num) {
   return ids;
 }
 
-/**
- * Adds nums messages into the given household
- * @param {String} householdID household you want to add the messages into
- * @param {number} nums number of messages you want to add
- * @returns list containing all the messages you just added
- */
-async function newMessage(householdID, nums) {
+async function newTxtMessage(householdID, nums, personIDs) {
   var firebaseConfig = {
     apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
     authDomain: "chores-97427.firebaseapp.com",
@@ -446,16 +354,6 @@ async function newMessage(householdID, nums) {
 
   const db = firebase.firestore();
 
-  var pplRef = db.collection("/houses/" + householdID + "/People");
-
-  var personIDs = [];
-
-  var pppl = await pplRef.get();
-
-  pppl.forEach((data) => {
-    personIDs.push(data.data().personID);
-  });
-
   var ids = [];
 
   for (var i = 0; i < nums; i++) {
@@ -466,7 +364,7 @@ async function newMessage(householdID, nums) {
     var photoURL, personID, text;
     if (num === 0) {
       photoURL = faker.image.imageUrl();
-      text = null;
+      text = faker.lorem.words();
     } else if (num === 1) {
       photoURL = null;
       text = faker.lorem.paragraphs();
@@ -484,8 +382,21 @@ async function newMessage(householdID, nums) {
       text = faker.lorem.sentence();
     }
 
-    personID = personIDs[getRandomInt(personIDs.length)];
-    var newMsg = new Message(text, photoURL, id, personID, householdID);
+    var timestamp = firebase.firestore.Timestamp.now();
+    timestamp.seconds = timestamp.seconds - getRandomInt(86400 * 2);
+    var personID = personIDs[getRandomInt(personIDs.length)];
+
+    var person = (await db.doc("users/" + personID).get()).data();
+    var newMsg = {
+      _id: generateID("m"),
+      createdAt: timestamp,
+      text: text,
+      user: {
+        _id: personID,
+        avatar: person.profilePic,
+        name: person.name,
+      },
+    };
 
     await db
       .doc("/houses/" + householdID + "/Messages/" + id)
@@ -495,14 +406,7 @@ async function newMessage(householdID, nums) {
   return ids;
 }
 
-/**
- * Creates everything. Creates numHouseholds Households with numPpl People, numTasks tasks and numMsg messages.
- * @param {number} numHouseholds Number of households u want
- * @param {number} numPpl Number of ppl u want in each household
- * @param {number} numTasks Number of tasks you want in each household
- * @param {number} numMsg Number of messages you want in each househould
- */
-async function create(numHouseholds, numPpl, numTasks, numMsg) {
+async function create(numPpl, numTasks, numMsgs) {
   var firebaseConfig = {
     apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
     authDomain: "chores-97427.firebaseapp.com",
@@ -520,90 +424,26 @@ async function create(numHouseholds, numPpl, numTasks, numMsg) {
   }
 
   const db = firebase.firestore();
+  var houseID = generateID("h");
+  await db.doc("houses/" + houseID).set({
+    householdID: houseID,
+    name: faker.name.findName() + "'s house",
+  });
+  var pplIDs = await newPerson(houseID, numPpl);
 
-  // Stores all of the freshly created households
-  var houseIDs = await newHousehold(numHouseholds);
+  await db.doc("houses/" + houseID).update({ people: pplIDs });
+  await newTask(houseID, numTasks, pplIDs);
 
-  for (var i = 0; i < houseIDs.length; i++) {
-    // Current household to add to
-    var curr = houseIDs[i];
-
-    // Adds numPpl People to the current household
-    await newPerson(curr, numPpl);
-
-    // Adds numTasks Tasks to the current household
-    await newTask(curr, numTasks);
-
-    // Adds numMsg Messages to the current household
-    await newMessage(curr, numMsg);
-  }
+  await newTxtMessage(houseID, numMsgs, pplIDs);
+  return houseID;
 }
 
-/**
- * Creates everything but more random. Creates numHouseholds Households with numPpl People, numTasks tasks and numMsg messages. Adds rng all households have different number of ppl, tasks, and msgs
- * @param {number} numHouseholds Number of households u want
- * @param {number} numPpl Number of ppl u want in each household
- * @param {number} numTasks Number of tasks you want in each household
- * @param {number} numMsg Number of messages you want in each househould
- * @param {number} rngPpl +- How many ppl u want
- * @param {number} rngTasks +- How many tasks u want
- * @param {number} rngMsg +- How many msgs u want
- */
-async function createRNG(
-  numHouseholds,
-  numPpl,
-  numTasks,
-  numMsg,
-  rngPpl,
-  rngTasks,
-  rngMsg
-) {
-  var firebaseConfig = {
-    apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
-    authDomain: "chores-97427.firebaseapp.com",
-    projectId: "chores-97427",
-    storageBucket: "chores-97427.appspot.com",
-    messagingSenderId: "409040868260",
-    appId: "1:409040868260:web:7b6d1f00e29554af802731",
-    measurementId: "G-8D3XVC7R9T",
-  };
-
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  } else {
-    firebase.app();
-  }
-
-  const db = firebase.firestore();
-
-  var houseIDs = await newHousehold(numHouseholds);
-
-  for (var i = 0; i < houseIDs.length; i++) {
-    var curr = houseIDs[i];
-    await newPerson(curr, numPpl + getRandomInt(rngPpl * 2) - rngPpl);
-    await newTask(curr, numTasks + getRandomInt(rngTasks * 2) - rngTasks);
-    await newMessage(curr, numMsg + getRandomInt(rngMsg * 2) - rngMsg);
-  }
-}
-
-// TODO LOOK HERE TO SEE HOW TO ADD RANDOM INFO TO DATABASE. YOU CAN ONLY EDIT STUFF BELOW THIS/
 (async () => {
-  // This creates two new households
-  // console.log(await newHousehold(2));
+  /* Use the create function to create a household. First parameter is the number of ppl, 
+  second parameter is the number of tasks, third parameter is the number of messages.
+  The below statement creates a household with 3 ppl, 2 tasks, 17 messages.
+  */
+  console.log("new house at:", await create(3, 2, 17));
 
-  // This creates 5 new ppl in the househould with ID h38219.
-  // console.log(await newPerson("h38219", 5));
-
-  // This creates 5 new tasks in the househould with ID h38219
-  // console.log(await newTask("h38219", 9));
-
-  // This creates 5 new messages in the househould with ID h38219
-  // console.log(await newMessage("h38219", 125));
-
-  // This creates 10 households with 5 ppl, 20 tasks and 250 msgs
-  // await create(10, 5, 20, 250);
-
-  // This creates 10 households each with 5 (+- 3) ppl, 20 (+- 10) tasks and 250 (+- 200) msgs with
-  // await createRNG(10, 5, 20, 250, 3, 10, 200);
   console.log("Data added. Press CTRL-C to close the program.");
 })();

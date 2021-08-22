@@ -17,12 +17,6 @@ import {
 import { Header, withTheme } from "react-native-elements";
 import { sub } from "react-native-reanimated";
 import { moderateScale } from "react-native-size-matters";
-import AppLoading from "expo-app-loading";
-import {
-  useFonts,
-  Montserrat_400Regular,
-  Montserrat_500Medium,
-} from "@expo-google-fonts/montserrat";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -30,6 +24,18 @@ import Drawer from "./Drawer";
 import HouseholdPage from "./HouseholdPage";
 
 /* Function to navigate to household page */
+function Changehouse({ navigation }) {
+  navigation = useNavigation();
+  return (
+    <View style={{ alignItems: "center", justifyContent: "center" }}>
+      <TouchableOpacity onPress={() => navigation.navigate("Household")}>
+        <Text style={{ fontSize: 20, fontFamily: "Montserrat_500medium" }}>
+          Change Household
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 const Stack = createNativeStackNavigator();
 
@@ -68,7 +74,7 @@ export class SettingsPage extends React.Component {
     return (
       /* container for any navigation needed */
       (
-        <NavigationContainer>
+        <NavigationContainer >
           <Stack.Navigator initialRouteName="HouseholdPage">
             <Stack.Screen name="Household" component={HouseholdPage} />
           </Stack.Navigator>
@@ -93,15 +99,6 @@ export class SettingsPage extends React.Component {
                 </View>
               </View>
 
-
-
-
-
-        {/* TODO: FIX FONT TO THIS!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Approaching deadline</Text>
- */}
-
-
-
               {/*Approaching deadline button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Approaching deadline</Text>
@@ -114,17 +111,6 @@ export class SettingsPage extends React.Component {
                 </View>
               </View>
 
-
-
-
-
-{/*TODO: FIX FONT!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
- */}
-
-
-
-
- 
               {/*Deadline passed button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Deadline passed</Text>
@@ -137,18 +123,6 @@ export class SettingsPage extends React.Component {
                 </View>
               </View>
 
-
-
-
-{/*TODO: FIX FONT!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
- */}
-
-
-
-
-
-
- 
               {/*Task incomplete button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Task incomplete</Text>
@@ -161,16 +135,6 @@ export class SettingsPage extends React.Component {
                 </View>
               </View>
 
-
-
-
-{/*TODO: FIX FONT!!! <Text style={{ fontSize: 16, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
- */}
-
-
-
-
- 
               {/*Housemate completion button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Housemate completion</Text>
@@ -182,19 +146,6 @@ export class SettingsPage extends React.Component {
                   />
                 </View>
               </View>
-
-
-
-
-
-{/*TODO: FIX FONT!!! <Text style={{ fontSize: 24, fontFamily: "Montserrat_500Medium" }}>Deadline passed</Text>
- */}
-
-
-
-
-
-
 
               {/*Chat notifications*/}
               <View style={styles.textAlign}>
@@ -211,22 +162,7 @@ export class SettingsPage extends React.Component {
 
           <View style={styles.bottomTextStart}>
             {/*Change Household button link*/}
-            <View style={{ alignItems: "center", justifyContent: "center" }}>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("HouseholdSelectionPage")
-                }
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    paddingBottom: "3%",
-                  }}
-                >
-                  Change Household
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <Changehouse />
             {/*Sign out button*/}
             <Button
               color="red"
