@@ -7,7 +7,6 @@ import ChatboxPage from "./app/screens/ChatboxPage";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import config from "./config";
-import Test from "./app/screens/Test";
 import SettingsPage from "./app/screens/SettingsPage";
 import Drawer from "./app/screens/Drawer";
 import HouseholdPage2 from "./app/screens/HouseholdPage2";
@@ -51,24 +50,24 @@ const AuthStack = createStackNavigator();
 export default function App() {
   // To display your page on the app, comment out the current element and add the page you are working on/want to see
   return (
-    <NavigationContainer independent={true}>
-      <AuthStack.Navigator independent={true}>
-        <AuthStack.Screen
-          independent={true}
-          name="LoginPage"
-          component={LoginPage}
-          options={{ headerShown: false }}
-        />
+    // <NavigationContainer independent={true}>
+    //   <AuthStack.Navigator independent={true}>
+    //     <AuthStack.Screen
+    //       independent={true}
+    //       name="LoginPage"
+    //       component={LoginPage}
+    //       options={{ headerShown: false }}
+    //     />
 
-        <AuthStack.Screen
-          independent={true}
-          name="Drawer"
-          component={Drawer}
-          options={{ headerShown: false }}
-        />
-      </AuthStack.Navigator>
-    </NavigationContainer>
-    // <Drawer></Drawer>
+    //     <AuthStack.Screen
+    //       independent={true}
+    //       name="Drawer"
+    //       component={Drawer}
+    //       options={{ headerShown: false }}
+    //     />
+    //   </AuthStack.Navigator>
+    // </NavigationContainer>
+     <Drawer></Drawer>
     // <LoginPage></LoginPage>
     // <Help></Help>
     // <Help2></Help2>
