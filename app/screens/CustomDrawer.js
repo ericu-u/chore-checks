@@ -64,11 +64,9 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   changeHouseholdButton: {
-    position: "absolute",
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
-    top: "108%",
     paddingTop: "4%",
     paddingBottom: "4%",
     paddingRight: "4%",
@@ -83,11 +81,9 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat_500Medium",
   },
   signOutButton: {
-    position: "absolute",
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
-    top: "125%",
     paddingTop: "4%",
     paddingBottom: "4%",
     paddingRight: "4%",
