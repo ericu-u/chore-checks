@@ -23,6 +23,8 @@ import HouseholdPage from "./HouseholdPage";
 import SettingsPage from "./SettingsPage";
 import CustomDrawer from "./CustomDrawer";
 import HouseholdSelectionPage from "./HouseholdSelectionPage";
+import LoginPage2 from "./LoginPage2";
+
 const Drawer = createDrawerNavigator();
 
 // drawer navigator screens
@@ -91,6 +93,30 @@ function MyDrawer() {
           ),
         }}
       />
+
+      <Drawer.Screen
+        independent={true}
+        name="Change Household"
+        component={ScuffedNavigator}
+        options={{
+          drawerLabel: () => null,
+          title: null,
+          drawerIcon: () => null,
+          gestureEnabled: false,
+        }}
+      />
+      <Drawer.Screen
+        independent={true}
+        name="Log out"
+        component={LogOutNavigator}
+        options={{
+          drawerLabel: () => null,
+          title: null,
+          drawerIcon: () => null,
+          gestureEnabled: false,
+        }}
+      />
+
       {/* <Drawer.Screen
         independent={true}
         name="Settings"
@@ -131,7 +157,7 @@ export default function MenuPage() {
   } else {
     return (
       <NavigationContainer independent={true}>
-        <MyDrawer independent={true}/>
+        <MyDrawer independent={true} />
       </NavigationContainer>
     );
   }
@@ -287,6 +313,48 @@ function HouseholdNavigator() {
         })}
       />
     </HouseholdStack.Navigator>
+  );
+}
+
+const ScuffedStack = createStackNavigator();
+
+function ScuffedNavigator() {
+  return (
+    <ScuffedStack.Navigator>
+      <ScuffedStack.Screen
+        name="HouseholdSelectionPage"
+        component={HouseholdSelectionPage}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <ScuffedStack.Screen
+        name="MenuPage"
+        component={MenuPage}
+        options={{ headerShown: false }}
+      ></ScuffedStack.Screen>
+    </ScuffedStack.Navigator>
+  );
+}
+
+const LogOutStack = createStackNavigator();
+
+function LogOutNavigator() {
+  return (
+    <LogOutStack.Navigator>
+      <LogOutStack.Screen
+        name="HouseholdSelectionPage"
+        component={LoginPage2}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <LogOutStack.Screen
+        name="Drawer"
+        component={MenuPage}
+        options={{ headerShown: false }}
+      ></LogOutStack.Screen>
+    </LogOutStack.Navigator>
   );
 }
 

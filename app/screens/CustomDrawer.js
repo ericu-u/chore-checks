@@ -29,13 +29,15 @@ function Sidebar(props) {
     return (
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
+
         <View style={styles.horizontalLine} />
         {/* change household button */}
         <View style={styles.changeHouseholdButton}>
           <TouchableOpacity
-            onPress={() =>
-              this.props.navigation.navigate("HouseholdSelectionPage")
-            }
+            onPress={() => {
+              console.log("household changed2");
+              props.navigation.navigate("Change Household");
+            }}
           >
             <Text style={styles.changeHouseholdText}>Change Household</Text>
           </TouchableOpacity>
@@ -43,8 +45,11 @@ function Sidebar(props) {
         {/* sign out button */}
         <View style={styles.signOutButton}>
           <TouchableOpacity
-            onPress={() =>
-              this.props.navigation.navigate("HouseholdSelectionPage") // gotta change this part
+            onPress={
+              () => {
+                console.log("signed out button2");
+                props.navigation.navigate("Log out");
+              } // gotta change this part
             }
           >
             <Text style={styles.signOutText}>Sign Out</Text>
