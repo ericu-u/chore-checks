@@ -107,24 +107,15 @@ export default class HouseholdPage extends React.Component {
         style={{ flex: 1 }}
         source={require("../assets/background-gradient.jpg")}
       >
-        <View style={{ flexDirection: "column", alignItems: "center" }}>
-          <View style={styles.statusHeader}>
-            <Text style={styles.statusHeaderText}>Sort By</Text>
-          </View>
-        </View>
-
-        <View style ={{alignItems: 'center'}}>
+        <View style ={styles.statusHeader}>
           {/* THE CRUCIAL DROP DOWN MENU 
                 FOR ACTUALLY SORTING      */}
           <SelectDropdown
-            styles={{}}
             buttonStyle={styles.dropdown3BtnStyle}
             dropdownStyle={styles.dropdown3DropdownStyle}
             rowStyle={styles.dropdown3RowStyle}
-            defaultButtonText={"Select"}
 
-            defaultButtonText={"Points"}
-            style={{ color: "red" }}
+            defaultButtonText={"Sort by"}
             data={sortList}
             onSelect={(selectedItem, index) => {
               if (selectedItem === "Points") {
@@ -194,13 +185,15 @@ const styles = StyleSheet.create({
     //height: "30%", //replace with relative positioning based on device
     justifyContent: "center",
     marginTop: "6%",
+    flexDirection: 'row'
     //marginBottom: "6%",
   },
   statusHeaderText: {
     fontSize: 25,
     justifyContent: "center",
-    textAlign: "center",
+    //textAlign: "center",
     fontFamily: "Montserrat_500Medium",
+    flexDirection: 'row',
   },
   individualGroup: {
     justifyContent: "space-evenly",
@@ -250,7 +243,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     //paddingHorizontal: 0,
     borderWidth: 0.2,
-    borderRadius: 6,
+    borderRadius: 4,
     borderColor: "black",
     marginBottom: "5%",
     alignItems: 'center',
