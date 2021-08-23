@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 1,
     margin: "10%",
-    marginTop: "12%",
+    marginTop: "-45%",
     backgroundColor: "black",
   },
   changeHouseholdButton: {
