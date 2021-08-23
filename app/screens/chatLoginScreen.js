@@ -79,7 +79,11 @@ class LoginScreen extends Component {
       return { error: true };
     }
   };
-
+  onLongPress(context, message) {
+    
+    const options = ['copy', 'Delete Message', 'Cancel'];
+    
+}
   render() {
     return (
       <View style={styles.container}>

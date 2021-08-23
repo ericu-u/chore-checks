@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "@expo-google-fonts/montserrat": "^0.2.0",
-    "@react-native-async-storage/async-storage": "^1.15.5",
+    "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-native-community/masked-view": "0.1.10",
-    "@react-native-community/netinfo": "^6.0.0",
+    "@react-native-community/netinfo": "6.0.0",
     "@react-navigation/drawer": "^5.12.5",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/native-stack": "^6.0.5",
@@ -27,7 +27,7 @@
     "expo-permissions": "~12.1.1",
     "expo-status-bar": "~1.0.4",
     "faker": "^5.5.3",
-    "firebase": "^8.8.0",
+    "firebase": "8.2.3",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
@@ -47,7 +47,7 @@
     "underscore": "^1.13.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0"
+    "@babel/core": "~7.9.0"
   },
   "private": true
 }
