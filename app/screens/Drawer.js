@@ -3,6 +3,11 @@ import { Image, StyleSheet, Button, View, Text } from "react-native";
 import { Header } from "react-native-elements";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MaterialIcons } from "@expo/vector-icons";
 import AppLoading from "expo-app-loading";
@@ -11,7 +16,6 @@ import {
   Montserrat_400Regular,
   Montserrat_600SemiBold,
 } from "@expo-google-fonts/montserrat";
-
 import ProfilePage from "./ProfilePage";
 import { TasksPage2 } from "./TasksPage2";
 import ChatboxPage from "./ChatboxPage";
@@ -19,8 +23,8 @@ import HouseholdPage from "./HouseholdPage";
 import SettingsPage from "./SettingsPage";
 import CustomDrawer from "./CustomDrawer";
 import HouseholdSelectionPage from "./HouseholdSelectionPage";
-import ScuffedLogin from "./ScuffedLogin";
 import LoginPage2 from "./LoginPage2";
+
 const Drawer = createDrawerNavigator();
 
 // drawer navigator screens
@@ -29,9 +33,11 @@ function MyDrawer() {
     <Drawer.Navigator
       independent={true}
       drawerStyle={{ backgroundColor: "#e5e5e5" }}
+      drawerContent={(props) => <CustomDrawer {...props} />}
+      // drawerContent={({navigation}) => <CustomDrawer navigation={navigation} />}
       drawerContentOptions={{
         inactiveTintColor: "black",
-        itemStyle: { marginVertical: 20 },
+        itemStyle: { marginVertical: 25 },
         labelStyle: { fontSize: 20, fontFamily: "Montserrat_400Regular" },
       }}
     >
@@ -87,34 +93,43 @@ function MyDrawer() {
           ),
         }}
       />
+
       <Drawer.Screen
         independent={true}
         name="Change Household"
         component={ScuffedNavigator}
         options={{
-          drawerIcon: () => (
-            <Image
-              source={require("../assets/change-household.png")}
-              style={styles.icon}
-            />
-          ),
+          drawerLabel: () => null,
+          title: null,
+          drawerIcon: () => null,
           gestureEnabled: false,
         }}
       />
       <Drawer.Screen
         independent={true}
-        name="Log Out"
+        name="Log out"
         component={LogOutNavigator}
         options={{
-          drawerIcon: () => (
-            <Image
-              source={require("../assets/log-out.png")}
-              style={styles.icon}
-            />
-          ),
+          drawerLabel: () => null,
+          title: null,
+          drawerIcon: () => null,
           gestureEnabled: false,
         }}
       />
+
+      {/* <Drawer.Screen
+        independent={true}
+        name="Settings"
+        component={SettingsNavigator}
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={require("../assets/settings.png")}
+              style={styles.icon}
+            />
+          ),
+        }}
+      /> */}
     </Drawer.Navigator>
   );
 }
@@ -123,9 +138,9 @@ const styles = StyleSheet.create({
   icon: {
     width: 40,
     height: 40,
-    marginLeft: "5%",
+    marginLeft: "6%",
   },
-  chatIcon: { width: 40, height: 37, marginLeft: "5%" },
+  chatIcon: { width: 40, height: 37, marginLeft: "6%" },
   menuIcon: {
     marginLeft: 20,
   },
@@ -342,3 +357,40 @@ function LogOutNavigator() {
     </LogOutStack.Navigator>
   );
 }
+
+// const SettingsStack = createStackNavigator();
+
+// function SettingsNavigator() {
+//   return (
+//     <SettingsStack.Navigator>
+//       <SettingsStack.Screen
+//         name="Settings"
+//         component={SettingsPage}
+//         options={({ navigation }) => ({
+//           title: "Settings",
+//           headerTitleStyle: {
+//             fontFamily: "Montserrat_600SemiBold",
+//             fontSize: 20,
+//           },
+//           headerLeft: () => (
+//             <MaterialIcons
+//               style={styles.menuIcon}
+//               name="menu"
+//               size={30}
+//               onPress={() => navigation.toggleDrawer()}
+//             />
+//           ),
+//           headerStyle: {
+//             backgroundColor: "#2B88D8",
+//             shadowColor: "#656565",
+//             shadowOpacity: 10,
+//             shadowRadius: 10,
+//             shadowOffset: {
+//               height: 5,
+//             },
+//           },
+//         })}
+//       />
+//     </SettingsStack.Navigator>
+//   );
+// }

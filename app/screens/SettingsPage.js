@@ -104,7 +104,7 @@ export class SettingsPage extends React.Component {
                   />
                 </View>
               </View>
-
+ 
               {/*Deadline passed button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Deadline passed</Text>
@@ -128,7 +128,7 @@ export class SettingsPage extends React.Component {
                   />
                 </View>
               </View>
-
+ 
               {/*Housemate completion button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Housemate completion</Text>
