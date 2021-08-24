@@ -50,19 +50,26 @@ function LoginPage({ navigation }) {
 
       // old func
       if (user) {
-        // const db = firebase.firestore();
+        const db = firebase.firestore();
 
         (async () => {
-          // var docRef = db.doc("users/" + user.uid);
-          //var doc = await docRef.get();
+          var docRef = db.doc("users/" + user.uid);
+          var doc = await docRef.get();
           console.log("boobs2");
-          var doc = {exists : true}
           if (doc.exists) {
             console.log("doc exists!!!!!!!!!!!!!!!!");
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Drawer" }],
-            });
+
+            if (doc.data().householdID === null) {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "HouseholdSelectionPage2" }],
+              });
+            } else {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Drawer" }],
+              });
+            }
           } else {
             console.log("first time!!!!!");
             var newP = new Person(
@@ -84,7 +91,7 @@ function LoginPage({ navigation }) {
             //await docRef.withConverter(Person.personConverter).set(newP);
             navigation.reset({
               index: 0,
-              routes: [{ name: "Drawer" }],
+              routes: [{ name: "HouseholdSelectionPage2" }],
             });
           }
         })();

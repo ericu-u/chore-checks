@@ -16,6 +16,7 @@ import BigChat from "./app/screens/chatMasterThing";
 import ScuffedLogin from "./app/screens/ScuffedLogin";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import HouseholdSelectionPage2 from "./app/screens/HouseholdSelectionPage2";
 
 import "react-native-gesture-handler";
 import ProfilePage from "./app/screens/ProfilePage";
@@ -56,6 +57,12 @@ export default function App() {
           independent={true}
           name="LoginPage"
           component={LoginPage}
+          options={{ headerShown: false }}
+        />
+        <AuthStack.Screen
+          independent={true}
+          name="HouseholdSelectionPage2"
+          component={HouseholdSelectionPage2}
           options={{ headerShown: false }}
         />
 
