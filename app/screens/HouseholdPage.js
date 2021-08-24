@@ -51,6 +51,7 @@ export default class HouseholdPage extends React.Component {
       tasks: [], // 2D array. The i-th position of tasks contains all the tasks the person in the i-th person on people accomplished.
       unsubscribe2: null,
       orderBy: "points",
+      hhid: "empty",
     };
   }
 
@@ -75,29 +76,35 @@ export default class HouseholdPage extends React.Component {
     const db = firebase.firestore();
 
     // Firestore subscription. Listens to database for changes.
-    var unsub = db
-      .collection("/users")
-      .where("householdID", "==", householdIDD)
-      .orderBy(this.state.orderBy, "desc")
-      .withConverter(Person.personConverter)
-      .onSnapshot((querySnapshot) => {
-        // Whenever there is a change in firestore, this method runs
-        var tempPpl = []; // This temp array will store all the People from firestore
-        var tempTasks = [];
-        querySnapshot.forEach((doc) => {
-          tempPpl.push(doc.data());
-          tempTasks.push([]);
+    const uid = firebase.auth().currentUser.uid;
+    db.doc("users/" + uid).onSnapshot((doc) => {
+      this.setState({ hhid: doc.data().householdID });
+      console.log("household id in snapshot1:", this.state.hhid);
+      var unsub = db
+        .collection("/users")
+        .where("householdID", "==", this.state.hhid)
+        .orderBy(this.state.orderBy, "desc")
+        .withConverter(Person.personConverter)
+        .onSnapshot((querySnapshot) => {
+          // Whenever there is a change in firestore, this method runs
+          var tempPpl = []; // This temp array will store all the People from firestore
+          var tempTasks = [];
+          querySnapshot.forEach((doc) => {
+            tempPpl.push(doc.data());
+            tempTasks.push([]);
+          });
+          this.setState({ people: tempPpl }); // Makes the state.people equal tempPpl
+          this.setState({ tasks: tempTasks });
         });
-        this.setState({ people: tempPpl }); // Makes the state.people equal tempPpl
-        this.setState({ tasks: tempTasks });
-      });
 
-    this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
+      this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
+    });
   }
 
   componentWillUnmount() {
     // This method runs whenever we stop rendering the component
-    this.state.unsubscribe(); // We end the subscription here so we don't waste resources
+    console.log("DISMOUNT!!!!!!!!!!!!!!!!!!");
+    if (this.state.unsubscribe !== null) this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
   render() {
     return (
@@ -107,14 +114,13 @@ export default class HouseholdPage extends React.Component {
         style={{ flex: 1 }}
         source={require("../assets/background-gradient.jpg")}
       >
-        <View style ={styles.statusHeader}>
+        <View style={styles.statusHeader}>
           {/* THE CRUCIAL DROP DOWN MENU 
                 FOR ACTUALLY SORTING      */}
           <SelectDropdown
             buttonStyle={styles.dropdown3BtnStyle}
             dropdownStyle={styles.dropdown3DropdownStyle}
             rowStyle={styles.dropdown3RowStyle}
-
             defaultButtonText={"Points"}
             data={sortList}
             onSelect={(selectedItem, index) => {
@@ -130,7 +136,7 @@ export default class HouseholdPage extends React.Component {
               const db = firebase.firestore();
               var uR = db.collection("/users");
               var pain = [];
-              uR.where("householdID", "==", householdIDD)
+              uR.where("householdID", "==", this.state.hhid)
                 .orderBy(this.state.orderBy, "desc")
                 .withConverter(Person.personConverter)
                 .get()
@@ -161,7 +167,7 @@ export default class HouseholdPage extends React.Component {
               return item;
             }}
           />
-          </View>
+        </View>
 
         <SectionList
           sections={[{ title: "Household", data: this.state.people }]}
@@ -185,7 +191,7 @@ const styles = StyleSheet.create({
     //height: "30%", //replace with relative positioning based on device
     justifyContent: "center",
     marginTop: "6%",
-    flexDirection: 'row'
+    flexDirection: "row",
     //marginBottom: "6%",
   },
   statusHeaderText: {
@@ -193,7 +199,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     //textAlign: "center",
     fontFamily: "Montserrat_500Medium",
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   individualGroup: {
     justifyContent: "space-evenly",
@@ -246,9 +252,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderColor: "black",
     marginBottom: "5%",
-    alignItems: 'center',
-    alignContent: 'center',
-    backgroundColor: "#dcf3fc"
+    alignItems: "center",
+    alignContent: "center",
+    backgroundColor: "#dcf3fc",
   },
   dropdown3DropdownStyle: { backgroundColor: "slategray" },
   dropdown3RowStyle: {

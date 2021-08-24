@@ -19,28 +19,11 @@ import ProfilePage from "./ProfilePage";
 import AppLoading from "expo-app-loading";
 import { useFonts, Montserrat_500Medium } from "@expo-google-fonts/montserrat";
 import * as firebase from "firebase";
-import Person from "../classes/household";
+import Household from "../classes/household";
 
 const Stack = createNativeStackNavigator();
 
 const JoinHousehold = () => {
-  var firebaseConfig = {
-    apiKey: config.FIREBASE_KEY,
-    authDomain: "chores-97427.firebaseapp.com",
-    projectId: "chores-97427",
-    storageBucket: "chores-97427.appspot.com",
-    messagingSenderId: "409040868260",
-    appId: "1:409040868260:web:7b6d1f00e29554af802731",
-    measurementId: "G-8D3XVC7R9T",
-  };
-  // Initialize Firebase
-
-  // console.log("refreshed");
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  } else {
-    firebase.app(); // if already initialized, use that one
-  }
   const [visible, setVisible] = useState(false);
   const [code, setCode] = useState("");
   const navigation = useNavigation();
@@ -53,7 +36,10 @@ const JoinHousehold = () => {
       const uid = firebase.auth().currentUser.uid;
       const db = firebase.firestore();
       console.log(uid);
+      // const oldID = await db.doc("users/" + uid).get().data().householdID;
       db.doc("users/" + uid).update({ householdID: null });
+
+
     })();
   }, []);
 
@@ -73,14 +59,14 @@ const JoinHousehold = () => {
       const uid = firebase.auth().currentUser.uid;
 
       db.doc("users/" + uid).update({ householdID: householdCode });
-      navigation.navigate("Profile");
+      navigation.navigate("Drawer");
     })();
   };
 
   return (
     <TouchableHighlight style={styles.joinBackground} onPress={showDialogJoin}>
       <View style={styles.container}>
-        <Text style={styles.buttonText}>Join Existing {"\n"}Household</Text>
+        <Text style={styles.buttonText}>Join Existing {"\n"} Household</Text>
         <Dialog.Container visible={visible}>
           <Dialog.Title>Enter Household Code</Dialog.Title>
           <Dialog.Description>
@@ -133,7 +119,7 @@ const CreateHousehold = () => {
       db.doc("users/" + uid).update({ householdID: id });
 
       setVisible(false);
-      navigation.navigate("Profile");
+      navigation.navigate("Drawer");
     })();
   };
 
@@ -143,7 +129,7 @@ const CreateHousehold = () => {
       onPress={showDialogCreate}
     >
       <View style={styles.container}>
-        <Text style={styles.buttonText}>Create New {"\n"}Household</Text>
+        <Text style={styles.buttonText}>Create New {"\n"} Household</Text>
         <Dialog.Container visible={visible}>
           <Dialog.Title>Enter Household Name</Dialog.Title>
           <Dialog.Description>
@@ -224,8 +210,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    //marginTop: "10%",
-    //marginBottom: "6%",
   },
   image: {
     flex: 1,
@@ -237,7 +221,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "black",
     textAlign: "center",
-    marginBottom: "15%",
+    marginBottom: "16%",
     fontFamily: "Montserrat_500Medium",
   },
   text: {
@@ -262,7 +246,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginLeft: "5%",
     marginRight: "2%",
-    marginBottom: "10%",
+    marginBottom: "4%",
     height: "100%",
   },
   buttonText: {
