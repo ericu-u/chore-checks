@@ -42,7 +42,7 @@ const JoinHousehold = () => {
   return (
     <TouchableHighlight style={styles.joinBackground} onPress={showDialogJoin}>
       <View style={styles.container}>
-        <Text style={styles.buttonText}>Join Existing {"\n"} Household</Text>
+        <Text style={styles.buttonText}>Join Existing {"\n"}Household</Text>
         <Dialog.Container visible={visible}>
           <Dialog.Title>Enter Household Code</Dialog.Title>
           <Dialog.Description>
@@ -91,7 +91,7 @@ const CreateHousehold = () => {
       onPress={showDialogCreate}
     >
       <View style={styles.container}>
-        <Text style={styles.buttonText}>Create New {"\n"} Household</Text>
+        <Text style={styles.buttonText}>Create New {"\n"}Household</Text>
         <Dialog.Container visible={visible}>
           <Dialog.Title>Enter Household Name</Dialog.Title>
           <Dialog.Description>
@@ -172,6 +172,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    //marginTop: "10%",
+    //marginBottom: "6%",
   },
   image: {
     flex: 1,
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "black",
     textAlign: "center",
-    marginBottom: "16%",
+    marginBottom: "15%",
     fontFamily: "Montserrat_500Medium",
   },
   text: {
@@ -208,7 +210,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginLeft: "5%",
     marginRight: "2%",
-    marginBottom: "4%",
+    marginBottom: "10%",
     height: "100%",
   },
   buttonText: {
