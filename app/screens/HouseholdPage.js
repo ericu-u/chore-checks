@@ -115,7 +115,7 @@ export default class HouseholdPage extends React.Component {
             dropdownStyle={styles.dropdown3DropdownStyle}
             rowStyle={styles.dropdown3RowStyle}
 
-            defaultButtonText={"Sort by"}
+            defaultButtonText={"Points"}
             data={sortList}
             onSelect={(selectedItem, index) => {
               if (selectedItem === "Points") {

@@ -86,7 +86,7 @@ function ProfilePage(props) {
         source={require("../assets/background-gradient.jpg")}
       >
         <SafeAreaView style={styles.container}>
-          <View style={{ flex:.6, alignItems: 'center', alignContent: 'center', flexDirection: 'flex-wrap' }}>
+          <View style={{ flex:.6, alignItems: 'center', alignContent: 'center', }}>
             <Image
               source={{
                 uri: pfp,
