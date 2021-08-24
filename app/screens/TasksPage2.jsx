@@ -25,14 +25,11 @@ import _, { map } from "underscore";
 import { FAB } from "react-native-paper";
 import Modal from "react-native-modal";
 import { MonthDateYearField } from 'react-native-datefield';
-import {TimePicker} from 'react-native-simple-time-picker';
 import { SelectMultipleButton } from "react-native-selectmultiple-button";
 import {
   useFonts,
   Montserrat_500Medium
 } from "@expo-google-fonts/montserrat";
-
-
 
 export class TasksPage2 extends React.Component {
   constructor(props) {
@@ -161,8 +158,6 @@ export class TasksPage2 extends React.Component {
   };
 
   render() {
-
-
     // Returns what we want the user to see
     return (
       <ImageBackground
@@ -178,6 +173,7 @@ export class TasksPage2 extends React.Component {
               setModalVisible={this.setModalVisible}
               modalVisible={this.state.modalVisible}
               setTask={this.setTask}
+              userID={firebase.auth().currentUser.uid}
             />
           )}
           renderSectionHeader={({ section: { title } }) => (
@@ -375,36 +371,30 @@ const InputModal = (props) => {
     {
       key: "Deadline:",
       property: (
-        //TODO: Edit/fix this section
-        <View>
-          <MonthDateYearField
-            labelDate="Day"
-            labelMonth="Month"
-            labelYear="Year"
-            containerStyle={{
-              flex: 1,
-              textAlign: 'center',
-              marginTop: windowHeight * 0.017,
-              marginLeft: windowWidth * 0.013,
-              marginRight: windowWidth * 0.013,
-              height: windowHeight * 0.05,
-              width: windowWidth * 0.5,
-            }}
-            styleInput={{
-              height: windowHeight * 0.05,
-              width: windowWidth * 0.171,
-              borderRadius: 10,
-              borderColor: '#192e4f',
-              borderWidth: 1.5,
-              fontFamily: 'Montserrat_500Medium',
-            }}
-            placeholderTextColor="#788fb3"
-            onSubmit={(value) => {props.setNewDeadline(value.valueOf())}}
-          />
-          <TimePicker
-             value={{hours, minutes}}
-          />
-        </View>
+        <MonthDateYearField
+          labelDate="Day"
+          labelMonth="Month"
+          labelYear="Year"
+          containerStyle={{
+            flex: 1,
+            textAlign: 'center',
+            marginTop: windowHeight * 0.017,
+            marginLeft: windowWidth * 0.013,
+            marginRight: windowWidth * 0.013,
+            height: windowHeight * 0.05,
+            width: windowWidth * 0.5,
+          }}
+          styleInput={{
+            height: windowHeight * 0.05,
+            width: windowWidth * 0.171,
+            borderRadius: 10,
+            borderColor: '#192e4f',
+            borderWidth: 1.5,
+            fontFamily: 'Montserrat_500Medium',
+          }}
+          placeholderTextColor="#788fb3"
+          onSubmit={(value) => {props.setNewDeadline(value.valueOf())}}
+        />
         
       ),
     },
@@ -623,7 +613,7 @@ const EditModal = (props) => {
           }}
           styleInput={{
             height: windowHeight * 0.05,
-            width: windowWidth * 0.171,
+            width: windowWidth * 0.12,
             borderRadius: 10,
             borderColor: '#192e4f',
             borderWidth: 1.5,
@@ -633,16 +623,6 @@ const EditModal = (props) => {
           onSubmit={(value) => {props.setNewDeadline(value.valueOf())}}
         />
       ),
-    },
-    {
-      key: "In progress by",
-      property: (
-        //TODO: Add button to switch to housemates
-        <TextInput
-          style={ styles.inputHeader }
-          value={inProgressPerson}
-        />
-      )
     },
     {
       key: "Points",
@@ -705,7 +685,18 @@ const EditModal = (props) => {
             <FlatList
               data={listData}
               renderItem={({ item }) => {
-                return (<View style={styles.inputRow}>{item.property}</View>);
+                return (
+                  <View style={styles.inputRow}>
+                    <Text
+                      style={{ fontSize: 16, textAlign: "left", marginTop: windowHeight * 0.017,
+                      marginLeft: windowWidth * 0.013,
+                      marginRight: windowWidth * 0.013, fontFamily: 'Montserrat_500Medium' }}
+                    >
+                      {item.key}:
+                    </Text>
+                    {item.property}
+                  </View>
+                );
               }}
             />
 
@@ -725,30 +716,33 @@ const EditModal = (props) => {
   )
 };
 
-const StatusButton = (task) => {
-  if (task.props.inProgress == "claimed") {
+const StatusButton = (props) => {
+
+  if (props.task.inProgress == props.userID) {
     //personID equal to user
     return (
       <TouchableHighlight
         style={styles.claimedStatus}
         onPress={onPressButton}
         underlayColor="#96c7eb"
+        disabled={true}
       >
         <Text style={styles.statusText}>Claimed!</Text>
       </TouchableHighlight>
     );
-  } else if (task.props.inProgress == "taken") {
+  } else if (props.task.inProgress && props.task.inProgress != props.userID) {
     //personID not equal to user
     return (
       <TouchableHighlight
         style={styles.takenStatus}
         onPress={onPressButton}
         underlayColor="#c26969"
+        disabled={true}
       >
         <Text style={styles.statusText}>Taken</Text>
       </TouchableHighlight>
     );
-  } else if (task.props.completed) {
+  } else if (props.task.completed) {
     return (
       <TouchableHighlight
         style={styles.doneStatus}
@@ -758,7 +752,7 @@ const StatusButton = (task) => {
         <Text style={styles.statusText}>Done</Text>
       </TouchableHighlight>
     );
-  } else if (!task.props.inProgress) {
+  } else if (!props.task.inProgress) {
     //inProgress = null
     return (
       <TouchableHighlight
@@ -774,7 +768,7 @@ const StatusButton = (task) => {
   }
 };
 
-const Item = ({ task, setModalVisible, modalVisible, setTask }) => {
+const Item = ({ task, setModalVisible, modalVisible, setTask, userID }) => {
   var deadline = new Date(task.deadline);
   var currTime = new Date();
   var timeLeft = task.deadline - currTime.valueOf();
@@ -842,7 +836,10 @@ const Item = ({ task, setModalVisible, modalVisible, setTask }) => {
       </View>
 
       <View style={{ flex: 2, justifyContent: "center" }}>
-        <StatusButton props={task} />
+        <StatusButton
+          task={task}
+          userID={userID}
+        />
       </View>
     </View>
   );
@@ -926,9 +923,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat_500Medium'
   },
   inputRow: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    width: windowWidth * 0.65, //styles.modalView.width * ( 4/5 )
+    justifyContent: 'center',
+    width: windowWidth * 0.65,
   },
   item: {
     flexDirection: "row",
