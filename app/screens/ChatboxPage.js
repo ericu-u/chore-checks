@@ -87,6 +87,8 @@ export default function App() {
     setUser(user);
   }
   async function handleSend(messages) {
+    const chatsRef = firebase.firestore().collection("/houses/" + householdIDD + "/Messages");
+
     const writes = messages.map((m) => chatsRef.add(m));
     await Promise.all(writes);
   }

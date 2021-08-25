@@ -23,10 +23,8 @@ import Task from "../classes/task";
 import _, { map } from "underscore";
 import { FAB } from "react-native-paper";
 import Modal from "react-native-modal";
-import { MonthDateYearField } from 'react-native-datefield';
+import { MonthDateYearField } from "react-native-datefield";
 import { SelectMultipleButton } from "react-native-selectmultiple-button";
-
-
 
 export class TasksPage2 extends React.Component {
   constructor(props) {
@@ -35,6 +33,7 @@ export class TasksPage2 extends React.Component {
       tasks: [], // List of task objects
       unsubscribe: null, // Firebase subscription. Calling this method will mean we stop listening to firebase for updates whenever the database changes
       sectionedTasks: [],
+      unsubscribe2: null,
 
       // modal visibilities
       modalVisible: false,
@@ -42,6 +41,7 @@ export class TasksPage2 extends React.Component {
       editModalVisible: false,
 
       selectedTask: null,
+      householdID: "empty",
 
       // new task properties
       newName: null,
@@ -73,45 +73,56 @@ export class TasksPage2 extends React.Component {
     }
     const db = firebase.firestore();
 
-    // Firestore subscription. Listens to database for changes.
-    var unsub = db
-      .collection("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks")
-      .withConverter(Task.taskConverter)
-      .onSnapshot((querySnapshot) => {
-        // Whenever there is a change in firestore, this method runs
-        var tempTasks = []; // This temp array will store all the Tasks from firestore
-        querySnapshot.forEach((doc) => {
-          tempTasks.push(doc.data());
-        });
-        console.log("updated tasks");
-        this.setState({ tasks: tempTasks }); // Makes the state.tasks equal tempTasks
-        var activeTasks = _.where(this.state.tasks, { completed: null }); // Gets tasks without completion
+    const uid = firebase.auth().currentUser.uid;
+    var unsub2 = db.doc("users/" + uid).onSnapshot((doc) => {
+      console.log("id set!:", doc.data().householdID);
+      this.setState({ householdID: doc.data().householdID });
+      console.log("state id is:", this.state.householdID);
 
-        // For loop that appends completed tasks
-        var completedTasks = [];
-        for (let task of this.state.tasks) {
-          if (typeof task.completed == "string") {
-            completedTasks.push(task);
+      var unsub = db
+        .collection("/houses/" + this.state.householdID + "/Tasks")
+        .withConverter(Task.taskConverter)
+        .onSnapshot((querySnapshot) => {
+          // Whenever there is a change in firestore, this method runs
+          var tempTasks = []; // This temp array will store all the Tasks from firestore
+          querySnapshot.forEach((doc) => {
+            tempTasks.push(doc.data());
+          });
+          console.log("updated tasks");
+          this.setState({ tasks: tempTasks }); // Makes the state.tasks equal tempTasks
+          var activeTasks = _.where(this.state.tasks, { completed: null }); // Gets tasks without completion
+
+          // For loop that appends completed tasks
+          var completedTasks = [];
+          for (let task of this.state.tasks) {
+            if (typeof task.completed == "string") {
+              completedTasks.push(task);
+            }
           }
-        }
 
-        var sections = [
-          {
-            title: "Active",
-            data: activeTasks,
-          },
-          {
-            title: "Inactive",
-            data: completedTasks,
-          },
-        ];
-        this.setState({ sectionedTasks: sections });
-      });
-    this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
+          var sections = [
+            {
+              title: "Active",
+              data: activeTasks,
+            },
+            {
+              title: "Inactive",
+              data: completedTasks,
+            },
+          ];
+          this.setState({ sectionedTasks: sections });
+        });
+      this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
+    });
+
+    this.setState({ unsubscribe2: unsub2 }); // We save our subscription so we can end it later
+
+    // Firestore subscription. Listens to database for changes.
   }
   componentWillUnmount() {
     // This method runs whenever we stop rendering the component
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
+    this.state.unsubscribe2();
   }
 
   setModalVisible = (visible) => {
@@ -144,7 +155,7 @@ export class TasksPage2 extends React.Component {
 
   setNewRepeat = (valueTap, repeat) => {
     this.setState({ newRepeat: repeat });
-  }
+  };
 
   setNewStartDate = (startDate) => {
     this.setState({ newStartDate: startDate });
@@ -155,8 +166,6 @@ export class TasksPage2 extends React.Component {
   };
 
   render() {
-
-
     // Returns what we want the user to see
     return (
       <ImageBackground
@@ -205,7 +214,6 @@ export class TasksPage2 extends React.Component {
           modalVisible={this.state.modalVisible}
           setModalVisible={this.setModalVisible}
           selectedTask={this.state.selectedTask}
-
           inputModalVisible={this.state.inputModalVisible}
           setInputModalVisible={this.setInputModalVisible}
           setNewName={this.setNewName}
@@ -219,9 +227,9 @@ export class TasksPage2 extends React.Component {
           newDescription={this.state.newDescription}
           newPoints={this.state.newPoints}
           newRepeat={this.state.newRepeat}
-
           editModalVisible={this.state.editModalVisible}
           setEditModalVisible={this.setEditModalVisible}
+          householdID={this.state.householdID}
         />
 
         <AddButton
@@ -245,7 +253,6 @@ const AddButton = (props) => (
 );
 
 const ModalRedirector = (props) => {
-
   if (props.modalVisible && props.selectedTask) {
     return (
       <TaskModal
@@ -254,7 +261,7 @@ const ModalRedirector = (props) => {
         setEditModalVisible={props.setEditModalVisible}
         selectedTask={props.selectedTask}
       />
-    )
+    );
   }
 
   if (props.inputModalVisible) {
@@ -268,12 +275,12 @@ const ModalRedirector = (props) => {
         setNewPoints={props.setNewPoints}
         setNewRepeat={props.setNewRepeat}
         setNewStartDate={props.setNewStartDate}
-        
         newDeadline={props.newDeadline}
         newDescription={props.newDescription}
         newName={props.newName}
         newPoints={props.newPoints}
         newRepeat={props.newRepeat}
+        householdID={props.householdID}
       />
     );
   }
@@ -286,14 +293,13 @@ const ModalRedirector = (props) => {
         selectedTask={props.selectedTask}
         setModalVisible={props.setModalVisible}
       />
-    )
+    );
   }
 
   return null;
-}
+};
 
 const TaskModal = (props) => {
-
   var selectedTask = props.selectedTask;
 
   if (!selectedTask.inProgressBy) {
@@ -302,69 +308,71 @@ const TaskModal = (props) => {
     var inProgressPerson = selectedTask.inProgressBy;
   }
 
-    var listData = [
-      {
-        key: "Deadline",
-        property: new Date(selectedTask.deadline).toDateString(),
-      },
-      {
-        key: "In progress by",
-        property: inProgressPerson,
-      },
-      {
-        key: "Points",
-        property: selectedTask.points,
-      },
-      {
-        key: "Start Date",
-        property: new Date(selectedTask.startDate).toDateString(),
-      },
-      {
-        key: "Description",
-        property: selectedTask.description,
-      },
-    ];
+  var listData = [
+    {
+      key: "Deadline",
+      property: new Date(selectedTask.deadline).toDateString(),
+    },
+    {
+      key: "In progress by",
+      property: inProgressPerson,
+    },
+    {
+      key: "Points",
+      property: selectedTask.points,
+    },
+    {
+      key: "Start Date",
+      property: new Date(selectedTask.startDate).toDateString(),
+    },
+    {
+      key: "Description",
+      property: selectedTask.description,
+    },
+  ];
 
-    return (
-      <Modal
-        isVisible={props.modalVisible}
-        backdropOpacity={0.3}
-        animationOut="slideOutDown"
-        onBackdropPress={() => props.setModalVisible(false)}
-        useNativeDriver={true}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalHeader}>{selectedTask.name}</Text>
-            <FlatList
-              data={listData}
-              renderItem={({ item }) => (
-                <Text style={{ fontSize: 15, textAlign: "left", margin: 5 }}>
-                  {item.key}: {item.property}
-                </Text>
-              )}
+  return (
+    <Modal
+      isVisible={props.modalVisible}
+      backdropOpacity={0.3}
+      animationOut="slideOutDown"
+      onBackdropPress={() => props.setModalVisible(false)}
+      useNativeDriver={true}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalHeader}>{selectedTask.name}</Text>
+          <FlatList
+            data={listData}
+            renderItem={({ item }) => (
+              <Text style={{ fontSize: 15, textAlign: "left", margin: 5 }}>
+                {item.key}: {item.property}
+              </Text>
+            )}
+          />
+          <View style={styles.modalButtons}>
+            <Button
+              style={styles.modalButton}
+              color="red"
+              onPress={() => props.setModalVisible(false)}
+              title="Close"
             />
-            <View style={styles.modalButtons}>
-              <Button
-                style={styles.modalButton}
-                color="red"
-                onPress={() => props.setModalVisible(false)}
-                title="Close"
-              />
-              <Button
-                style={styles.modalButton}
-                title="Edit Task"
-                onPress={() => {props.setEditModalVisible(true); props.setModalVisible(false)}}
-              />
-            </View>
+            <Button
+              style={styles.modalButton}
+              title="Edit Task"
+              onPress={() => {
+                props.setEditModalVisible(true);
+                props.setModalVisible(false);
+              }}
+            />
           </View>
         </View>
-      </Modal>
-    )
+      </View>
+    </Modal>
+  );
 };
 
 const InputModal = (props) => {
-
   var inputData = [
     {
       key: "Deadline:",
@@ -375,7 +383,7 @@ const InputModal = (props) => {
           labelYear="Year"
           containerStyle={{
             flex: 1,
-            textAlign: 'center',
+            textAlign: "center",
             marginTop: windowHeight * 0.017,
             marginLeft: windowWidth * 0.013,
             marginRight: windowWidth * 0.013,
@@ -386,11 +394,13 @@ const InputModal = (props) => {
             height: windowHeight * 0.05,
             width: windowWidth * 0.171,
             borderRadius: 10,
-            borderColor: '#192e4f',
+            borderColor: "#192e4f",
             borderWidth: 1.5,
           }}
           placeholderTextColor="#788fb3"
-          onSubmit={(value) => {props.setNewDeadline(value.valueOf())}}
+          onSubmit={(value) => {
+            props.setNewDeadline(value.valueOf());
+          }}
         />
       ),
     },
@@ -400,11 +410,13 @@ const InputModal = (props) => {
         <TextInput
           style={styles.inputHeader}
           underlineColorAndroid="transparent"
-          keyboardType='number-pad'
+          keyboardType="number-pad"
           maxLength={2}
           placeholder="Points"
           placeholderTextColor="#788fb3"
-          onEndEditing={(text) => {props.setNewPoints(text.nativeEvent.text)}}
+          onEndEditing={(text) => {
+            props.setNewPoints(text.nativeEvent.text);
+          }}
         />
       ),
     },
@@ -415,7 +427,7 @@ const InputModal = (props) => {
           style={{
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: 'center',
+            alignItems: "center",
             marginTop: windowHeight * 0.017,
             marginLeft: windowWidth * 0.013,
             marginRight: windowWidth * 0.013,
@@ -427,37 +439,33 @@ const InputModal = (props) => {
             backgroundColor: "#FFFFFF",
           }}
         >
-          <Text
-            style={{color: '#788fb3'}}
-          >
-            Repeated (optional):
-          </Text>
+          <Text style={{ color: "#788fb3" }}>Repeated (optional):</Text>
           <ScrollView
             style={{
-              flexDirection: 'row'
+              flexDirection: "row",
             }}
             horizontal={true}
           >
-          {['Daily', 'Weekly', 'Bi-Weekly', 'Monthly'].map(selection => (
-            <SelectMultipleButton
-              key={selection}
-              value={selection}
-              displayValue={selection}
-              highLightStyle={{
-                borderColor: "gray",
-                backgroundColor: "transparent",
-                textColor: "#192e4f",
-                borderTintColor: "#192e4f",
-                backgroundTintColor: "#192e4f",
-                textTintColor: "white"
-              }}
-              //buttonViewStyle={}
-              selected={props.newRepeat == selection}
-              singleTap={valueTap =>
-                {props.setNewRepeat(valueTap, selection)}
-              }
-            />
-          ))}
+            {["Daily", "Weekly", "Bi-Weekly", "Monthly"].map((selection) => (
+              <SelectMultipleButton
+                key={selection}
+                value={selection}
+                displayValue={selection}
+                highLightStyle={{
+                  borderColor: "gray",
+                  backgroundColor: "transparent",
+                  textColor: "#192e4f",
+                  borderTintColor: "#192e4f",
+                  backgroundTintColor: "#192e4f",
+                  textTintColor: "white",
+                }}
+                //buttonViewStyle={}
+                selected={props.newRepeat == selection}
+                singleTap={(valueTap) => {
+                  props.setNewRepeat(valueTap, selection);
+                }}
+              />
+            ))}
           </ScrollView>
         </View>
       ),
@@ -473,7 +481,9 @@ const InputModal = (props) => {
           placeholder="Description"
           placeholderTextColor="#788fb3"
           autoCapitalize="sentences"
-          onEndEditing={(text) => {props.setNewDescription(text.nativeEvent.text)}}
+          onEndEditing={(text) => {
+            props.setNewDescription(text.nativeEvent.text);
+          }}
         />
       ),
     },
@@ -490,9 +500,7 @@ const InputModal = (props) => {
       useNativeDriver={true}
     >
       <View style={styles.centeredView}>
-        <Pressable
-          onPress={Keyboard.dismiss}
-        >
+        <Pressable onPress={Keyboard.dismiss}>
           <View style={styles.modalView}>
             <View style={styles.inputRow}>
               <TextInput
@@ -501,7 +509,9 @@ const InputModal = (props) => {
                 placeholder="Task Name"
                 placeholderTextColor="#788fb3"
                 autoCapitalize="sentences"
-                onEndEditing={(text) => {props.setNewName(text.nativeEvent.text)}}
+                onEndEditing={(text) => {
+                  props.setNewName(text.nativeEvent.text);
+                }}
               />
             </View>
 
@@ -517,8 +527,8 @@ const InputModal = (props) => {
                 style={styles.modalButton}
                 color="red"
                 onPress={() => {
-                  props.setInputModalVisible(!props.inputModalVisible)
-                  props.setNewRepeat(null)
+                  props.setInputModalVisible(!props.inputModalVisible);
+                  props.setNewRepeat(null);
                 }}
                 title="Close"
               />
@@ -527,6 +537,7 @@ const InputModal = (props) => {
                 title="Create"
                 onPress={() => {
                   var tID = Math.random().toString(36).substring(7);
+                  console.log("props: ", props);
                   var newT = new Task(
                     props.newName,
                     props.newDeadline,
@@ -534,18 +545,20 @@ const InputModal = (props) => {
                     props.newRepeat,
                     Date.now(),
                     props.newDescription,
-                    "hDmQmaXM0qoZP6TuaPK4u",
+                    props.householdID,
                     null,
                     null,
                     null,
                     tID
                   );
-                  console.log("new Task: ", newT)
-                  var db = firebase.firestore()
-                  var tRef = db.doc("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks/" + tID);
+                  console.log("new Task: ", newT);
+                  var db = firebase.firestore();
+                  var tRef = db.doc(
+                    "/houses/" + props.householdID + "/Tasks/" + tID
+                  );
                   tRef.withConverter(Task.taskConverter).set(newT);
                   props.setInputModalVisible(!props.inputModalVisible);
-                  props.setNewRepeat(null)
+                  props.setNewRepeat(null);
                 }}
               />
             </View>
@@ -557,7 +570,6 @@ const InputModal = (props) => {
 };
 
 const EditModal = (props) => {
-
   var selectedTask = props.selectedTask;
 
   if (!selectedTask.inProgressBy) {
@@ -598,9 +610,7 @@ const EditModal = (props) => {
       useNativeDriver={true}
     >
       <View style={styles.centeredView}>
-        <Pressable
-          onPress={Keyboard.dismiss}
-        >
+        <Pressable onPress={Keyboard.dismiss}>
           <View style={styles.modalView}>
             <Text style={styles.modalHeader}>{selectedTask.name}</Text>
             <FlatList
@@ -616,7 +626,10 @@ const EditModal = (props) => {
               <Button
                 style={styles.modalButton}
                 color="red"
-                onPress={() => {props.setEditModalVisible(false); props.setModalVisible(true)}}
+                onPress={() => {
+                  props.setEditModalVisible(false);
+                  props.setModalVisible(true);
+                }}
                 title="Close"
               />
               <Button style={styles.modalButton} title="oof" />
@@ -625,7 +638,7 @@ const EditModal = (props) => {
         </Pressable>
       </View>
     </Modal>
-  )
+  );
 };
 
 const StatusButton = (task) => {
