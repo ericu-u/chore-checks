@@ -34,10 +34,9 @@ function MyDrawer() {
       independent={true}
       drawerStyle={{ backgroundColor: "#e5e5e5" }}
       drawerContent={(props) => <CustomDrawer {...props} />}
-      // drawerContent={({navigation}) => <CustomDrawer navigation={navigation} />}
       drawerContentOptions={{
         inactiveTintColor: "black",
-        itemStyle: { marginVertical: 25 },
+        itemStyle: { marginVertical: 22 },
         labelStyle: { fontSize: 20, fontFamily: "Montserrat_400Regular" },
       }}
     >

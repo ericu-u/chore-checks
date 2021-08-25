@@ -1,5 +1,5 @@
-import React from "react";
-import { Image, StyleSheet, Button, View, Text } from "react-native";
+import React, {useState} from "react";
+import { Image, StyleSheet, Button, View, Text, Clipboard } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -23,6 +23,12 @@ function Sidebar(props) {
     Montserrat_700Bold,
   });
 
+  const [copiedText, setCopiedText] = useState("");
+
+  const copyToClipboard = () => {
+    Clipboard.setString("hello world"); // replace w household id
+  };
+
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
@@ -31,6 +37,17 @@ function Sidebar(props) {
         <DrawerItemList {...props} />
 
         <View style={styles.horizontalLine} />
+        {/* add member button */}
+        <View style={styles.addMemberButton}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log("copied household id");
+              copyToClipboard();
+            }}
+          >
+            <Text style={styles.addMemberText}>Add Member</Text>
+          </TouchableOpacity>
+        </View>
         {/* change household button */}
         <View style={styles.changeHouseholdButton}>
           <TouchableOpacity
@@ -45,12 +62,10 @@ function Sidebar(props) {
         {/* sign out button */}
         <View style={styles.signOutButton}>
           <TouchableOpacity
-            onPress={
-              () => {
-                console.log("signed out button2");
-                props.navigation.navigate("Log out");
-              } // gotta change this part
-            }
+            onPress={() => {
+              console.log("signed out button2");
+              props.navigation.navigate("Log out");
+            }}
           >
             <Text style={styles.signOutText}>Sign Out</Text>
           </TouchableOpacity>
@@ -65,18 +80,36 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 1,
     margin: "10%",
-    marginTop: "-45%",
+    marginTop: "-40%",
     backgroundColor: "black",
+  },
+  addMemberButton: {
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: "3%",
+    paddingBottom: "3%",
+    paddingRight: "5%",
+    paddingLeft: "5%",
+    marginTop: "2%",
+    borderRadius: 50,
+    borderColor: "black",
+    borderWidth: 1,
+  },
+  addMemberText: {
+    color: "#555555",
+    fontSize: 20,
+    fontFamily: "Montserrat_500Medium",
   },
   changeHouseholdButton: {
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: "4%",
-    paddingBottom: "4%",
-    paddingRight: "4%",
-    paddingLeft: "4%",
-    marginTop: "6%",
+    paddingTop: "3%",
+    paddingBottom: "3%",
+    paddingRight: "5%",
+    paddingLeft: "5%",
+    marginTop: "7%",
     borderRadius: 50,
     borderColor: "black",
     borderWidth: 1,
@@ -90,11 +123,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: "4%",
-    paddingBottom: "4%",
-    paddingRight: "4%",
-    paddingLeft: "4%",
-    marginTop: "12%",
+    paddingTop: "3%",
+    paddingBottom: "3%",
+    paddingRight: "5%",
+    paddingLeft: "5%",
+    marginTop: "7%",
     borderRadius: 50,
     borderColor: "black",
     borderWidth: 1,

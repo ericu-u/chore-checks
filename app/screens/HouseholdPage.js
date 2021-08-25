@@ -32,17 +32,7 @@ const sortList = ["Points", "Completion Rate", "Tasks Completed"];
 
 var householdIDD = "hDmQmaXM0qoZP6TuaPK4u";
 export default class HouseholdPage extends React.Component {
-  // TODO: ADD THIS PART IN FOR FONT
-
-  //   let [fontsLoaded] = useFonts({
-  //     Montserrat_400Regular,
-  //     Montserrat_500Medium,
-  //   });
-
-  // if (!fontsLoaded) {
-  //    return <AppLoading />;
-  // }
-  // else {
+  
   constructor(props) {
     super(props);
     this.state = {
