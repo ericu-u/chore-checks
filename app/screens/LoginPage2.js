@@ -25,15 +25,6 @@ function LoginPage({ navigation }) {
   //const [unsub, setUnsub] = useState(null);
   const [unsubscriber, setUnsubscriber] = useState(null);
 
-  var firebaseConfig = {
-    apiKey: config.FIREBASE_KEY,
-    authDomain: "chores-97427.firebaseapp.com",
-    projectId: "chores-97427",
-    storageBucket: "chores-97427.appspot.com",
-    messagingSenderId: "409040868260",
-    appId: "1:409040868260:web:7b6d1f00e29554af802731",
-    measurementId: "G-8D3XVC7R9T",
-  };
   // Initialize Firebase
 
   // console.log("refreshed");
@@ -97,54 +88,7 @@ function LoginPage({ navigation }) {
     };
   });
 
-  /*
-  setUnsub(
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        const db = firebase.firestore();
-
-        (async () => {
-          var docRef = db.doc("users/" + user.uid);
-          var doc = await docRef.get();
-          console.log("boobs2");
-
-          if (doc.exists) {
-            console.log("doc exists!!!!!!!!!!!!!!!!");
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Drawer" }],
-            });
-          } else {
-            console.log("first time!!!!!");
-            var newP = new Person(
-              user.uid,
-              user.displayName,
-              user.photoURL,
-              null,
-              0,
-              0,
-              0,
-              0,
-              true,
-              true,
-              true,
-              true,
-              true
-            );
-
-            await docRef.withConverter(Person.personConverter).set(newP);
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Drawer" }],
-            });
-          }
-        })();
-      } else {
-        // No user is signed in.
-      }
-    })
-  );
-*/
+ 
   useEffect;
   () => {
     console.log("effect");

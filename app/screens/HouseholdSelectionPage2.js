@@ -36,10 +36,21 @@ const JoinHousehold = () => {
       const uid = firebase.auth().currentUser.uid;
       const db = firebase.firestore();
       console.log(uid);
-      // const oldID = await db.doc("users/" + uid).get().data().householdID;
+      const oldID = (await db.doc("users/" + uid).get()).data().householdID;
+      if (oldID !== null) {
+        var oldRef = db.doc("houses/" + oldID);
+        var ppl = (await oldRef.get()).data().people;
+        var index = ppl.indexOf(uid);
+        console.log("before:", ppl);
+
+        if (index > -1) {
+          ppl.splice(index, 1);
+        }
+        console.log("after:", ppl);
+        await oldRef.update({ people: ppl });
+      }
+
       db.doc("users/" + uid).update({ householdID: null });
-
-
     })();
   }, []);
 
@@ -59,14 +70,25 @@ const JoinHousehold = () => {
       const uid = firebase.auth().currentUser.uid;
 
       db.doc("users/" + uid).update({ householdID: householdCode });
-      navigation.navigate("Drawer");
+      // navigation.navigate("Profile");
+
+      const newRef = db.doc("houses/" + householdCode);
+      var ppl = (await newRef.get()).data().people;
+
+      ppl.push(uid);
+      newRef.update({ people: ppl });
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Drawer" }],
+      });
     })();
   };
 
   return (
     <TouchableHighlight style={styles.joinBackground} onPress={showDialogJoin}>
       <View style={styles.container}>
-        <Text style={styles.buttonText}>Join Existing {"\n"} Household</Text>
+        <Text style={styles.buttonText}>Join Existing {"\n"}Household</Text>
         <Dialog.Container visible={visible}>
           <Dialog.Title>Enter Household Code</Dialog.Title>
           <Dialog.Description>
@@ -109,17 +131,29 @@ const CreateHousehold = () => {
     const db = firebase.firestore();
 
     (async () => {
-      const id = "id lol";
+      // const uid = firebase.auth().currentUser.uid;
+      const id = Math.random().toString(36).substring(7);
       const h = new Household(householdName, id);
+      console.log("new hh made");
+
+      var ppl = [];
+      ppl.push(firebase.auth().currentUser.uid);
       var newRef = db.doc("/houses/" + id);
-      newRef.withConverter(Household.houseConverter).set(h);
+
+      console.log(ppl);
+
+      await newRef.withConverter(Household.houseConverter).set(h);
+      await newRef.update({ people: ppl });
 
       const uid = firebase.auth().currentUser.uid;
-      console.log("new hh made");
-      db.doc("users/" + uid).update({ householdID: id });
+      await db.doc("users/" + uid).update({ householdID: id });
 
       setVisible(false);
-      navigation.navigate("Drawer");
+      // navigation.navigate("Profile");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Drawer" }],
+      });
     })();
   };
 
@@ -129,7 +163,7 @@ const CreateHousehold = () => {
       onPress={showDialogCreate}
     >
       <View style={styles.container}>
-        <Text style={styles.buttonText}>Create New {"\n"} Household</Text>
+        <Text style={styles.buttonText}>Create New {"\n"}Household</Text>
         <Dialog.Container visible={visible}>
           <Dialog.Title>Enter Household Name</Dialog.Title>
           <Dialog.Description>
@@ -210,6 +244,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    //marginTop: "10%",
+    //marginBottom: "6%",
   },
   image: {
     flex: 1,
@@ -221,7 +257,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "black",
     textAlign: "center",
-    marginBottom: "16%",
+    marginBottom: "15%",
     fontFamily: "Montserrat_500Medium",
   },
   text: {
@@ -246,7 +282,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginLeft: "5%",
     marginRight: "2%",
-    marginBottom: "4%",
+    marginBottom: "10%",
     height: "100%",
   },
   buttonText: {

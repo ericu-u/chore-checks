@@ -47,7 +47,7 @@ export class TaskPageClass extends React.Component {
 
     const db = firebase.firestore();
     var unsub = db
-      .collection("/houses/h38219/Tasks")
+      .collection("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks")
       .withConverter(Task.taskConverter)
       .onSnapshot((querySnapshot) => {
         var tempTasks = [];

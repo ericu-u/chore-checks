@@ -19,28 +19,11 @@ import ProfilePage from "./ProfilePage";
 import AppLoading from "expo-app-loading";
 import { useFonts, Montserrat_500Medium } from "@expo-google-fonts/montserrat";
 import * as firebase from "firebase";
-import Person from "../classes/household";
+import Household from "../classes/household";
 
 const Stack = createNativeStackNavigator();
 
 const JoinHousehold = () => {
-  var firebaseConfig = {
-    apiKey: config.FIREBASE_KEY,
-    authDomain: "chores-97427.firebaseapp.com",
-    projectId: "chores-97427",
-    storageBucket: "chores-97427.appspot.com",
-    messagingSenderId: "409040868260",
-    appId: "1:409040868260:web:7b6d1f00e29554af802731",
-    measurementId: "G-8D3XVC7R9T",
-  };
-  // Initialize Firebase
-
-  // console.log("refreshed");
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  } else {
-    firebase.app(); // if already initialized, use that one
-  }
   const [visible, setVisible] = useState(false);
   const [code, setCode] = useState("");
   const navigation = useNavigation();
@@ -53,6 +36,20 @@ const JoinHousehold = () => {
       const uid = firebase.auth().currentUser.uid;
       const db = firebase.firestore();
       console.log(uid);
+      const oldID = (await db.doc("users/" + uid).get()).data().householdID;
+      if (oldID !== null) {
+        var oldRef = db.doc("houses/" + oldID);
+        var ppl = (await oldRef.get()).data().people;
+        var index = ppl.indexOf(uid);
+        console.log("before:", ppl);
+
+        if (index > -1) {
+          ppl.splice(index, 1);
+        }
+        console.log("after:", ppl);
+        await oldRef.update({ people: ppl });
+      }
+
       db.doc("users/" + uid).update({ householdID: null });
     })();
   }, []);
@@ -73,7 +70,18 @@ const JoinHousehold = () => {
       const uid = firebase.auth().currentUser.uid;
 
       db.doc("users/" + uid).update({ householdID: householdCode });
-      navigation.navigate("Profile");
+      // navigation.navigate("Profile");
+
+      const newRef = db.doc("houses/" + householdCode);
+      var ppl = (await newRef.get()).data().people;
+
+      ppl.push(uid);
+      newRef.update({ people: ppl });
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Profile" }],
+      });
     })();
   };
 
@@ -123,17 +131,29 @@ const CreateHousehold = () => {
     const db = firebase.firestore();
 
     (async () => {
-      const id = "id lol";
+      // const uid = firebase.auth().currentUser.uid;
+      const id = Math.random().toString(36).substring(7);
       const h = new Household(householdName, id);
+      console.log("new hh made");
+
+      var ppl = [];
+      ppl.push(firebase.auth().currentUser.uid);
       var newRef = db.doc("/houses/" + id);
-      newRef.withConverter(Household.houseConverter).set(h);
+
+      console.log(ppl);
+
+      await newRef.withConverter(Household.houseConverter).set(h);
+      await newRef.update({ people: ppl });
 
       const uid = firebase.auth().currentUser.uid;
-      console.log("new hh made");
-      db.doc("users/" + uid).update({ householdID: id });
+      await db.doc("users/" + uid).update({ householdID: id });
 
       setVisible(false);
-      navigation.navigate("Profile");
+      // navigation.navigate("Profile");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Profile" }],
+      });
     })();
   };
 

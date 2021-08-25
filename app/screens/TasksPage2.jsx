@@ -75,7 +75,7 @@ export class TasksPage2 extends React.Component {
 
     // Firestore subscription. Listens to database for changes.
     var unsub = db
-      .collection("/houses/h38219/Tasks")
+      .collection("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks")
       .withConverter(Task.taskConverter)
       .onSnapshot((querySnapshot) => {
         // Whenever there is a change in firestore, this method runs
@@ -534,7 +534,7 @@ const InputModal = (props) => {
                     props.newRepeat,
                     Date.now(),
                     props.newDescription,
-                    "h38219",
+                    "hDmQmaXM0qoZP6TuaPK4u",
                     null,
                     null,
                     null,
@@ -542,7 +542,7 @@ const InputModal = (props) => {
                   );
                   console.log("new Task: ", newT)
                   var db = firebase.firestore()
-                  var tRef = db.doc("/houses/h38219/Tasks/" + tID);
+                  var tRef = db.doc("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks/" + tID);
                   tRef.withConverter(Task.taskConverter).set(newT);
                   props.setInputModalVisible(!props.inputModalVisible);
                   props.setNewRepeat(null)

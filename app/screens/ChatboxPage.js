@@ -7,7 +7,7 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 import ImgPicker from "./ImagePicker";
 
-var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
+var householdIDD = "hDmQmaXM0qoZP6TuaPK4u";
 const firebaseConfig = {
   apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
   authDomain: "chores-97427.firebaseapp.com",

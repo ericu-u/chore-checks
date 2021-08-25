@@ -30,7 +30,7 @@ import SelectDropdown from "react-native-select-dropdown";
 
 const sortList = ["Points", "Completion Rate", "Tasks Completed"];
 
-var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
+var householdIDD = "hDmQmaXM0qoZP6TuaPK4u";
 export default class HouseholdPage extends React.Component {
   // TODO: ADD THIS PART IN FOR FONT
 

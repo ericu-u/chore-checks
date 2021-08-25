@@ -88,7 +88,7 @@ function LoginPage({ navigation }) {
               true
             );
 
-            //await docRef.withConverter(Person.personConverter).set(newP);
+            await docRef.withConverter(Person.personConverter).set(newP);
             navigation.reset({
               index: 0,
               routes: [{ name: "HouseholdSelectionPage2" }],

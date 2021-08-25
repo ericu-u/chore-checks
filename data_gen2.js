@@ -443,7 +443,17 @@ async function create(numPpl, numTasks, numMsgs) {
   second parameter is the number of tasks, third parameter is the number of messages.
   The below statement creates a household with 3 ppl, 2 tasks, 17 messages.
   */
-  console.log("new house at:", await create(3, 2, 17));
+  console.log("new house at:", await create(3, 8, 17));
+
+  console.log("new house at:", await create(2, 12, 35));
+  console.log("new house at:", await create(3, 10, 40));
+  console.log("new house at:", await create(4, 11, 53));
+  console.log("new house at:", await create(3, 14, 10));
+  console.log("new house at:", await create(5, 9, 123));
+  console.log("new house at:", await create(3, 5, 98));
+  console.log("new house at:", await create(2, 4, 75));
+  console.log("new house at:", await create(3, 8, 60));
+  console.log("new house at:", await create(4, 6, 35));
 
   console.log("Data added. Press CTRL-C to close the program.");
 })();
