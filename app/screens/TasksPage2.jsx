@@ -78,7 +78,7 @@ export class TasksPage2 extends React.Component {
 
     // Firestore subscription. Listens to database for changes.
     var unsub = db
-      .collection("/houses/h38219/Tasks")
+      .collection("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks")
       .withConverter(Task.taskConverter)
       .onSnapshot((querySnapshot) => {
         // Whenever there is a change in firestore, this method runs
@@ -115,6 +115,15 @@ export class TasksPage2 extends React.Component {
   componentWillUnmount() {
     // This method runs whenever we stop rendering the component
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
+  }
+
+  updateTask(task, ) {
+
+    var tRef = db.doc("/houses/hHeLFGtKHEHl6PPMwf9ek/Tasks/" + tID);
+    tRef.withConverter(Task.taskConverter).update(newT);
+
+    db.collection("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks").set(task).doc(task)
+
   }
 
   setModalVisible = (visible) => {
@@ -375,15 +384,7 @@ const InputModal = (props) => {
           labelDate="Day"
           labelMonth="Month"
           labelYear="Year"
-          containerStyle={{
-            flex: 1,
-            textAlign: 'center',
-            marginTop: windowHeight * 0.017,
-            marginLeft: windowWidth * 0.013,
-            marginRight: windowWidth * 0.013,
-            height: windowHeight * 0.05,
-            width: windowWidth * 0.5,
-          }}
+          containerStyle={[styles.input, {borderWidth: 0}]}
           styleInput={{
             height: windowHeight * 0.05,
             width: windowWidth * 0.171,
@@ -402,7 +403,7 @@ const InputModal = (props) => {
       key: "Points:",
       property: (
         <TextInput
-          style={styles.inputHeader}
+          style={styles.input}
           underlineColorAndroid="transparent"
           keyboardType='number-pad'
           maxLength={2}
@@ -474,7 +475,7 @@ const InputModal = (props) => {
       key: "Description:",
       property: (
         <TextInput
-          style={[styles.inputHeader, { height: windowHeight * 0.1, }]}
+          style={[styles.input, { height: windowHeight * 0.1, }]}
           underlineColorAndroid="transparent"
           multiline={true}
           blurOnSubmit={true}
@@ -518,7 +519,7 @@ const InputModal = (props) => {
           );
           console.log("new Task: ", newT)
           var db = firebase.firestore()
-          var tRef = db.doc("/houses/h38219/Tasks/" + tID);
+          var tRef = db.doc("/houses/hHeLFGtKHEHl6PPMwf9ek/Tasks/" + tID);
           tRef.withConverter(Task.taskConverter).set(newT);
           props.setInputModalVisible(!props.inputModalVisible);
           props.setNewRepeat(null)
@@ -582,7 +583,6 @@ const InputModal = (props) => {
   );
 };
 
-// TODO: this next
 const EditModal = (props) => {
 
   var selectedTask = props.selectedTask;
@@ -602,15 +602,7 @@ const EditModal = (props) => {
           labelMonth="Month"
           labelYear="Year"
           defaultValue={new Date(selectedTask.deadline)}
-          containerStyle={{
-            flex: 1,
-            textAlign: 'center',
-            marginTop: windowHeight * 0.017,
-            marginLeft: windowWidth * 0.013,
-            marginRight: windowWidth * 0.013,
-            height: windowHeight * 0.05,
-            width: windowWidth * 0.5,
-          }}
+          containerStyle={[styles.input, {borderWidth: 0}]}
           styleInput={{
             height: windowHeight * 0.05,
             width: windowWidth * 0.12,
@@ -628,14 +620,14 @@ const EditModal = (props) => {
       key: "Points",
       property: (
         <TextInput
-          style={styles.inputHeader}
+          style={styles.input}
           underlineColorAndroid="transparent"
           keyboardType='number-pad'
           maxLength={2}
           placeholder="Points"
           placeholderTextColor="#788fb3"
           onEndEditing={(text) => {props.setNewPoints(text.nativeEvent.text)}}
-          value={selectedTask.points}
+          value={String(selectedTask.points)}
         />
       )
     },
@@ -643,7 +635,7 @@ const EditModal = (props) => {
       key: "Description",
       property: (
         <TextInput
-          style={[styles.inputHeader, { height: windowHeight * 0.1, }]}
+          style={[styles.input, { height: windowHeight * 0.1, }]}
           underlineColorAndroid="transparent"
           multiline={true}
           blurOnSubmit={true}
@@ -688,7 +680,9 @@ const EditModal = (props) => {
                 return (
                   <View style={styles.inputRow}>
                     <Text
-                      style={{ fontSize: 16, textAlign: "left", marginTop: windowHeight * 0.017,
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      style={{ flex: 0.5, fontSize: 16, textAlign: "left", marginTop: windowHeight * 0.017,
                       marginLeft: windowWidth * 0.013,
                       marginRight: windowWidth * 0.013, fontFamily: 'Montserrat_500Medium' }}
                     >
@@ -707,7 +701,7 @@ const EditModal = (props) => {
                 onPress={() => {props.setEditModalVisible(false); props.setModalVisible(true)}}
                 title="Back"
               />
-              <Button style={styles.modalButton} title="oof" />
+              <Button style={styles.modalButton} title="Confirm" />
             </View>
           </View>
         </Pressable>
@@ -898,19 +892,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#071b7a",
   },
   input: {
-    flex: 3,
-    margin: 15,
-    height: windowHeight * 0.03,
+    flex: 1,
+    marginTop: windowHeight * 0.02,
+    marginLeft: windowWidth * 0.013,
+    marginRight: windowWidth * 0.013,
+    height: windowHeight * 0.05,
     width: windowWidth * 0.512,
     textAlign: "center",
     borderWidth: 1.5,
     borderColor: "#192e4f",
     borderRadius: 10,
     backgroundColor: "#FFFFFF",
+    fontFamily: 'Montserrat_500Medium'
   },
   inputHeader: {
     flex: 1,
-    marginTop: windowHeight * 0.017,
+    marginBottom: windowHeight * 0.012,
     marginLeft: windowWidth * 0.013,
     marginRight: windowWidth * 0.013,
     height: windowHeight * 0.05,
@@ -923,7 +920,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat_500Medium'
   },
   inputRow: {
-    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: 'center',
@@ -953,7 +949,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontFamily: 'Montserrat_500Medium',
     textAlign: "center",
-    margin: 10,
+    marginBottom: windowHeight * 0.012,
   },
   modalView: {
     margin: 20,
