@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import { Image, StyleSheet, Button, View, Text, Clipboard } from "react-native";
 import {
   DrawerContentScrollView,
@@ -15,18 +15,27 @@ import {
   Montserrat_700Bold,
 } from "@expo-google-fonts/montserrat";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as firebase from "firebase";
+
 
 function Sidebar(props) {
+  const [copiedText, setCopiedText] = useState("frick");
+
   let [fontsLoaded] = useFonts({
     Montserrat_400Regular,
     Montserrat_500Medium,
     Montserrat_700Bold,
   });
 
-  const [copiedText, setCopiedText] = useState("");
+  useEffect(() => {
+    const uid = firebase.auth().currentUser.uid;
+    firebase.firestore().doc("users/" + uid).onSnapshot((doc) => {
+      setCopiedText(doc.data().householdID);
+    });
+  });
 
   const copyToClipboard = () => {
-    Clipboard.setString("hello world"); // replace w household id
+    Clipboard.setString(copiedText); // replace w household id
   };
 
   if (!fontsLoaded) {
