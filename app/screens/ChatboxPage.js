@@ -22,8 +22,6 @@ if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
 
-const db = firebase.firestore();
-const chatsRef = db.collection("/houses/" + householdIDD + "/Messages");
 // const chatsRef = db.collection("/chat2");
 
 export default function App() {
@@ -32,21 +30,34 @@ export default function App() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    AsyncStorage.removeItem("user");
+    var unsubscribe = () => {
+      console.log("UNSUBBED EARLY!!!!!!!!!!!!!!!!!!q");
+    };
+    const db = firebase.firestore();
 
-    readUser();
-    const unsubscribe = chatsRef.onSnapshot((querySnapshot) => {
-      const messagesFirestore = querySnapshot
-        .docChanges()
-        .filter(({ type }) => type === "added")
-        .map(({ doc }) => {
-          const message = doc.data();
+    (async () => {
+      const uid = firebase.auth().currentUser.uid;
+      db.doc("users/" + uid).onSnapshot((doc) => {
+        householdIDD = doc.data().householdID;
+        const chatsRef = db.collection("/houses/" + householdIDD + "/Messages");
 
-          return { ...message, createdAt: message.createdAt.toDate() };
-        })
-        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-      appendMessages(messagesFirestore);
-    });
+        AsyncStorage.removeItem("user");
+        readUser();
+        unsubscribe = chatsRef.onSnapshot((querySnapshot) => {
+          const messagesFirestore = querySnapshot
+            .docChanges()
+            .filter(({ type }) => type === "added")
+            .map(({ doc }) => {
+              const message = doc.data();
+
+              return { ...message, createdAt: message.createdAt.toDate() };
+            })
+            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          appendMessages(messagesFirestore);
+        });
+      });
+    })();
+
     return () => unsubscribe();
   }, []);
 
