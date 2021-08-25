@@ -35,7 +35,8 @@ function Sidebar(props) {
   });
 
   const copyToClipboard = () => {
-    Clipboard.setString(copiedText); // replace w household id
+    Clipboard.setString(copiedText);
+    alert("Copied Household ID!");
   };
 
   if (!fontsLoaded) {
