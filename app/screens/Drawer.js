@@ -349,6 +349,13 @@ function LogOutNavigator() {
           headerShown: false,
         }}
       />
+       <LogOutStack.Screen
+        name="hhsp"
+        component={HouseholdSelectionPage}
+        options={{
+          headerShown: false,
+        }}
+      />
       <LogOutStack.Screen
         name="Drawer"
         component={MenuPage}
