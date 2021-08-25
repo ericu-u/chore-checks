@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   username: {
     fontSize: 28,
     fontWeight: "bold",
-    top: "2%",
+    bottom: "1%",
     left: "1.6%",
     textAlign: "center",
     fontFamily: "Montserrat_600SemiBold",
