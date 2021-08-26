@@ -32,7 +32,7 @@ function Sidebar(props) {
     firebase.firestore().doc("users/" + uid).onSnapshot((doc) => {
       setCopiedText(doc.data().householdID);
     });
-  });
+  },[]);
 
   const copyToClipboard = () => {
     Clipboard.setString(copiedText);
