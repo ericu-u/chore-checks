@@ -13,110 +13,27 @@ import { Header } from "react-native-elements";
 import { set } from "react-native-reanimated";
 import * as firebase from "firebase";
 import * as Google from "expo-google-app-auth";
-import AppLoading from "expo-app-loading";
-import { useFonts } from "@expo-google-fonts/montserrat";
-import segoesc from "../assets/fonts/segoesc.ttf";
-import { FontAwesome } from "@expo/vector-icons";
-import Person from "../classes/person";
 
 function LoginPage({ navigation }) {
   const [oatmealfact, setFact] = useState("");
 
-  //const [unsub, setUnsub] = useState(null);
-  const [unsubscriber, setUnsubscriber] = useState(null);
-
-  console.log("boobs");
-
-  useEffect(() => {
-    const please = firebase.auth().onAuthStateChanged(function (user) {
-      // if (user) {
-      //   console.log(" uh user here i guess");
-      //   (async () => {
-      //     const db = firebase.firestore();
-      //     var docRef = db.doc("users/" + user.uid);
-      //     var doc = await docRef.get();
-      //     if (doc.exists) {
-      //       console.log("user in database");
-      //       if (doc.exists) {
-      //         console.log("doc exists!!!!!!!!!!!!!!!!");
-      //         navigation.reset({
-      //           index: 0,
-      //           routes: [{ name: "Drawer" }],
-      //         });
-      //       }
-      //     }
-      //   })();
-      // }
-
-      // old func
-      if (user) {
-        const db = firebase.firestore();
-
-        (async () => {
-          var docRef = db.doc("users/" + user.uid);
-          var doc = await docRef.get();
-          console.log("boobs2");
-          if (doc.exists) {
-            console.log("doc exists!!!!!!!!!!!!!!!!");
-
-            if (doc.data().householdID === null) {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "HouseholdSelectionPage2" }],
-              });
-            } else {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "Drawer" }],
-              });
-            }
-          } else {
-            console.log("first time!!!!!");
-            var newP = new Person(
-              user.uid,
-              user.displayName,
-              user.photoURL,
-              null,
-              0,
-              0,
-              0,
-              0,
-              true,
-              true,
-              true,
-              true,
-              true
-            );
-
-            await docRef.withConverter(Person.personConverter).set(newP);
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "HouseholdSelectionPage2" }],
-            });
-          }
-        })();
-      } else {
-        // No user is signed in.
-      }
-    });
-    return function cleanup() {
-      if (unsubscriber !== null && unsubscriber !== undefined) {
-        unsubscriber();
-      }
-      please();
-    };
-  }, []);
-
-  // useEffect() => {
-  //   console.log("effect");
-  //   var oatmealfacts_array = [
-  //     "Oatmeal fact ",
-  //     "Oatmeal fact2",
-  //     "Oatmeal fact3",
-  //   ];
-  //   setFact =
-  //     oatmealfacts_array[Math.floor(Math.random() * oatmealfactsarray.length)];
-  // };
+  useEffect;
+  () => {
+    console.log("effect");
+    if (firebase.auth().currentUser !== null) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Drawer" }],
+      });
+    }
+    var oatmealfacts_array = [
+      "Oatmeal fact ",
+      "Oatmeal fact2",
+      "Oatmeal fact3",
+    ];
+    setFact =
+      oatmealfacts_array[Math.floor(Math.random() * oatmealfactsarray.length)];
+  };
 
   isUserEqual = (googleUser, firebaseUser) => {
     if (firebaseUser) {
@@ -141,7 +58,6 @@ function LoginPage({ navigation }) {
     var unsubscribe = firebase.auth().onAuthStateChanged(
       function (firebaseUser) {
         unsubscribe();
-        setUnsubscriber(unsubscribe);
         // Check if we are already signed-in Firebase with the correct user.
         if (!this.isUserEqual(googleUser, firebaseUser)) {
           // Build Firebase credential with the Google ID token.
@@ -211,69 +127,77 @@ function LoginPage({ navigation }) {
 
       if (result.type === "success") {
         this.onSignIn(result);
-
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Drawer" }],
+        });
         return result.accessToken;
       } else {
         return { cancelled: true };
       }
     } else {
+      // navigation.push("Drawer");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Drawer" }],
+      });
       console.log("already logged in");
     }
   };
 
   const handleTap = () => console.log("sign in to google");
 
-  let [fontsLoaded] = useFonts({
-    segoesc: require("../assets/fonts/segoesc.ttf"),
-  });
+  const [RndmItem, setRndmItem] = useState();
 
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  } else {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={{ flex: 0.25 }}></View>
-        <View style={{ flex: 1.25 }}>
-          <Image
-            source={require("../assets/oatmeal-logo.jpg")}
-            style={styles.image}
-          />
-        </View>
+  const myArray = [
+    "Oats are used primarily as food for livestock, with only about 5% of the world crop being consumed by humans.",
+    "The most popular oatmeal toppings are: milk, sugar, fruit (raisins, bananas) and butter/margarine",
+    "Oatmeal cookies are the number one non-cereal usage for oatmeal, followed by meatloaf.",
+    "Seventy-five percent of U.S. households have oatmeal in their cupboard.",
+  ];
 
-        <View
-          style={
-            (styles.container,
-            {
-              flex: 0.5,
-              alignItems: "center",
-              justifyContent: "center",
-              marginTop: "5%",
-              marginBottom: "5%",
-            })
-          }
-        >
-          <Text style={styles.titleText}>Chore Checks</Text>
-        </View>
+  const timoutId = setTimeout(() => {
+    var randomItem = myArray[Math.floor(Math.random() * myArray.length)];
+    console.log(randomItem);
+    setRndmItem(randomItem);
+  }, 7000);
 
-        <TouchableOpacity onPress={login}>
-          <Image
-            style={{ resizeMode: "contain", width: 300, height: 60 }}
-            source={require("../assets/Gsignin.png")}
-          ></Image>
-        </TouchableOpacity>
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={{ flex: 0.25 }}></View>
+      <View style={{ flex: 1.25 }}>
+        <Image
+          source={require("../assets/oatmeal-logo.jpg")}
+          style={styles.image}
+        />
+      </View>
 
-        <View
-          style={{ flex: 2, alignItems: "center", justifyContent: "center" }}
-        >
-          <Text>
-            Oats contain more soluble fiber than whole wheat, rice or corn!
-          </Text>
-        </View>
+      <View
+        style={
+          (styles.container,
+          { flex: 0.5, alignItems: "center", justifyContent: "center" })
+        }
+      >
+        <Text style={styles.titleText}>Chore Checks</Text>
+      </View>
 
-        <StatusBar style="auto" />
-      </SafeAreaView>
-    );
-  }
+      <TouchableOpacity onPress={login}>
+        <Image
+          style={{ resizeMode: "contain", width: 300, height: 60 }}
+          source={require("../assets/Gsignin.png")}
+        ></Image>
+      </TouchableOpacity>
+
+      <View style={{ flex: 2, alignItems: "center", justifyContent: "center" }}>
+        {
+          /* <Text>Oats contain more soluble fiber than whole wheat, rice or corn!</Text> */
+          <Text style={styles.text}> {RndmItem}</Text>
+        }
+      </View>
+
+      <StatusBar style="auto" />
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -285,6 +209,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
+
     width: 200,
     height: 200,
     borderRadius: 200 / 2,
@@ -292,10 +217,13 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 40,
     color: "white",
-    fontFamily: "segoesc",
   },
   text: {
     fontSize: 20,
+    color: "gray",
+    justifyContent: "center",
+    flexDirection: "column",
+    textAlign: "center",
   },
 });
 
