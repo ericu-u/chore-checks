@@ -7,7 +7,7 @@ import {
   Image,
   StatusBar,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { Header } from "react-native-elements";
 import { set } from "react-native-reanimated";
@@ -147,6 +147,21 @@ function LoginPage({ navigation }) {
 
   const handleTap = () => console.log("sign in to google");
 
+  const [RndmItem, setRndmItem] = useState();
+
+  const myArray = [
+    "Oats are used primarily as food for livestock, with only about 5% of the world crop being consumed by humans.",
+    "The most popular oatmeal toppings are: milk, sugar, fruit (raisins, bananas) and butter/margarine",
+    "Oatmeal cookies are the number one non-cereal usage for oatmeal, followed by meatloaf.",
+    "Seventy-five percent of U.S. households have oatmeal in their cupboard.",
+  ];
+
+  const timoutId = setTimeout(() => {
+    var randomItem = myArray[Math.floor(Math.random() * myArray.length)];
+    console.log(randomItem);
+    setRndmItem(randomItem);
+  }, 7000);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ flex: 0.25 }}></View>
@@ -167,15 +182,17 @@ function LoginPage({ navigation }) {
       </View>
 
       <TouchableOpacity onPress={login}>
-        <Image 
-        style={{resizeMode: "contain" , width: 300, height: 60}}
-        source= {require("../assets/Gsignin.png")}>
-        </Image>
+        <Image
+          style={{ resizeMode: "contain", width: 300, height: 60 }}
+          source={require("../assets/Gsignin.png")}
+        ></Image>
       </TouchableOpacity>
 
-
       <View style={{ flex: 2, alignItems: "center", justifyContent: "center" }}>
-        <Text>Oats contain more soluble fiber than whole wheat, rice or corn!</Text>
+        {
+          /* <Text>Oats contain more soluble fiber than whole wheat, rice or corn!</Text> */
+          <Text style={styles.text}> {RndmItem}</Text>
+        }
       </View>
 
       <StatusBar style="auto" />
@@ -203,6 +220,10 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
+    color: "gray",
+    justifyContent: "center",
+    flexDirection: "column",
+    textAlign: "center",
   },
 });
 
