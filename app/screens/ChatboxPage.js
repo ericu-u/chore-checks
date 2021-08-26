@@ -93,10 +93,14 @@ export default function App() {
   // }
 
   function handleonLongPress(context, pressed_message) {
-    console.log(context, pressed_message);
+    // console.log(context, pressed_message);
     const options = ["Delete", "Cancel"];
     const cancelButtonIndex = options.length;
     //var to_delete = pressed_message.docRef.id();
+    // console.log(messages)
+    // console.log(messages.pop());
+    // setMessages(messages);
+
     context
       .actionSheet()
       .showActionSheetWithOptions(
@@ -113,6 +117,15 @@ export default function App() {
                   querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
                     console.log("firebase id is:", doc.id);
+                    var ind;
+                    for (var i = 0; i < messages.length; i++) {
+                      if (messages[i]._id === pressed_message._id) {
+                        ind = i;
+                        console.log("message gone for u:", messages[i]);
+                      }
+                    }
+                    messages.splice(ind, 1);
+
                     db.collection("houses")
                       .doc("hDmQmaXM0qoZP6TuaPK4u")
                       .collection("Messages")
