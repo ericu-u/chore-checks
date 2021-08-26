@@ -17,6 +17,12 @@ import {
 import { Header, withTheme } from "react-native-elements";
 import { sub } from "react-native-reanimated";
 import { moderateScale } from "react-native-size-matters";
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+} from "@expo-google-fonts/montserrat";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -98,7 +104,7 @@ export class SettingsPage extends React.Component {
                   />
                 </View>
               </View>
-
+ 
               {/*Deadline passed button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Deadline passed</Text>
@@ -122,7 +128,7 @@ export class SettingsPage extends React.Component {
                   />
                 </View>
               </View>
-
+ 
               {/*Housemate completion button setting*/}
               <View style={styles.subTextAlign}>
                 <Text>Housemate completion</Text>
@@ -159,7 +165,6 @@ export class SettingsPage extends React.Component {
                 <Text
                   style={{
                     fontSize: 20,
-                    fontFamily: "Montserrat_500medium",
                     paddingBottom: "3%",
                   }}
                 >

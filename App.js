@@ -2,13 +2,11 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 import LoginPage from "./app/screens/LoginPage";
-import TasksPage from "./app/screens/TasksPage";
 import HouseholdPage from "./app/screens/HouseholdPage";
 import ChatboxPage from "./app/screens/ChatboxPage";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import config from "./config";
-import Test from "./app/screens/Test";
 import SettingsPage from "./app/screens/SettingsPage";
 import Drawer from "./app/screens/Drawer";
 import HouseholdPage2 from "./app/screens/HouseholdPage2";
@@ -18,6 +16,7 @@ import BigChat from "./app/screens/chatMasterThing";
 import ScuffedLogin from "./app/screens/ScuffedLogin";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import HouseholdSelectionPage2 from "./app/screens/HouseholdSelectionPage2";
 
 import "react-native-gesture-handler";
 import ProfilePage from "./app/screens/ProfilePage";
@@ -60,6 +59,12 @@ export default function App() {
           component={LoginPage}
           options={{ headerShown: false }}
         />
+        <AuthStack.Screen
+          independent={true}
+          name="HouseholdSelectionPage2"
+          component={HouseholdSelectionPage2}
+          options={{ headerShown: false }}
+        />
 
         <AuthStack.Screen
           independent={true}
@@ -69,6 +74,7 @@ export default function App() {
         />
       </AuthStack.Navigator>
     </NavigationContainer>
+    // <Drawer></Drawer>
     // <LoginPage></LoginPage>
     // <Help></Help>
     // <Help2></Help2>

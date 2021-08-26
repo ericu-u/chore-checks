@@ -80,7 +80,7 @@ const JoinHousehold = () => {
 
       navigation.reset({
         index: 0,
-        routes: [{ name: "Profile" }],
+        routes: [{ name: "Drawer" }],
       });
     })();
   };
@@ -152,7 +152,7 @@ const CreateHousehold = () => {
       // navigation.navigate("Profile");
       navigation.reset({
         index: 0,
-        routes: [{ name: "Profile" }],
+        routes: [{ name: "Drawer" }],
       });
     })();
   };

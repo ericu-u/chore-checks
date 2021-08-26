@@ -20,9 +20,19 @@ import Household from "../classes/household";
 import Task from "../classes/task";
 import { Header } from "react-native-elements";
 import Person from "../classes/person";
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+} from "@expo-google-fonts/montserrat";
+import SelectDropdown from "react-native-select-dropdown";
 
-var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
+const sortList = ["Points", "Completion Rate", "Tasks Completed"];
+
+var householdIDD = "hDmQmaXM0qoZP6TuaPK4u";
 export default class HouseholdPage extends React.Component {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -30,6 +40,8 @@ export default class HouseholdPage extends React.Component {
       unsubscribe: null, // Firebase subscription. Calling this method will mean we stop listening to firebase for updates whenever the database changes
       tasks: [], // 2D array. The i-th position of tasks contains all the tasks the person in the i-th person on people accomplished.
       unsubscribe2: null,
+      orderBy: "points",
+      hhid: "empty",
     };
   }
 
@@ -54,47 +66,37 @@ export default class HouseholdPage extends React.Component {
     const db = firebase.firestore();
 
     // Firestore subscription. Listens to database for changes.
-    var unsub = db
-      .collection("/users")
-      .where("householdID", "==", householdIDD)
-      .orderBy("points", "desc")
-      .withConverter(Person.personConverter)
-      .onSnapshot((querySnapshot) => {
-        // Whenever there is a change in firestore, this method runs
-        var tempPpl = []; // This temp array will store all the People from firestore
-        var tempTasks = [];
-        querySnapshot.forEach((doc) => {
-          tempPpl.push(doc.data());
-          tempTasks.push([]);
-        });
-        this.setState({ people: tempPpl }); // Makes the state.people equal tempPpl
-        this.setState({ tasks: tempTasks });
-
-        const setTasks = async () => {
-          tempTasks = [];
-          this.state.people.forEach(async (p) => {
-            // var temtem = await p.getTasks();
-            // console.log(p.personID, temtem);
-            // tempTasks.push();
-            // tempTasks.push(temtem);
-            // this.setState({ tasks: tempTasks });
-            // console.log("tasks", this.state.tasks);
-            // console.log("people", this.state.people);
+    const uid = firebase.auth().currentUser.uid;
+    db.doc("users/" + uid).onSnapshot((doc) => {
+      this.setState({ hhid: doc.data().householdID });
+      console.log("household id in snapshot1:", this.state.hhid);
+      var unsub = db
+        .collection("/users")
+        .where("householdID", "==", this.state.hhid)
+        .orderBy(this.state.orderBy, "desc")
+        .withConverter(Person.personConverter)
+        .onSnapshot((querySnapshot) => {
+          // Whenever there is a change in firestore, this method runs
+          var tempPpl = []; // This temp array will store all the People from firestore
+          var tempTasks = [];
+          querySnapshot.forEach((doc) => {
+            tempPpl.push(doc.data());
             tempTasks.push([]);
           });
-        };
-        setTasks();
-      });
+          this.setState({ people: tempPpl }); // Makes the state.people equal tempPpl
+          this.setState({ tasks: tempTasks });
+        });
 
-    this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
+      this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
+    });
   }
 
   componentWillUnmount() {
     // This method runs whenever we stop rendering the component
-    this.state.unsubscribe(); // We end the subscription here so we don't waste resources
+    console.log("DISMOUNT!!!!!!!!!!!!!!!!!!");
+    if (this.state.unsubscribe !== null) this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
   render() {
-    // console.log(this.state.people);
     return (
       //replace all margins/paddings with relative positioning based on device
 
@@ -102,10 +104,59 @@ export default class HouseholdPage extends React.Component {
         style={{ flex: 1 }}
         source={require("../assets/background-gradient.jpg")}
       >
-        <View style={{ flexDirection: "column", alignItems: "center" }}>
-          <View style={styles.statusHeader}>
-            <Text style={styles.statusHeaderText}>Sort By Points</Text>
-          </View>
+        <View style={styles.statusHeader}>
+          {/* THE CRUCIAL DROP DOWN MENU 
+                FOR ACTUALLY SORTING      */}
+          <SelectDropdown
+            buttonStyle={styles.dropdown3BtnStyle}
+            dropdownStyle={styles.dropdown3DropdownStyle}
+            rowStyle={styles.dropdown3RowStyle}
+            defaultButtonText={"Points"}
+            data={sortList}
+            onSelect={(selectedItem, index) => {
+              if (selectedItem === "Points") {
+                this.state.orderBy = "points";
+              }
+              if (selectedItem === "Completion Rate") {
+                this.state.orderBy = "successRate";
+              }
+              if (selectedItem === "Tasks Completed") {
+                this.state.orderBy = "tasksCompleted";
+              }
+              const db = firebase.firestore();
+              var uR = db.collection("/users");
+              var pain = [];
+              uR.where("householdID", "==", this.state.hhid)
+                .orderBy(this.state.orderBy, "desc")
+                .withConverter(Person.personConverter)
+                .get()
+                .then((querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    // console.log(doc.id, " => ", doc.data());
+                    pain.push(doc.data());
+                  });
+                  // this.setState({ tasks: pain });
+                  this.setState({ people: pain });
+
+                  // console.log(this.state.tasks);
+                })
+                .catch((error) => {
+                  console.log("Error getting documents: ", error);
+                });
+              // console.log(this.state.orderBy, index);
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              // text represented after item is selected
+              // if data array is an array of objects then return selectedItem.property to render after item is selected
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              // text represented for each item in dropdown
+              // if data array is an array of objects then return item.property to represent item in dropdown
+              return item;
+            }}
+          />
         </View>
 
         <SectionList
@@ -130,12 +181,15 @@ const styles = StyleSheet.create({
     //height: "30%", //replace with relative positioning based on device
     justifyContent: "center",
     marginTop: "6%",
-    marginBottom: "6%",
+    flexDirection: "row",
+    //marginBottom: "6%",
   },
   statusHeaderText: {
     fontSize: 25,
     justifyContent: "center",
-    textAlign: "center",
+    //textAlign: "center",
+    fontFamily: "Montserrat_500Medium",
+    flexDirection: "row",
   },
   individualGroup: {
     justifyContent: "space-evenly",
@@ -178,6 +232,32 @@ const styles = StyleSheet.create({
     //margin: 'auto',
     paddingLeft: "20%",
     paddingTop: "15%",
+  },
+  dropdown3BtnStyle: {
+    width: "50%",
+    height: 30,
+    backgroundColor: "#FFF",
+    //paddingHorizontal: 0,
+    borderWidth: 0.2,
+    borderRadius: 4,
+    borderColor: "black",
+    marginBottom: "5%",
+    alignItems: "center",
+    alignContent: "center",
+    backgroundColor: "#dcf3fc",
+  },
+  dropdown3DropdownStyle: { backgroundColor: "slategray" },
+  dropdown3RowStyle: {
+    //backgroundColor: "slategray",
+    borderBottomColor: "#444",
+    height: 40,
+  },
+  dropdown3RowChildStyle: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingHorizontal: 18,
   },
 });
 
@@ -224,16 +304,25 @@ const Item = ({ title, index, tasksDone }) => (
           flex: 1,
           textAlign: "center",
           paddingBottom: "3%",
+          fontFamily: "Montserrat_500Medium",
         }}
       >
         {title.name}
       </Text>
-      <Text style={{ textAlign: "center" }}>Points: {title.points}</Text>
-      <Text style={{ textAlign: "center" }}>
+      <Text
+        style={{ textAlign: "center", fontFamily: "Montserrat_400Regular" }}
+      >
+        Points: {title.points}
+      </Text>
+      <Text
+        style={{ textAlign: "center", fontFamily: "Montserrat_400Regular" }}
+      >
         Tasks Completed: {title.tasksCompleted}
       </Text>
 
-      <Text style={{ textAlign: "center" }}>
+      <Text
+        style={{ textAlign: "center", fontFamily: "Montserrat_400Regular" }}
+      >
         Completion Rate: {title.successRate}
       </Text>
     </View>

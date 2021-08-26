@@ -1,31 +1,88 @@
-import React from "react";
-import { Image, StyleSheet, Button, View, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Image, StyleSheet, Button, View, Text, Clipboard } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
+import { DrawerNavigator } from "react-navigation";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_700Bold,
+} from "@expo-google-fonts/montserrat";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import * as firebase from "firebase";
 
-function Sidebar({ ...props }) {
-  return (
-    <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
-      <View style={styles.horizontalLine} />
-      <View style={styles.container}>
-        <View>
-          <Image
-            source={require("../assets/rounded-square.png")}
-            style={styles.square}
-          />
-          <View style={styles.textBorder}>
-            <Text style={styles.titleText}>Bubloo 7</Text>
-            <Text style={styles.bodyText}>{"\u2022"} Bubloo 7 house</Text>
-            <Text style={styles.bodyText}>{"\u2022"} -1 points </Text>
-          </View>
+
+function Sidebar(props) {
+  const [copiedText, setCopiedText] = useState("frick");
+
+  let [fontsLoaded] = useFonts({
+    Montserrat_400Regular,
+    Montserrat_500Medium,
+    Montserrat_700Bold,
+  });
+
+  useEffect(() => {
+    const uid = firebase.auth().currentUser.uid;
+    firebase.firestore().doc("users/" + uid).onSnapshot((doc) => {
+      setCopiedText(doc.data().householdID);
+    });
+  },[]);
+
+  const copyToClipboard = () => {
+    Clipboard.setString(copiedText);
+    alert("Copied Household ID!");
+  };
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+
+        <View style={styles.horizontalLine} />
+        {/* add member button */}
+        <View style={styles.addMemberButton}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log("copied household id");
+              copyToClipboard();
+            }}
+          >
+            <Text style={styles.addMemberText}>Add Member</Text>
+          </TouchableOpacity>
         </View>
-      </View>
-    </DrawerContentScrollView>
-  );
+        {/* change household button */}
+        <View style={styles.changeHouseholdButton}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log("household changed2");
+              props.navigation.navigate("Change Household");
+            }}
+          >
+            <Text style={styles.changeHouseholdText}>Change Household</Text>
+          </TouchableOpacity>
+        </View>
+        {/* sign out button */}
+        <View style={styles.signOutButton}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log("signed out button2");
+              props.navigation.navigate("Log out");
+            }}
+          >
+            <Text style={styles.signOutText}>Sign Out</Text>
+          </TouchableOpacity>
+        </View>
+      </DrawerContentScrollView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -33,40 +90,62 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 1,
     margin: "10%",
-    marginTop: "8%",
-    marginBottom: "7%",
+    marginTop: "-40%",
     backgroundColor: "black",
   },
-  container: {
-    flex: 1,
+  addMemberButton: {
+    alignSelf: "center",
     alignItems: "center",
+    justifyContent: "center",
+    paddingTop: "3%",
+    paddingBottom: "3%",
+    paddingRight: "5%",
+    paddingLeft: "5%",
+    marginTop: "2%",
+    borderRadius: 50,
+    borderColor: "black",
+    borderWidth: 1,
   },
-  square: {
-    width: 220,
-    height: 220,
-  },
-  textBorder: {
-    position: "absolute",
-    right: 0,
-    left: 0,
-    top: 0,
-    bottom: 0,
-    paddingTop: "10%",
-    paddingBottom: "10%",
-    paddingLeft: "10%",
-    paddingRight: "10%",
-  },
-  titleText: {
-    paddingBottom: "10%",
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 27,
-  },
-  bodyText: {
-    paddingBottom: "8%",
-    paddingLeft: "10%",
-    paddingRight: "10%",
+  addMemberText: {
+    color: "#555555",
     fontSize: 20,
+    fontFamily: "Montserrat_500Medium",
+  },
+  changeHouseholdButton: {
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: "3%",
+    paddingBottom: "3%",
+    paddingRight: "5%",
+    paddingLeft: "5%",
+    marginTop: "7%",
+    borderRadius: 50,
+    borderColor: "black",
+    borderWidth: 1,
+  },
+  changeHouseholdText: {
+    color: "blue",
+    fontSize: 20,
+    fontFamily: "Montserrat_500Medium",
+  },
+  signOutButton: {
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: "3%",
+    paddingBottom: "3%",
+    paddingRight: "5%",
+    paddingLeft: "5%",
+    marginTop: "7%",
+    borderRadius: 50,
+    borderColor: "black",
+    borderWidth: 1,
+  },
+  signOutText: {
+    color: "#D21404",
+    fontSize: 20,
+    fontFamily: "Montserrat_500Medium",
   },
 });
 

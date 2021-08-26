@@ -25,30 +25,10 @@ function LoginPage({ navigation }) {
   //const [unsub, setUnsub] = useState(null);
   const [unsubscriber, setUnsubscriber] = useState(null);
 
-  console.log("boobs");
-
+  console.log("tits");
+  firebase.auth().signOut();
   useEffect(() => {
     const please = firebase.auth().onAuthStateChanged(function (user) {
-      // if (user) {
-      //   console.log(" uh user here i guess");
-      //   (async () => {
-      //     const db = firebase.firestore();
-      //     var docRef = db.doc("users/" + user.uid);
-      //     var doc = await docRef.get();
-      //     if (doc.exists) {
-      //       console.log("user in database");
-      //       if (doc.exists) {
-      //         console.log("doc exists!!!!!!!!!!!!!!!!");
-      //         navigation.reset({
-      //           index: 0,
-      //           routes: [{ name: "Drawer" }],
-      //         });
-      //       }
-      //     }
-      //   })();
-      // }
-
-      // old func
       if (user) {
         const db = firebase.firestore();
 
@@ -56,20 +36,13 @@ function LoginPage({ navigation }) {
           var docRef = db.doc("users/" + user.uid);
           var doc = await docRef.get();
           console.log("boobs2");
+
           if (doc.exists) {
             console.log("doc exists!!!!!!!!!!!!!!!!");
-
-            if (doc.data().householdID === null) {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "HouseholdSelectionPage2" }],
-              });
-            } else {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "Drawer" }],
-              });
-            }
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Drawer" }],
+            });
           } else {
             console.log("first time!!!!!");
             var newP = new Person(
@@ -91,7 +64,7 @@ function LoginPage({ navigation }) {
             await docRef.withConverter(Person.personConverter).set(newP);
             navigation.reset({
               index: 0,
-              routes: [{ name: "HouseholdSelectionPage2" }],
+              routes: [{ name: "Drawer" }],
             });
           }
         })();
@@ -100,23 +73,73 @@ function LoginPage({ navigation }) {
       }
     });
     return function cleanup() {
+      // unsub();
       if (unsubscriber !== null && unsubscriber !== undefined) {
         unsubscriber();
       }
       please();
     };
-  }, []);
+  });
 
-  // useEffect() => {
-  //   console.log("effect");
-  //   var oatmealfacts_array = [
-  //     "Oatmeal fact ",
-  //     "Oatmeal fact2",
-  //     "Oatmeal fact3",
-  //   ];
-  //   setFact =
-  //     oatmealfacts_array[Math.floor(Math.random() * oatmealfactsarray.length)];
-  // };
+  /*
+  setUnsub(
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        const db = firebase.firestore();
+
+        (async () => {
+          var docRef = db.doc("users/" + user.uid);
+          var doc = await docRef.get();
+          console.log("boobs2");
+
+          if (doc.exists) {
+            console.log("doc exists!!!!!!!!!!!!!!!!");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Drawer" }],
+            });
+          } else {
+            console.log("first time!!!!!");
+            var newP = new Person(
+              user.uid,
+              user.displayName,
+              user.photoURL,
+              null,
+              0,
+              0,
+              0,
+              0,
+              true,
+              true,
+              true,
+              true,
+              true
+            );
+
+            await docRef.withConverter(Person.personConverter).set(newP);
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Drawer" }],
+            });
+          }
+        })();
+      } else {
+        // No user is signed in.
+      }
+    })
+  );
+*/
+  useEffect;
+  () => {
+    console.log("effect");
+    var oatmealfacts_array = [
+      "Oatmeal fact ",
+      "Oatmeal fact2",
+      "Oatmeal fact3",
+    ];
+    setFact =
+      oatmealfacts_array[Math.floor(Math.random() * oatmealfactsarray.length)];
+  };
 
   isUserEqual = (googleUser, firebaseUser) => {
     if (firebaseUser) {

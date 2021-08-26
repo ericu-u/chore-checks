@@ -25,44 +25,31 @@ function LoginPage({ navigation }) {
   //const [unsub, setUnsub] = useState(null);
   const [unsubscriber, setUnsubscriber] = useState(null);
 
-  console.log("boobs");
+  // Initialize Firebase
 
+  // console.log("refreshed");
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  } else {
+    firebase.app(); // if already initialized, use that one
+  }
+  firebase.auth().signOut();
   useEffect(() => {
     const please = firebase.auth().onAuthStateChanged(function (user) {
-      // if (user) {
-      //   console.log(" uh user here i guess");
-      //   (async () => {
-      //     const db = firebase.firestore();
-      //     var docRef = db.doc("users/" + user.uid);
-      //     var doc = await docRef.get();
-      //     if (doc.exists) {
-      //       console.log("user in database");
-      //       if (doc.exists) {
-      //         console.log("doc exists!!!!!!!!!!!!!!!!");
-      //         navigation.reset({
-      //           index: 0,
-      //           routes: [{ name: "Drawer" }],
-      //         });
-      //       }
-      //     }
-      //   })();
-      // }
-
-      // old func
       if (user) {
         const db = firebase.firestore();
 
         (async () => {
           var docRef = db.doc("users/" + user.uid);
           var doc = await docRef.get();
-          console.log("boobs2");
+
           if (doc.exists) {
             console.log("doc exists!!!!!!!!!!!!!!!!");
-
             if (doc.data().householdID === null) {
+              console.log("hh is null!!!!!!");
               navigation.reset({
                 index: 0,
-                routes: [{ name: "HouseholdSelectionPage2" }],
+                routes: [{ name: "hhsp" }],
               });
             } else {
               navigation.reset({
@@ -91,7 +78,7 @@ function LoginPage({ navigation }) {
             await docRef.withConverter(Person.personConverter).set(newP);
             navigation.reset({
               index: 0,
-              routes: [{ name: "HouseholdSelectionPage2" }],
+              routes: [{ name: "hhsp" }],
             });
           }
         })();
@@ -100,23 +87,25 @@ function LoginPage({ navigation }) {
       }
     });
     return function cleanup() {
+      // unsub();
       if (unsubscriber !== null && unsubscriber !== undefined) {
         unsubscriber();
       }
       please();
     };
-  }, []);
+  });
 
-  // useEffect() => {
-  //   console.log("effect");
-  //   var oatmealfacts_array = [
-  //     "Oatmeal fact ",
-  //     "Oatmeal fact2",
-  //     "Oatmeal fact3",
-  //   ];
-  //   setFact =
-  //     oatmealfacts_array[Math.floor(Math.random() * oatmealfactsarray.length)];
-  // };
+  useEffect;
+  () => {
+    console.log("effect");
+    var oatmealfacts_array = [
+      "Oatmeal fact ",
+      "Oatmeal fact2",
+      "Oatmeal fact3",
+    ];
+    setFact =
+      oatmealfacts_array[Math.floor(Math.random() * oatmealfactsarray.length)];
+  };
 
   isUserEqual = (googleUser, firebaseUser) => {
     if (firebaseUser) {

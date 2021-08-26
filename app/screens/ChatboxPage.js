@@ -1,5 +1,4 @@
 //@refresh _reset
-
 import React, { useState, useEffect, useCallback } from "react";
 import {
   GiftedChat,
@@ -29,8 +28,6 @@ if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
 
-const db = firebase.firestore();
-const chatsRef = db.collection("/houses/" + householdIDD + "/Messages");
 // const chatsRef = db.collection("/chat2");
 
 export default function App() {
@@ -39,19 +36,34 @@ export default function App() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    readUser();
-    const unsubscribe = chatsRef.onSnapshot((querySnapshot) => {
-      const messagesFirestore = querySnapshot
-        .docChanges()
-        .filter(({ type }) => type === "added")
-        .map(({ doc }) => {
-          const message = doc.data();
+    var unsubscribe = () => {
+      console.log("UNSUBBED EARLY!!!!!!!!!!!!!!!!!!q");
+    };
+    const db = firebase.firestore();
 
-          return { ...message, createdAt: message.createdAt.toDate() };
-        })
-        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-      appendMessages(messagesFirestore);
-    });
+    (async () => {
+      const uid = firebase.auth().currentUser.uid;
+      db.doc("users/" + uid).onSnapshot((doc) => {
+        householdIDD = doc.data().householdID;
+        const chatsRef = db.collection("/houses/" + householdIDD + "/Messages");
+
+        AsyncStorage.removeItem("user");
+        readUser();
+        unsubscribe = chatsRef.onSnapshot((querySnapshot) => {
+          const messagesFirestore = querySnapshot
+            .docChanges()
+            .filter(({ type }) => type === "added")
+            .map(({ doc }) => {
+              const message = doc.data();
+
+              return { ...message, createdAt: message.createdAt.toDate() };
+            })
+            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          appendMessages(messagesFirestore);
+        });
+      });
+    })();
+
     return () => unsubscribe();
   }, []);
 
@@ -71,12 +83,18 @@ export default function App() {
     }
   }
   async function handlePress() {
-    const _id = Math.random().toString(36).substring(7);
-    const user = { _id, name };
+    // const _id = Math.random().toString(36).substring(7);
+    // const user = { _id, name };
+    const _id = firebase.auth().currentUser.uid;
+    const name = firebase.auth().currentUser.displayName;
+    const avatar = firebase.auth().currentUser.photoURL;
+    const user = { _id, name, avatar };
     await AsyncStorage.setItem("user", JSON.stringify(user));
     setUser(user);
   }
   async function handleSend(messages) {
+    const chatsRef = firebase.firestore().collection("/houses/" + householdIDD + "/Messages");
+
     const writes = messages.map((m) => chatsRef.add(m));
     await Promise.all(writes);
   }
@@ -154,16 +172,7 @@ export default function App() {
   }
 
   if (!user) {
-    return (
-      <View alignitmes="center">
-        <TextInput
-          placeholder="Future google signin"
-          value={name}
-          onChangeText={setName}
-        />
-        <Button onPress={handlePress} title="type here" />
-      </View>
-    );
+    handlePress();
   }
 
   // onTextChange = (value, props) => {

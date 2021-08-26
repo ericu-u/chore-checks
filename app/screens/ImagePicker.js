@@ -5,13 +5,17 @@ import * as Permissions from "expo-permissions";
 import { IconButton, Colors } from "react-native-paper";
 import * as firebase from "firebase";
 
-var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
-
+// var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
+// var householdIDD = "hDmQmaXM0qoZP6TuaPK4u";
 // Source: https://github.com/shnrndk/office_messenger/blob/master/Components/ImagePicker/ImgPicker.js
 export default class ImgPicker extends React.Component {
   state = {
     image: null,
     imageURL: null,
+    householdID: "empty",
+    unsubscribe: () => {
+      console.log("IMAGE PICKER DISMOUNTED EARLY");
+    },
   };
 
   render() {
@@ -28,7 +32,36 @@ export default class ImgPicker extends React.Component {
   }
 
   componentDidMount() {
+    const firebaseConfig = {
+      apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
+      authDomain: "chores-97427.firebaseapp.com",
+      projectId: "chores-97427",
+      storageBucket: "chores-97427.appspot.com",
+      messagingSenderId: "409040868260",
+      appId: "1:409040868260:web:f017bd7c65851944802731",
+      measurementId: "G-4NVH0ELYEG",
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    } else {
+      firebase.app();
+    }
+    const db = firebase.firestore();
+
+    const uid = firebase.auth().currentUser.uid;
+    var unsub = db.doc("users/" + uid).onSnapshot((doc) => {
+      this.setState({ householdID: doc.data().householdID });
+    });
+
+    this.setState({ unsubscribe: unsub });
+
     this.getPermissionAsync();
+  }
+
+  componentWillUnmount() {
+    // This method runs whenever we stop rendering the component
+    this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
 
   getPermissionAsync = async () => {
@@ -109,21 +142,19 @@ export default class ImgPicker extends React.Component {
             }
 
             const db = firebase.firestore();
-            // const chatsRef = db.collection("/houses/" + householdIDD + "/Messages");
             const _id = Math.random().toString(36).substring(7);
 
             const chatsRef = db.doc(
-              "/houses/" + householdIDD + "/Messages/" + _id
+              "/houses/" + this.state.householdID + "/Messages/" + _id
             );
             chatsRef.set({
               _id: _id,
               createdAt: firebase.firestore.Timestamp.now(),
               image: this.state.imageURL,
               user: {
-                _id: 1,
-                avatar:
-                  "https://lh3.googleusercontent.com EbXw8rOdYxOGdXEFjgNP8lh-YAuUxwhOAe2jhrz3sgqvPeMac6a6tHvT35V6YMbyNvkZL4R_a2hcYBrtfUhLvhf-N2X3OB9cvH4uMw=w1064-v0",
-                name: "photo admin thingy",
+                _id: firebase.auth().currentUser.uid,
+                avatar: firebase.auth().currentUser.photoURL,
+                name: firebase.auth().currentUser.displayName,
               },
             });
           });

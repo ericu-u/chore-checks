@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -10,80 +10,134 @@ import {
   TouchableHighlight,
 } from "react-native";
 import * as firebase from "firebase";
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+} from "@expo-google-fonts/montserrat";
+import Person from "../classes/person";
 
-const personIDD = "p0VVeQsUlU6suH3g5ru5R";
+// const personIDD = firebase.auth().currentUser.uid;
 
-console.log(firebase.auth().currentUser);
+// console.log(firebase.auth().currentUser);
 function ProfilePage(props) {
-  return (
-    //Replace profile picture with firebase profile
-    //FlatList is default scrollable. Can be made unscrollable.
-    //Most statistics are calculatable.
-    <ImageBackground
-      style={{ flex: 1 }}
-      source={require("../assets/background-gradient.jpg")}
-    >
-      <SafeAreaView style={styles.container}>
-        <View style={{ flex: 0.65 }}>
-          <Image
-            source={{
-              uri: "https://lh3.googleusercontent.com/a-/AOh14GjpWcYnEoZq4pnBEIBPsbzpE7MlS1yok8cEQjR2=s96-c",
-            }}
-            style={styles.image}
-          />
-          <Text style={styles.username}>Bubloo 7</Text>
-        </View>
-
-        <View style={styles.householdBackground}>
-          <View style={styles.container}>
-            <Text style={styles.householdName}>Total Points</Text>
-          </View>
-        </View>
-        <View
-          style={{
-            flex: 1.2,
-            flexDirection: "row",
-          }}
-        >
-          <View style={styles.nestedContainerBackground}>
-            <View style={styles.container}>
-              <Text style={styles.nestedContainerTitle}>Tasks</Text>
-              <FlatList
-                data={[
-                  { key: "Walk the dog" },
-                  { key: "Walk the other dog" },
-                  { key: "Take a shower" },
-                  { key: "Buy groceries" },
-                  { key: "Invest this month's rent in Gamestop stonks" },
-                  { key: "Lose it all" },
-                ]}
-                renderItem={({ item }) => (
-                  <Text style={styles.list}>{item.key}</Text>
-                )}
-              />
-            </View>
-          </View>
-          <View style={styles.nestedContainerBackground}>
-            <View style={styles.container}>
-              <Text style={styles.nestedContainerTitle}>Statistics</Text>
-              <FlatList
-                data={[
-                  { key: "Tasks Done: \n 60" },
-                  { key: "Completion Rate: \n 91.7%" },
-                  { key: "On Time Tasks: \n 50" },
-                  { key: "Late Tasks: \n 5" },
-                  { key: "Missed Tasks: \n 5" },
-                ]}
-                renderItem={({ item }) => (
-                  <Text style={styles.list}>{item.key}</Text>
-                )}
-              />
-            </View>
-          </View>
-        </View>
-      </SafeAreaView>
-    </ImageBackground>
+  const [name, setName] = useState("Loading...");
+  const [points, setPoints] = useState("Loading...");
+  const [tasks, setTasks] = useState([{ key: "Loading..." }]);
+  const [tasksdone, setTasksdone] = useState("Loading...");
+  const [tasksfailed, setTasksfailed] = useState("Loading...");
+  const [completion, setCompletion] = useState("Loading...");
+  const [pfp, setPfp] = useState(
+    "https://firebasestorage.googleapis.com/v0/b/chores-97427.appspot.com/o/standard-account90.png?alt=media&token=a8c59bff-000f-48cc-a690-c51e845bc6d6"
   );
+
+  // const [ontime, setOntime] = useState("Loading...");
+  // const [late, setLate] = useState("Loading...");
+
+  useEffect(() => {
+    const pls = firebase.auth().onAuthStateChanged(function (user) {
+      (async () => {
+        var pid = user.uid;
+        const db = firebase.firestore();
+        var pObj = (
+          await db
+            .doc("users/" + pid)
+            .withConverter(Person.personConverter)
+            .get()
+        ).data();
+
+        //console.log(pObj);
+        var tObjs = await pObj.getTasks();
+        // console.log("tasks", tObjs);
+        var taskName = [];
+        for (var i = 0; i < tObjs.length; i++) {
+          taskName.push({ key: tObjs[i].name });
+        }
+        setName(pObj.name);
+        setPoints(pObj.points + " points");
+        setTasks(taskName);
+        setTasksdone(pObj.tasksCompleted);
+        setCompletion(pObj.successRate);
+        setPfp(pObj.profilePic);
+        setTasksfailed(pObj.tasksFailed);
+      })();
+    });
+
+    return function cleanup() {
+      pls();
+    };
+  }, []);
+
+  //Replace profile picture with firebase profile
+  //FlatList is default scrollable. Can be made unscrollable.
+  //Most statistics are calculatable.
+  let [fontsLoaded] = useFonts({
+    Montserrat_500Medium,
+    Montserrat_600SemiBold,
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      <ImageBackground
+        style={{ flex: 1 }}
+        source={require("../assets/background-gradient.jpg")}
+      >
+        <SafeAreaView style={styles.container}>
+          <View style={{ flex:.6, alignItems: 'center', alignContent: 'center', }}>
+            <Image
+              source={{
+                uri: pfp,
+              }}
+              style={styles.image}
+            />
+            <Text style={styles.username}>{name}</Text>
+          </View>
+
+          <View style={styles.householdBackground}>
+            <View style={styles.container}>
+              <Text style={styles.householdName}>{points}</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flex: 1.2,
+              flexDirection: "row",
+            }}
+          >
+            <View style={styles.nestedContainerBackground}>
+              <View style={styles.container}>
+                <Text style={styles.nestedContainerTitle}>Tasks</Text>
+                <FlatList
+                  data={tasks}
+                  renderItem={({ item }) => (
+                    <Text style={styles.list}>{item.key}</Text>
+                  )}
+                />
+              </View>
+            </View>
+            <View style={styles.nestedContainerBackground}>
+              <View style={styles.container}>
+                <Text style={styles.nestedContainerTitle}>Statistics</Text>
+                <FlatList
+                  data={[
+                    { key: "Tasks Done: " + tasksdone },
+                    { key: "Late Tasks: " + tasksfailed },
+                    { key: "Completion Rate: " + completion },
+                  ]}
+                  renderItem={({ item }) => (
+                    <Text style={styles.list}>{item.key}</Text>
+                  )}
+                />
+              </View>
+            </View>
+          </View>
+        </SafeAreaView>
+      </ImageBackground>
+    );
+  }
 }
 
 //All styles
@@ -94,11 +148,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   image: {
-    flex: 0.8,
+    //flex: 0.8,
     resizeMode: "contain",
     width: 130,
     height: 130,
-    borderRadius: 130 / 2,
+    borderRadius: 100, //previously 130/2
     alignItems: "center",
     marginTop: "5%",
     marginLeft: "1.5%",
@@ -109,6 +163,7 @@ const styles = StyleSheet.create({
     bottom: "1%",
     left: "1.6%",
     textAlign: "center",
+    fontFamily: "Montserrat_600SemiBold",
   },
   householdBackground: {
     flex: 0.15,
@@ -129,6 +184,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "center",
+    fontFamily: "Montserrat_600SemiBold",
   },
   nestedContainerBackground: {
     flex: 1,
@@ -136,7 +192,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderColor: "black",
     borderWidth: 1,
-    marginLeft: "5%",
+    marginLeft: "3%",
     marginRight: "2%",
     height: "83%",
   },
@@ -147,6 +203,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
+    fontFamily: "Montserrat_600SemiBold",
   },
   list: {
     marginLeft: "10%",
@@ -154,6 +211,7 @@ const styles = StyleSheet.create({
     marginRight: "10%",
     fontSize: 17,
     textAlign: "left",
+    fontFamily: "Montserrat_500Medium",
   },
 });
 

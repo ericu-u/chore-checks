@@ -1,7 +1,7 @@
 var faker = require("faker");
 var firebase = require("firebase");
 
-// TODO SCROLL TO THE BOTTOM OF THE FILE DO NOT EDIT ANYTHING ELSE. Please run this program with node data_gen2.js
+// TODO you probably should not run this program lol
 
 class Person {
   /**
@@ -196,7 +196,15 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-async function newPerson(householdID, num) {
+/**
+ * 
+ * @param {*} householdID 
+ * @param {*} uid 
+ * @param {*} pfp 
+ * @param {*} name 
+ * @returns 
+ */
+async function newPerson(householdID, uid, pfp, name) {
   var firebaseConfig = {
     apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
     authDomain: "chores-97427.firebaseapp.com",
@@ -217,8 +225,9 @@ async function newPerson(householdID, num) {
 
   var ids = [];
 
+  num = 1;
   for (var i = 0; i < num; i++) {
-    var id = generateID("p");
+    var id = uid;
 
     var completed = getRandomInt(10);
 
@@ -232,8 +241,8 @@ async function newPerson(householdID, num) {
 
     var newPerson = new Person(
       id,
-      faker.name.findName(),
-      faker.image.avatar(),
+      name,
+      pfp,
       householdID,
       getRandomInt(1000),
       completed,
@@ -291,22 +300,82 @@ async function newTask(householdID, num, personIDs) {
       repeat = null;
     }
 
+    completed = null;
+    inProgress = null;
+    assigned = null;
+
+    if (getRandomInt(10) < 4) {
+      inProgress = personIDs[getRandomInt(personIDs.length)];
+      assigned = inProgress;
+    }
+    var id = generateID("t");
+
+    ids.push(id);
+
+    var startDate = Date.now() + getRandomInt(12096000);
+
+    var newTask = new Task(
+      faker.lorem.words(),
+      startDate + getRandomInt(12096000),
+      getRandomInt(90) + 10,
+      repeat,
+      startDate,
+      faker.lorem.sentence(),
+      householdID,
+      completed,
+      inProgress,
+      assigned,
+      id
+    );
+    await db
+      .doc("/houses/" + householdID + "/Tasks/" + id)
+      .set(Object.assign({}, newTask));
+  }
+  return ids;
+}
+
+/**
+ * Adds num Tasks to the given household
+ * @param {String} householdID Household you want to add tasks into
+ * @param {number} num number of tasks you want to add
+ * @param {Array} personID List of ppl in the household
+ * @returns list containing ids of all the tasks you just added
+ */
+async function newCompletedTask(householdID, num, personID) {
+  var firebaseConfig = {
+    apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
+    authDomain: "chores-97427.firebaseapp.com",
+    projectId: "chores-97427",
+    storageBucket: "chores-97427.appspot.com",
+    messagingSenderId: "409040868260",
+    appId: "1:409040868260:web:7b6d1f00e29554af802731",
+    measurementId: "G-8D3XVC7R9T",
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  } else {
+    firebase.app();
+  }
+
+  const db = firebase.firestore();
+
+  var ids = [];
+
+  for (var i = 0; i < num; i++) {
+    var completeProgress = getRandomInt(3);
+
+    var completed, inProgress, assigned, repeat;
+
     if (getRandomInt(2) === 0) {
-      assigned = null;
+      repeat = getRandomInt(12096000);
     } else {
-      assigned = personIDs[getRandomInt(personIDs.length)];
+      repeat = null;
     }
 
-    if (completeProgress === 0) {
-      completed = assigned;
-      inProgress = null;
-    } else if (completeProgress === 1) {
-      completed = null;
-      inProgress = assigned;
-    } else {
-      completed = null;
-      inProgress = null;
-    }
+    completed = personID;
+    inProgress = personID;
+    assigned = personID;
 
     var id = generateID("t");
 
@@ -331,7 +400,6 @@ async function newTask(householdID, num, personIDs) {
       .doc("/houses/" + householdID + "/Tasks/" + id)
       .set(Object.assign({}, newTask));
   }
-
   return ids;
 }
 
@@ -357,13 +425,12 @@ async function newTxtMessage(householdID, nums, personIDs) {
   var ids = [];
 
   for (var i = 0; i < nums; i++) {
-    var num = getRandomInt(9);
+    var num = getRandomInt(15);
     var id = generateID("m");
 
     ids.push(id);
     var photoURL, personID, text;
     if (num === 0) {
-      photoURL = faker.image.imageUrl();
       text = faker.lorem.words();
     } else if (num === 1) {
       photoURL = null;
@@ -377,6 +444,10 @@ async function newTxtMessage(householdID, nums, personIDs) {
     } else if (num === 4) {
       photoURL = null;
       text = faker.lorem.words();
+    } else if (num === 5) {
+      text = null;
+      photoURL = fake.image.animals;
+      console.log(photoURL);
     } else {
       photoURL = null;
       text = faker.lorem.sentence();
@@ -443,17 +514,8 @@ async function create(numPpl, numTasks, numMsgs) {
   second parameter is the number of tasks, third parameter is the number of messages.
   The below statement creates a household with 3 ppl, 2 tasks, 17 messages.
   */
-  console.log("new house at:", await create(3, 8, 17));
-
-  console.log("new house at:", await create(2, 12, 35));
-  console.log("new house at:", await create(3, 10, 40));
-  console.log("new house at:", await create(4, 11, 53));
-  console.log("new house at:", await create(3, 14, 10));
-  console.log("new house at:", await create(5, 9, 123));
-  console.log("new house at:", await create(3, 5, 98));
-  console.log("new house at:", await create(2, 4, 75));
-  console.log("new house at:", await create(3, 8, 60));
-  console.log("new house at:", await create(4, 6, 35));
-
+  // console.log("new house at:", await create(3, 2, 17));
+  // console.log("Data added. Press CTRL-C to close the program.");
+  await newPerson("ourHouse", "9rn9QRQQcSevXkZHA1zVzFIhoCC3", );
   console.log("Data added. Press CTRL-C to close the program.");
 })();
