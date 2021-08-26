@@ -22,7 +22,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-gesture-handler";
 import ProfilePage from "./app/screens/ProfilePage";
 
-firebase.auth().signOut();
+// firebase.auth().signOut();
 var firebaseConfig = {
   apiKey: config.FIREBASE_KEY,
   authDomain: "chores-97427.firebaseapp.com",

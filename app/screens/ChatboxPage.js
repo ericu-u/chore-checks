@@ -105,14 +105,36 @@ export default function App() {
           switch (buttonIndex) {
             case 0:
               let db = firebase.firestore();
-              db.collection("/houses/")
-                .doc("hDmQmaXM0qoZP6TuaPK4u")
-                .collection("/Messages/")
-                .doc(pressed_message.id) // this line works if you hardcode the id
-                .delete()
-                .then(() => {
-                  console.log("Deleted");
+
+              db.collection("/houses/hDmQmaXM0qoZP6TuaPK4u/Messages")
+                .where("_id", "==", pressed_message._id)
+                .get()
+                .then((querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    console.log("firebase id is:", doc.id);
+                    db.collection("houses")
+                      .doc("hDmQmaXM0qoZP6TuaPK4u")
+                      .collection("Messages")
+                      .doc(doc.id) // this line works if you hardcode the id
+                      .delete()
+                      .then(() => {
+                        console.log("Deleted");
+                      });
+                  });
+                })
+                .catch((error) => {
+                  console.log("Error getting documents: ", error);
                 });
+            // console.log("id: ", pressed_message._id)
+            // db.collection("houses")
+            //   .doc("hDmQmaXM0qoZP6TuaPK4u")
+            //   .collection("Messages")
+            //   .where("_id", "==", pressed_message._id) // this line works if you hardcode the id
+            //   .deleteDoc()
+            //   .then(() => {
+            //     console.log("Deleted");
+            //   });
           }
         }
       );
