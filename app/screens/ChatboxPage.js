@@ -12,8 +12,9 @@ import { StyleSheet, TextInput, View, Button, ActionSheet } from "react-native";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import ImgPicker from "./ImagePicker";
+import { doc, deleteDoc } from "firebase/firestore";
 
-var householdIDD = "hHeLFGtKHEHl6PPMwf9ek";
+var householdIDD = "hDmQmaXM0qoZP6TuaPK4u";
 const firebaseConfig = {
   apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
   authDomain: "chores-97427.firebaseapp.com",
@@ -80,34 +81,41 @@ export default function App() {
     await Promise.all(writes);
   }
 
-  const db = firebase.firestore();
-  function handleDelete(v) {
-    db.collection("/houses/")
-      .doc(householdIDD)
-      .collection("/Messages/")
-      .doc(v)
-      .delete();
-    console.log(v);
-  }
+  // async function _delete(id) {
+  //   const db = firebase.firestore();
+  //   await db
+  //     .collection("/houses/")
+  //     .doc(householdIDD)
+  //     .collection("/Messages/")
+  //     .doc(v)
+  //     .delete();
+  //   console.log(v);
+  // }
 
-  function handleLongPress(context, pressed_message) {
-    if (pressed_message.text !== "") {
-      console.log(context, pressed_message);
-      const options = ["Delete", "Cancel"];
-      const cancelButtonIndex = options.length;
-      context
-        .actionSheet()
-        .showActionSheetWithOptions(
-          { options, cancelButtonIndex },
-          (buttonIndex) => {
-            switch (buttonIndex) {
-              case 1:
-                let result = handleDelete(pressed_message); //deleting logic here
-                break;
-            }
+  function handleonLongPress(context, pressed_message) {
+    console.log(context, pressed_message);
+    const options = ["Delete", "Cancel"];
+    const cancelButtonIndex = options.length;
+    //var to_delete = pressed_message.docRef.id();
+    context
+      .actionSheet()
+      .showActionSheetWithOptions(
+        { options, cancelButtonIndex },
+        (buttonIndex) => {
+          switch (buttonIndex) {
+            case 0:
+              let db = firebase.firestore();
+              db.collection("/houses/")
+                .doc("hDmQmaXM0qoZP6TuaPK4u")
+                .collection("/Messages/")
+                .doc(pressed_message.id) // this line works if you hardcode the id
+                .delete()
+                .then(() => {
+                  console.log("Deleted");
+                });
           }
-        );
-    }
+        }
+      );
   }
 
   if (!user) {
@@ -180,7 +188,7 @@ export default function App() {
       messages={messages}
       user={user}
       onSend={handleSend}
-      onLongPress={handleLongPress}
+      onLongPress={handleonLongPress}
       renderUsernameOnMessage
       renderAvatarOnTop
       messagesContainerStyle={{ backgroundColor: "#7ab5ca" }}
