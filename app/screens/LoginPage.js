@@ -13,27 +13,109 @@ import { Header } from "react-native-elements";
 import { set } from "react-native-reanimated";
 import * as firebase from "firebase";
 import * as Google from "expo-google-app-auth";
+import AppLoading from "expo-app-loading";
+import { useFonts } from "@expo-google-fonts/montserrat";
+import { FontAwesome } from "@expo/vector-icons";
+import Person from "../classes/person";
 
 function LoginPage({ navigation }) {
   const [oatmealfact, setFact] = useState("");
 
-  useEffect;
-  () => {
-    console.log("effect");
-    if (firebase.auth().currentUser !== null) {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Drawer" }],
-      });
-    }
-    var oatmealfacts_array = [
-      "Oatmeal fact ",
-      "Oatmeal fact2",
-      "Oatmeal fact3",
-    ];
-    setFact =
-      oatmealfacts_array[Math.floor(Math.random() * oatmealfactsarray.length)];
-  };
+  //const [unsub, setUnsub] = useState(null);
+  const [unsubscriber, setUnsubscriber] = useState(null);
+
+  console.log("boobs");
+
+  useEffect(() => {
+    const please = firebase.auth().onAuthStateChanged(function (user) {
+      // if (user) {
+      //   console.log(" uh user here i guess");
+      //   (async () => {
+      //     const db = firebase.firestore();
+      //     var docRef = db.doc("users/" + user.uid);
+      //     var doc = await docRef.get();
+      //     if (doc.exists) {
+      //       console.log("user in database");
+      //       if (doc.exists) {
+      //         console.log("doc exists!!!!!!!!!!!!!!!!");
+      //         navigation.reset({
+      //           index: 0,
+      //           routes: [{ name: "Drawer" }],
+      //         });
+      //       }
+      //     }
+      //   })();
+      // }
+
+      // old func
+      if (user) {
+        const db = firebase.firestore();
+
+        (async () => {
+          var docRef = db.doc("users/" + user.uid);
+          var doc = await docRef.get();
+          console.log("boobs2");
+          if (doc.exists) {
+            console.log("doc exists!!!!!!!!!!!!!!!!");
+
+            if (doc.data().householdID === null) {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "HouseholdSelectionPage2" }],
+              });
+            } else {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Drawer" }],
+              });
+            }
+          } else {
+            console.log("first time!!!!!");
+            var newP = new Person(
+              user.uid,
+              user.displayName,
+              user.photoURL,
+              null,
+              0,
+              0,
+              0,
+              0,
+              true,
+              true,
+              true,
+              true,
+              true
+            );
+
+            await docRef.withConverter(Person.personConverter).set(newP);
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "HouseholdSelectionPage2" }],
+            });
+          }
+        })();
+      } else {
+        // No user is signed in.
+      }
+    });
+    return function cleanup() {
+      if (unsubscriber !== null && unsubscriber !== undefined) {
+        unsubscriber();
+      }
+      please();
+    };
+  }, []);
+
+  // useEffect() => {
+  //   console.log("effect");
+  //   var oatmealfacts_array = [
+  //     "Oatmeal fact ",
+  //     "Oatmeal fact2",
+  //     "Oatmeal fact3",
+  //   ];
+  //   setFact =
+  //     oatmealfacts_array[Math.floor(Math.random() * oatmealfactsarray.length)];
+  // };
 
   isUserEqual = (googleUser, firebaseUser) => {
     if (firebaseUser) {
@@ -58,6 +140,7 @@ function LoginPage({ navigation }) {
     var unsubscribe = firebase.auth().onAuthStateChanged(
       function (firebaseUser) {
         unsubscribe();
+        setUnsubscriber(unsubscribe);
         // Check if we are already signed-in Firebase with the correct user.
         if (!this.isUserEqual(googleUser, firebaseUser)) {
           // Build Firebase credential with the Google ID token.
@@ -127,20 +210,12 @@ function LoginPage({ navigation }) {
 
       if (result.type === "success") {
         this.onSignIn(result);
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Drawer" }],
-        });
+
         return result.accessToken;
       } else {
         return { cancelled: true };
       }
     } else {
-      // navigation.push("Drawer");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Drawer" }],
-      });
       console.log("already logged in");
     }
   };
@@ -209,7 +284,6 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-
     width: 200,
     height: 200,
     borderRadius: 200 / 2,
