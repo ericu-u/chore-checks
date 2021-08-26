@@ -13,7 +13,7 @@ import "firebase/firestore";
 import ImgPicker from "./ImagePicker";
 import { doc, deleteDoc } from "firebase/firestore";
 
-var householdIDD = "hDmQmaXM0qoZP6TuaPK4u";
+var householdIDD = "empty";
 const firebaseConfig = {
   apiKey: "AIzaSyBXrzMPWBxF9GBbtxLL1rqGeSVmz7C1KKw",
   authDomain: "chores-97427.firebaseapp.com",
@@ -128,7 +128,7 @@ export default function App() {
             case 0:
               let db = firebase.firestore();
 
-              db.collection("/houses/hDmQmaXM0qoZP6TuaPK4u/Messages")
+              db.collection("/houses/" + householdIDD +"/Messages")
                 .where("_id", "==", pressed_message._id)
                 .get()
                 .then((querySnapshot) => {
@@ -145,7 +145,7 @@ export default function App() {
                     messages.splice(ind, 1);
 
                     db.collection("houses")
-                      .doc("hDmQmaXM0qoZP6TuaPK4u")
+                      .doc(householdIDD)
                       .collection("Messages")
                       .doc(doc.id) // this line works if you hardcode the id
                       .delete()
