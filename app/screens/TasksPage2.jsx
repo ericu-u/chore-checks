@@ -75,42 +75,51 @@ export class TasksPage2 extends React.Component {
       firebase.app();
     }
     const db = firebase.firestore();
+    const uid = firebase.auth().currentUser.uid;
+    var unsub2 = db.doc("users/" + uid).onSnapshot((doc) => {
+      console.log("id set!:", doc.data().householdID);
+      this.setState({ householdID: doc.data().householdID });
+      console.log("state id is:", this.state.householdID);
+
+      var unsub = db
+        .collection("/houses/" + this.state.householdID + "/Tasks")
+        .withConverter(Task.taskConverter)
+        .onSnapshot((querySnapshot) => {
+          // Whenever there is a change in firestore, this method runs
+          var tempTasks = []; // This temp array will store all the Tasks from firestore
+          querySnapshot.forEach((doc) => {
+            tempTasks.push(doc.data());
+          });
+          console.log("updated tasks");
+          this.setState({ tasks: tempTasks }); // Makes the state.tasks equal tempTasks
+          var activeTasks = _.where(this.state.tasks, { completed: null }); // Gets tasks without completion
+
+          // For loop that appends completed tasks
+          var completedTasks = [];
+          for (let task of this.state.tasks) {
+            if (typeof task.completed == "string") {
+              completedTasks.push(task);
+            }
+          }
+
+          var sections = [
+            {
+              title: "Active",
+              data: activeTasks,
+            },
+            {
+              title: "Inactive",
+              data: completedTasks,
+            },
+          ];
+          this.setState({ sectionedTasks: sections });
+        });
+      this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
+    });
+
+    this.setState({ unsubscribe2: unsub2 }); // We save our subscription so we can end it later
 
     // Firestore subscription. Listens to database for changes.
-    var unsub = db
-      .collection("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks")
-      .withConverter(Task.taskConverter)
-      .onSnapshot((querySnapshot) => {
-        // Whenever there is a change in firestore, this method runs
-        var tempTasks = []; // This temp array will store all the Tasks from firestore
-        querySnapshot.forEach((doc) => {
-          tempTasks.push(doc.data());
-        });
-        console.log("updated tasks");
-        this.setState({ tasks: tempTasks }); // Makes the state.tasks equal tempTasks
-        var activeTasks = _.where(this.state.tasks, { completed: null }); // Gets tasks without completion
-
-        // For loop that appends completed tasks
-        var completedTasks = [];
-        for (let task of this.state.tasks) {
-          if (typeof task.completed == "string") {
-            completedTasks.push(task);
-          }
-        }
-
-        var sections = [
-          {
-            title: "Active",
-            data: activeTasks,
-          },
-          {
-            title: "Inactive",
-            data: completedTasks,
-          },
-        ];
-        this.setState({ sectionedTasks: sections });
-      });
-    this.setState({ unsubscribe: unsub }); // We save our subscription so we can end it later
   }
   componentWillUnmount() {
     // This method runs whenever we stop rendering the component
@@ -373,7 +382,10 @@ const TaskModal = (props) => {
               <Button
                 style={styles.modalButton}
                 title="Edit Task"
-                onPress={() => {props.setEditModalVisible(true); props.setModalVisible(false)}}
+                onPress={() => {
+                  props.setEditModalVisible(true);
+                  props.setModalVisible(false);
+                }}
               />
             </View>
           </View>
@@ -577,8 +589,8 @@ const InputModal = (props) => {
                 style={styles.modalButton}
                 color="red"
                 onPress={() => {
-                  props.setInputModalVisible(!props.inputModalVisible)
-                  props.setNewRepeat(null)
+                  props.setInputModalVisible(!props.inputModalVisible);
+                  props.setNewRepeat(null);
                 }}
                 title="Close"
               />
