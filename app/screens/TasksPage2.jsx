@@ -217,6 +217,7 @@ export class TasksPage2 extends React.Component {
               />
             </View>
           )}
+          ListFooterComponent={<View style={{height: windowHeight * 0.1,}}></View>}
         />
 
         <ModalRedirector
