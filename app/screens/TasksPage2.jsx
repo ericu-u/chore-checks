@@ -25,6 +25,10 @@ import { FAB } from "react-native-paper";
 import Modal from "react-native-modal";
 import { MonthDateYearField } from "react-native-datefield";
 import { SelectMultipleButton } from "react-native-selectmultiple-button";
+import {
+  useFonts,
+  Montserrat_500Medium
+} from "@expo-google-fonts/montserrat";
 
 export class TasksPage2 extends React.Component {
   constructor(props) {
@@ -345,7 +349,7 @@ const TaskModal = (props) => {
           <FlatList
             data={listData}
             renderItem={({ item }) => (
-              <Text style={{ fontSize: 15, textAlign: "left", margin: 5 }}>
+              <Text style={{ fontSize: 16, textAlign: "left", margin: 5, fontFamily: 'Montserrat_500Medium', }}>
                 {item.key}: {item.property}
               </Text>
             )}
@@ -381,15 +385,7 @@ const InputModal = (props) => {
           labelDate="Day"
           labelMonth="Month"
           labelYear="Year"
-          containerStyle={{
-            flex: 1,
-            textAlign: "center",
-            marginTop: windowHeight * 0.017,
-            marginLeft: windowWidth * 0.013,
-            marginRight: windowWidth * 0.013,
-            height: windowHeight * 0.05,
-            width: windowWidth * 0.5,
-          }}
+          containerStyle={[styles.input, {borderWidth: 0}]}
           styleInput={{
             height: windowHeight * 0.05,
             width: windowWidth * 0.171,
@@ -398,9 +394,7 @@ const InputModal = (props) => {
             borderWidth: 1.5,
           }}
           placeholderTextColor="#788fb3"
-          onSubmit={(value) => {
-            props.setNewDeadline(value.valueOf());
-          }}
+          onSubmit={(value) => {props.setNewDeadline(value.valueOf() + 86399999)}}
         />
       ),
     },
@@ -439,33 +433,40 @@ const InputModal = (props) => {
             backgroundColor: "#FFFFFF",
           }}
         >
-          <Text style={{ color: "#788fb3" }}>Repeated (optional):</Text>
+          <Text
+            style={{color: '#788fb3', fontFamily: 'Montserrat_500Medium', }}
+          >
+            Repeated (optional):
+          </Text>
           <ScrollView
             style={{
               flexDirection: "row",
             }}
             horizontal={true}
           >
-            {["Daily", "Weekly", "Bi-Weekly", "Monthly"].map((selection) => (
-              <SelectMultipleButton
-                key={selection}
-                value={selection}
-                displayValue={selection}
-                highLightStyle={{
-                  borderColor: "gray",
-                  backgroundColor: "transparent",
-                  textColor: "#192e4f",
-                  borderTintColor: "#192e4f",
-                  backgroundTintColor: "#192e4f",
-                  textTintColor: "white",
-                }}
-                //buttonViewStyle={}
-                selected={props.newRepeat == selection}
-                singleTap={(valueTap) => {
-                  props.setNewRepeat(valueTap, selection);
-                }}
-              />
-            ))}
+            {['Daily', 'Weekly', 'Bi-Weekly', 'Monthly'].map(selection => (
+            <SelectMultipleButton
+              key={selection}
+              value={selection}
+              displayValue={selection}
+              textStyle={{fontFamily: 'Montserrat_500Medium'}}
+              highLightStyle={{
+                borderColor: "gray",
+                backgroundColor: "transparent",
+                textColor: "#192e4f",
+                borderTintColor: "#192e4f",
+                backgroundTintColor: "#192e4f",
+                textTintColor: "white",
+              }}
+              buttonViewStyle={{
+                borderRadius: 10,
+                height: windowHeight * 0.0415
+              }}
+              selected={props.newRepeat == selection}
+              singleTap={valueTap =>
+                {props.setNewRepeat(valueTap, selection)}
+              }
+            />))}
           </ScrollView>
         </View>
       ),
@@ -489,6 +490,46 @@ const InputModal = (props) => {
     },
   ];
 
+  if (!props.newName || !props.newDeadline || !props.newPoints) {
+    var buttonElement = (
+      <Button
+        style={styles.modalButton}
+        title="Create"
+        disabled={true}
+      />
+    )
+  }
+  else {
+    var buttonElement = (
+      <Button
+        style={styles.modalButton}
+        title="Create"
+        onPress={() => {
+          var tID = Math.random().toString(36).substring(7);
+          var newT = new Task(
+            props.newName,
+            props.newDeadline,
+            props.newPoints,
+            props.newRepeat,
+            Date.now(),
+            props.newDescription,
+            "h38219",
+            null,
+            null,
+            null,
+            tID
+          );
+          console.log("new Task: ", newT)
+          var db = firebase.firestore()
+          var tRef = db.doc("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks/" + tID);
+          tRef.withConverter(Task.taskConverter).set(newT);
+          props.setInputModalVisible(!props.inputModalVisible);
+          props.setNewRepeat(null)
+        }}
+      />
+    )
+  }
+
   return (
     <Modal
       isVisible={props.inputModalVisible}
@@ -499,8 +540,13 @@ const InputModal = (props) => {
       }
       useNativeDriver={true}
     >
-      <View style={styles.centeredView}>
-        <Pressable onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        style={styles.centeredView}
+        behavior='padding'
+      >
+        <Pressable
+          onPress={Keyboard.dismiss}
+        >
           <View style={styles.modalView}>
             <View style={styles.inputRow}>
               <TextInput
@@ -532,39 +578,11 @@ const InputModal = (props) => {
                 }}
                 title="Close"
               />
-              <Button
-                style={styles.modalButton}
-                title="Create"
-                onPress={() => {
-                  var tID = Math.random().toString(36).substring(7);
-                  console.log("props: ", props);
-                  var newT = new Task(
-                    props.newName,
-                    props.newDeadline,
-                    props.newPoints,
-                    props.newRepeat,
-                    Date.now(),
-                    props.newDescription,
-                    props.householdID,
-                    null,
-                    null,
-                    null,
-                    tID
-                  );
-                  console.log("new Task: ", newT);
-                  var db = firebase.firestore();
-                  var tRef = db.doc(
-                    "/houses/" + props.householdID + "/Tasks/" + tID
-                  );
-                  tRef.withConverter(Task.taskConverter).set(newT);
-                  props.setInputModalVisible(!props.inputModalVisible);
-                  props.setNewRepeat(null);
-                }}
-              />
+              {buttonElement}
             </View>
           </View>
         </Pressable>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
@@ -626,13 +644,10 @@ const EditModal = (props) => {
               <Button
                 style={styles.modalButton}
                 color="red"
-                onPress={() => {
-                  props.setEditModalVisible(false);
-                  props.setModalVisible(true);
-                }}
-                title="Close"
+                onPress={() => {props.setEditModalVisible(false); props.setModalVisible(true)}}
+                title="Back"
               />
-              <Button style={styles.modalButton} title="oof" />
+              <Button style={styles.modalButton} title="Confirm" />
             </View>
           </View>
         </Pressable>
