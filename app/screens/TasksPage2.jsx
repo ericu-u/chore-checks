@@ -117,13 +117,15 @@ export class TasksPage2 extends React.Component {
     this.state.unsubscribe(); // We end the subscription here so we don't waste resources
   }
 
-  updateTask(task, ) {
+  updateTaskStatus(task, userID ) {
 
-    var tRef = db.doc("/houses/hHeLFGtKHEHl6PPMwf9ek/Tasks/" + tID);
-    tRef.withConverter(Task.taskConverter).update(newT);
-
-    db.collection("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks").set(task).doc(task)
-
+    var tRef = firebase.firestore().doc("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks/" + task.taskID);
+    tRef.withConverter(Task.taskConverter).update({
+      inProgress: userID
+    }).then(() => {
+      console.log('Task Status updated!');
+      alert("You have claimed this task!");
+    });
   }
 
   setModalVisible = (visible) => {
@@ -136,6 +138,10 @@ export class TasksPage2 extends React.Component {
 
   setEditModalVisible = (visible) => {
     this.setState({ editModalVisible: visible });
+  };
+
+  setButtonStatus = (status) => {
+    this.setState({ buttonStatus: status });
   };
 
   setTask = (task) => {
@@ -183,6 +189,7 @@ export class TasksPage2 extends React.Component {
               modalVisible={this.state.modalVisible}
               setTask={this.setTask}
               userID={firebase.auth().currentUser.uid}
+              updateTaskStatus={this.updateTaskStatus}
             />
           )}
           renderSectionHeader={({ section: { title } }) => (
@@ -394,7 +401,7 @@ const InputModal = (props) => {
             fontFamily: 'Montserrat_500Medium',
           }}
           placeholderTextColor="#788fb3"
-          onSubmit={(value) => {props.setNewDeadline(value.valueOf())}}
+          onSubmit={(value) => {props.setNewDeadline(value.valueOf() + 86399999)}}
         />
         
       ),
@@ -519,7 +526,7 @@ const InputModal = (props) => {
           );
           console.log("new Task: ", newT)
           var db = firebase.firestore()
-          var tRef = db.doc("/houses/hHeLFGtKHEHl6PPMwf9ek/Tasks/" + tID);
+          var tRef = db.doc("/houses/hDmQmaXM0qoZP6TuaPK4u/Tasks/" + tID);
           tRef.withConverter(Task.taskConverter).set(newT);
           props.setInputModalVisible(!props.inputModalVisible);
           props.setNewRepeat(null)
@@ -612,7 +619,7 @@ const EditModal = (props) => {
             fontFamily: 'Montserrat_500Medium',
           }}
           placeholderTextColor="#788fb3"
-          onSubmit={(value) => {props.setNewDeadline(value.valueOf())}}
+          //onSubmit={(value) => {props.setNewDeadline(value.valueOf())}}
         />
       ),
     },
@@ -626,7 +633,7 @@ const EditModal = (props) => {
           maxLength={2}
           placeholder="Points"
           placeholderTextColor="#788fb3"
-          onEndEditing={(text) => {props.setNewPoints(text.nativeEvent.text)}}
+          //onEndEditing={(text) => {props.setNewPoints(text.nativeEvent.text)}}
           value={String(selectedTask.points)}
         />
       )
@@ -643,7 +650,7 @@ const EditModal = (props) => {
           placeholderTextColor="#788fb3"
           autoCapitalize="sentences"
           value={selectedTask.description}
-          onEndEditing={(text) => {props.setNewDescription(text.nativeEvent.text)}}
+          //onEndEditing={(text) => {props.setNewDescription(text.nativeEvent.text)}}
         />
       )
     },
@@ -670,7 +677,7 @@ const EditModal = (props) => {
                 placeholderTextColor="#788fb3"
                 autoCapitalize="sentences"
                 value={selectedTask.name}
-                onEndEditing={(text) => {props.setNewName(text.nativeEvent.text)}}
+                //onEndEditing={(text) => {props.setNewName(text.nativeEvent.text)}}
               />
             </View>
 
@@ -717,7 +724,9 @@ const StatusButton = (props) => {
     return (
       <TouchableHighlight
         style={styles.claimedStatus}
-        onPress={onPressButton}
+        onPress={
+          () => { onPressButton; props.updateTaskStatus(props.task, props.userID) }
+        }
         underlayColor="#96c7eb"
         disabled={true}
       >
@@ -742,6 +751,7 @@ const StatusButton = (props) => {
         style={styles.doneStatus}
         onPress={onPressButton}
         underlayColor="#69c272"
+        disabled={true}
       >
         <Text style={styles.statusText}>Done</Text>
       </TouchableHighlight>
@@ -751,7 +761,9 @@ const StatusButton = (props) => {
     return (
       <TouchableHighlight
         style={styles.claimStatus}
-        onPress={onPressButton}
+        onPress={
+          () => { onPressButton; props.updateTaskStatus(props.task, props.userID) }
+        }
         underlayColor="#96c7eb"
       >
         <Text style={styles.statusText}>Claim</Text>
@@ -762,7 +774,7 @@ const StatusButton = (props) => {
   }
 };
 
-const Item = ({ task, setModalVisible, modalVisible, setTask, userID }) => {
+const Item = ({ task, setModalVisible, modalVisible, setTask, userID, updateTaskStatus }) => {  
   var deadline = new Date(task.deadline);
   var currTime = new Date();
   var timeLeft = task.deadline - currTime.valueOf();
@@ -833,6 +845,7 @@ const Item = ({ task, setModalVisible, modalVisible, setTask, userID }) => {
         <StatusButton
           task={task}
           userID={userID}
+          updateTaskStatus={updateTaskStatus}
         />
       </View>
     </View>
@@ -840,13 +853,12 @@ const Item = ({ task, setModalVisible, modalVisible, setTask, userID }) => {
 };
 
 function onPressButton() {
-  alert("Status has been changed."); // TODO: Alert and/or Button to be replaced
+  alert("Status has been changed.");
 }
 
 const windowWidth = Dimensions.get("window").width; //390
 const windowHeight = Dimensions.get("window").height; //844
 
-// TODO: Test dimensions on other devices.
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
