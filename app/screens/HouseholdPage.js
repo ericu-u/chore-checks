@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
 
   topRight: {
     position: "absolute",
-    paddingLeft: "112%",
+    paddingLeft: "118%",
     paddingTop: "3%",
     //height: "1%",
     //width: "1%",
