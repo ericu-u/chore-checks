@@ -251,6 +251,7 @@ export class TasksPage2 extends React.Component {
           newDescription={this.state.newDescription}
           newPoints={this.state.newPoints}
           newRepeat={this.state.newRepeat}
+          householdID={this.state.householdID}
 
           editModalVisible={this.state.editModalVisible}
           setEditModalVisible={this.setEditModalVisible}
@@ -306,6 +307,7 @@ const ModalRedirector = (props) => {
         newName={props.newName}
         newPoints={props.newPoints}
         newRepeat={props.newRepeat}
+        householdID={props.householdID}
       />
     );
   }
@@ -535,7 +537,7 @@ const InputModal = (props) => {
             props.newRepeat,
             Date.now(),
             props.newDescription,
-            "h38219",
+            props.householdID,
             null,
             null,
             null,
